@@ -1,0 +1,178 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="Yg9TO1vTAM_hLL_6UUqh">
+    <mxGraphModel dx="1164" dy="824" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-12" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Item" vertex="1">
+          <mxGeometry height="140" width="200" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-13" parent="FdsNxDIVNmd6Ogx1N236-12" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;div&gt;- Name: string&lt;/div&gt;&lt;div&gt;- Sprite: Sprite&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="200" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-14" parent="FdsNxDIVNmd6Ogx1N236-12" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="14" width="200" y="66" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-15" parent="FdsNxDIVNmd6Ogx1N236-12" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;div&gt;+ GetName(): string&lt;/div&gt;&lt;div&gt;+ GetSprite(): Sprite&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="200" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-17" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Relic" vertex="1">
+          <mxGeometry height="104" width="200" y="243" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-18" parent="FdsNxDIVNmd6Ogx1N236-17" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- Price: float" vertex="1">
+          <mxGeometry height="24" width="200" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-19" parent="FdsNxDIVNmd6Ogx1N236-17" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="14" width="200" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-20" parent="FdsNxDIVNmd6Ogx1N236-17" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ GetPrice(): float" vertex="1">
+          <mxGeometry height="40" width="200" y="64" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-25" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="EffectRelic" vertex="1">
+          <mxGeometry height="104" width="200" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-26" parent="FdsNxDIVNmd6Ogx1N236-25" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- Effect: Effect" vertex="1">
+          <mxGeometry height="24" width="200" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-27" parent="FdsNxDIVNmd6Ogx1N236-25" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="14" width="200" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-28" parent="FdsNxDIVNmd6Ogx1N236-25" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ GetEffect(): Effect" vertex="1">
+          <mxGeometry height="40" width="200" y="64" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-29" edge="1" parent="1" source="FdsNxDIVNmd6Ogx1N236-17" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="FdsNxDIVNmd6Ogx1N236-12" value="Extends">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="310" y="430" as="sourcePoint" />
+            <mxPoint x="290" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-31" edge="1" parent="1" source="FdsNxDIVNmd6Ogx1N236-25" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;entryX=0.5;entryY=1.1;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="FdsNxDIVNmd6Ogx1N236-20" value="Extends">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="310" y="430" as="sourcePoint" />
+            <mxPoint x="470" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-33" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;&amp;lt;&amp;lt;enum&amp;gt;&amp;gt;&lt;/div&gt;&lt;div&gt;Effect&lt;/div&gt;" vertex="1">
+          <mxGeometry height="118" width="140" x="30" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-34" parent="FdsNxDIVNmd6Ogx1N236-33" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ InstantLightning" vertex="1">
+          <mxGeometry height="26" width="140" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-35" parent="FdsNxDIVNmd6Ogx1N236-33" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ SlowBullets" vertex="1">
+          <mxGeometry height="26" width="140" y="66" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-36" parent="FdsNxDIVNmd6Ogx1N236-33" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ Etc..." vertex="1">
+          <mxGeometry height="26" width="140" y="92" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-38" parent="1" style="html=1;whiteSpace=wrap;" value="«interface»&lt;br&gt;&lt;div&gt;&lt;b&gt;Effectable&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Those implementing this will have to implement functions that (1) allow them to accept every Effect and (2) Inform listeners that they have been effected.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="150" width="190" x="405" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-40" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Player" vertex="1">
+          <mxGeometry height="178" width="230" x="385" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-41" parent="FdsNxDIVNmd6Ogx1N236-40" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;div&gt;+ OnEffectReceived: event&lt;/div&gt;&lt;div&gt;+ OnEffectLost: event&lt;/div&gt;&lt;div&gt;+ PlayerNumber: int&lt;/div&gt;" vertex="1">
+          <mxGeometry height="54" width="230" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-42" parent="FdsNxDIVNmd6Ogx1N236-40" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="230" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-43" parent="FdsNxDIVNmd6Ogx1N236-40" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;div&gt;+ GetPlayerNumber(): int&lt;/div&gt;&lt;div&gt;- OnCollisionEnter2D(): void&lt;/div&gt;&lt;div&gt;- RelicHitPlayer(Relic): void&lt;/div&gt;&lt;div&gt;- EffectRelicHitPlayer(EffectRelic): void&lt;/div&gt;&lt;div&gt;~ EffectableImplementedMethods(): void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="230" y="88" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-45" edge="1" parent="1" source="FdsNxDIVNmd6Ogx1N236-40" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="FdsNxDIVNmd6Ogx1N236-38" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="350" y="430" as="sourcePoint" />
+            <mxPoint x="510" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-46" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Inventory" vertex="1">
+          <mxGeometry height="160" width="240" x="240" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-47" parent="FdsNxDIVNmd6Ogx1N236-46" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;div&gt;+ OnInventoryCh.: event&lt;/div&gt;&lt;div&gt;- List&amp;lt;Item&amp;gt;: inventory&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="240" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-48" parent="FdsNxDIVNmd6Ogx1N236-46" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="240" y="66" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-49" parent="FdsNxDIVNmd6Ogx1N236-46" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;div&gt;+ AddItem(Item): void&lt;/div&gt;&lt;div&gt;+ RemoveItem(Item): void&lt;/div&gt;&lt;div&gt;+ RemoveItemAt(index): void&lt;/div&gt;&lt;div&gt;+ GetEnumerator(): IEnumerable&amp;lt;Item&amp;gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="86" width="240" y="74" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-50" edge="1" parent="1" source="FdsNxDIVNmd6Ogx1N236-46" style="endArrow=diamondThin;endFill=1;endSize=24;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" target="FdsNxDIVNmd6Ogx1N236-40" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="350" y="430" as="sourcePoint" />
+            <mxPoint x="510" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-51" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Metal Detector" vertex="1">
+          <mxGeometry height="86" width="160" x="420" y="859" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-52" parent="FdsNxDIVNmd6Ogx1N236-51" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- unimplemented" vertex="1">
+          <mxGeometry height="26" width="160" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-53" parent="FdsNxDIVNmd6Ogx1N236-51" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="160" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-54" parent="FdsNxDIVNmd6Ogx1N236-51" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- unimplemented" vertex="1">
+          <mxGeometry height="26" width="160" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-55" edge="1" parent="1" source="FdsNxDIVNmd6Ogx1N236-51" style="endArrow=diamondThin;endFill=1;endSize=24;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="FdsNxDIVNmd6Ogx1N236-40" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="555" y="430" as="sourcePoint" />
+            <mxPoint x="615" y="317" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-56" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="InputMovement" vertex="1">
+          <mxGeometry height="86" width="160" x="570" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-57" parent="FdsNxDIVNmd6Ogx1N236-56" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ Speed: float" vertex="1">
+          <mxGeometry height="26" width="160" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-58" parent="FdsNxDIVNmd6Ogx1N236-56" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="160" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-59" parent="FdsNxDIVNmd6Ogx1N236-56" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- Move(): void" vertex="1">
+          <mxGeometry height="26" width="160" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-60" edge="1" parent="1" source="FdsNxDIVNmd6Ogx1N236-56" style="endArrow=diamondThin;endFill=1;endSize=24;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" target="FdsNxDIVNmd6Ogx1N236-40" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="585" y="432" as="sourcePoint" />
+            <mxPoint x="723" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-61" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;div&gt;Enemy&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;Not under construction. This square demonstrates that we could implement other Effectables." vertex="1">
+          <mxGeometry height="90" width="200" x="630" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-62" edge="1" parent="1" source="FdsNxDIVNmd6Ogx1N236-61" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;rounded=0;entryX=1;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="FdsNxDIVNmd6Ogx1N236-38" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="750" y="230" as="sourcePoint" />
+            <mxPoint x="750" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-63" parent="1" style="html=1;whiteSpace=wrap;" value="IEnumerable&amp;lt;Item&amp;gt;" vertex="1">
+          <mxGeometry height="50" width="120" x="240" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-65" edge="1" parent="1" source="FdsNxDIVNmd6Ogx1N236-46" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.25;exitY=0;exitDx=0;exitDy=0;" target="FdsNxDIVNmd6Ogx1N236-63" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="410" y="450" as="sourcePoint" />
+            <mxPoint x="410" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-70" parent="1" style="shape=ext;double=1;rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;EventsManager&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;In charge of sending out the Effects onto Effectables (the players). Also would be in charge of in-game events potentially.&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110" width="230" x="10" y="981" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-71" parent="1" style="shape=ext;double=1;rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;ArenaManager&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;In charge of spawning in and &quot;burying&quot; relics and communicating the positions to those listening (the metal detectors).&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110" width="230" x="10" y="859" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-72" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Construction Zone" vertex="1">
+          <mxGeometry height="60" width="220" x="170" y="787" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-73" parent="1" style="shape=ext;double=1;rounded=0;whiteSpace=wrap;html=1;" value="UI Manager" vertex="1">
+          <mxGeometry height="60" width="140" x="263" y="859" as="geometry" />
+        </mxCell>
+        <mxCell id="FdsNxDIVNmd6Ogx1N236-74" parent="1" style="shape=ext;double=1;rounded=0;whiteSpace=wrap;html=1;" value="Sound Manager" vertex="1">
+          <mxGeometry height="60" width="140" x="263" y="931" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
