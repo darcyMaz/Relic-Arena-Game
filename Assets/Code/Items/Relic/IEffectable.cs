@@ -2,14 +2,18 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Abstract class where those implementing it become Effectable.
+/// They may receive Effects, for which there are in-game consequences attached.
+/// </summary>
 public abstract class IEffectable: MonoBehaviour
 {
     // IEffectables (1) inform others that they have received or lost effects
     //              (2) have some functionality for receiving and losing effects and
     //              (3) implement each possible effect
 
-    //public event Action <Effect> OnEffectReceived;
-    // public event Action <Effect> OnEffectLost;
+    public event Action <Effect> OnEffectReceived;
+    public event Action <Effect> OnEffectLost;
     
     /// <summary>
     /// The Effects Dictionary, Effect enums are mapped to class methods that take a string as input.
@@ -36,6 +40,7 @@ public abstract class IEffectable: MonoBehaviour
     private void Init()
     {
         InitEffectDict();
+        InitFormatDict();
     }
 
     /// <summary>
@@ -48,7 +53,7 @@ public abstract class IEffectable: MonoBehaviour
         _effectsDict.TryAdd(Effect.Test, this.EffectTest);
         _effectsDict.TryAdd(Effect.None, this.NoEffect);
         _effectsDict.TryAdd(Effect.DelayedLightning, this.DelayedLightning);
-
+        _effectsDict.TryAdd(Effect.Knockout, this.Knockout);
 
         // Then do a check at the end to see if the size of the dictionary matches up with the number of Effects.
         int EffectCount = Enum.GetNames(typeof(Effect)).Length;
@@ -82,10 +87,17 @@ public abstract class IEffectable: MonoBehaviour
             // Apply the Effect.
             Action<string, Effect> effectAction;
             _effectsDict.TryGetValue(relic.GetEffect(), out effectAction);
+            // Inform listeners of the Effect starting.
+            OnEffectReceived?.Invoke(relic.GetEffect());
             effectAction.Invoke(relic.GetEffectDetails(), relic.GetEffect());
         }
     }
 
+    /// <summary>
+    /// Apply the DelayedLightning Effect. This Effect will mainly be handled by the Effect Manager.
+    /// </summary>
+    /// <param name="delay"> The delay before the lightning strikes. </param>
+    /// <param name="currentEffect"> The DelayedLightning Effect. </param>
     private void DelayedLightning(string delay, Effect currentEffect)
     {
         // Convert from string to float
@@ -93,9 +105,8 @@ public abstract class IEffectable: MonoBehaviour
         try
         {
             float delayFloat = float.Parse(delay);
-            // So we'll need to tell the effectsmanager to start this effect.
-            // We'll also need to let the effectsmanager know that this effect has ended, potentially I mean.
-            // Like, delayed lightning will strike after say, 3 seconds. But if it is cancelled out then that needs to be known.   
+            Debug.Log("Delayed Lightning Effect not implemented in IEffectable.");
+            // EffectManager.Instance.DelayedLightning(delayFloat);
         }
         catch (FormatException fe)
         {
@@ -112,6 +123,20 @@ public abstract class IEffectable: MonoBehaviour
     {
         Debug.Log("The no effect effect has been called. Here's the associated details string: " + noEffect);
     }
+
+    private void Knockout(string knockoutTime, Effect currentEffect)
+    {
+        try
+        {
+            float knockoutTimeFloat = float.Parse(knockoutTime);
+            ApplyKnockout(knockoutTimeFloat);
+        }
+        catch (FormatException fe)
+        {
+            LogFormatException(fe, currentEffect);
+        }
+    }
+    protected abstract void ApplyKnockout(float knockoutTime);
 
     /// <summary>
     /// This function logs the error for the case where the format of a Relic's details string is incorrect.

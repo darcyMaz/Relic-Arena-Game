@@ -58,4 +58,13 @@ public class Player : IEffectable
 
         throw new NotImplementedException();
     }
+
+    /// <summary>
+    /// Applies the knockout effect.
+    /// </summary>
+    /// <param name="knockoutTime"> Amount of time to be knocked out. </param>
+    protected override void ApplyKnockout(float knockoutTime)
+    {
+        Debug.Log("Knockout Effect not implemented onto the Player.");
+    }
 }

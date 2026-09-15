@@ -4,7 +4,7 @@ public enum Effect
 {
     None,
     DelayedLightning,
-    SlowDownSpeed,
+    ChangeSpeed,
     Knockout,
     Test
 
