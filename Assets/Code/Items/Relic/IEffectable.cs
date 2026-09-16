@@ -53,7 +53,10 @@ public abstract class IEffectable: MonoBehaviour
         _effectsDict.TryAdd(Effect.Test, this.EffectTest);
         _effectsDict.TryAdd(Effect.None, this.NoEffect);
         _effectsDict.TryAdd(Effect.DelayedLightning, this.DelayedLightning);
+<<<<<<< Updated upstream
         _effectsDict.TryAdd(Effect.Knockout, this.Knockout);
+=======
+>>>>>>> Stashed changes
 
         // Then do a check at the end to see if the size of the dictionary matches up with the number of Effects.
         int EffectCount = Enum.GetNames(typeof(Effect)).Length;
