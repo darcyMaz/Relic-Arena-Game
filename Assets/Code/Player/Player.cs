@@ -79,4 +79,9 @@ public class Player : IEffectable
     {
         Debug.Log("Knockout Effect not implemented onto the Player.");
     }
+
+    protected override void ApplyChangeSpeed(float speed, float duration)
+    {
+        Debug.Log("ChangeSpeed Effect nto implemented by Player.");
+    }
 }
