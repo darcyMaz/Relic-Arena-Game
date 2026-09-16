@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -76,7 +77,7 @@ public abstract class IEffectable: MonoBehaviour
     {
         _formatDict.TryAdd(Effect.Test, "This is a test effect, there is no format.");
         _formatDict.TryAdd(Effect.None, "Empty String");
-        _formatDict.TryAdd(Effect.DelayedLightning, "Integer: 3");
+        _formatDict.TryAdd(Effect.DelayedLightning, "Integer representing milliseconds: 3000");
         _formatDict.TryAdd(Effect.Knockout, "float: 1.4");
         _formatDict.TryAdd(Effect.ChangeSpeed, "Non-negative float,non-negative float: 0.1,1.2");
 
@@ -88,16 +89,24 @@ public abstract class IEffectable: MonoBehaviour
     /// <param name="collision"> The body colliding with the IEffectable. </param>
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("Player collision.");
+
         // If the collision object has a Relic component on it, then the IEffectable has been hit by a Relic.
         Relic relic;
         if (collision.gameObject.TryGetComponent(out relic))
         {
+            Debug.Log("Relic collision.");
             // Apply the Effect.
             Action<string, Effect> effectAction;
+
+            
+
             _effectsDict.TryGetValue(relic.GetEffect(), out effectAction);
             // Inform listeners of the Effect starting.
             OnEffectReceived?.Invoke(relic.GetEffect());
             effectAction.Invoke(relic.GetEffectDetails(), relic.GetEffect());
+
+            Debug.Log(relic.GetEffect());
         }
     }
 
@@ -106,23 +115,35 @@ public abstract class IEffectable: MonoBehaviour
     /// </summary>
     /// <param name="delay"> The delay before the lightning strikes. </param>
     /// <param name="currentEffect"> The DelayedLightning Effect. </param>
-    private void DelayedLightning(string delay, Effect currentEffect)
+    private async void DelayedLightning(string delay, Effect currentEffect)
     {
+        Debug.Log("Delayed lightning");
+
         // Convert from string to float
         // Tell the effect manager to do this effect onto this IEffectable.
         try
         {
-            float delayFloat = float.Parse(delay);
-            Debug.Log("Delayed Lightning Effect not implemented in IEffectable. Requires EffectManager to exist.");
-            // EffectManager.Instance.DelayedLightning(delayFloat);
+            //float delayFloat = float.Parse(delay);
+            // Debug.Log("Delayed Lightning Effect not implemented in IEffectable. Requires EffectManager to exist.");
+            int delayInt = int.Parse(delay);
+
+            Debug.Log("Before delay");
+
+            // Need to make a task that listens for an effect being cancelled.
+            await Task.Delay(delayInt);
+
+            Debug.Log("After delay");
+
+            // Strike lightning!
+            EffectsManager.Instance.Lightning(transform.position);
         }
         catch (FormatException fe)
         {
             LogFormatException(fe, currentEffect);
         }
-
-        
     }
+    protected abstract void ApplyLightning();
+
     private void EffectTest(string test, Effect currentEffect)
     {
         // EffectsManager.Instance.EffectTest();

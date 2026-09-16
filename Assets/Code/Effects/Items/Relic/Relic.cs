@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Relic : MonoBehaviour
 {
-    private RelicSO _relic;
+    [SerializeField] private RelicSO _relic;
 
     public Relic(RelicSO relicSO)
     {

@@ -84,4 +84,9 @@ public class Player : IEffectable
     {
         Debug.Log("ChangeSpeed Effect nto implemented by Player.");
     }
+
+    protected override void ApplyLightning()
+    {
+        Debug.Log("A Player was struck by lightning but the effect is not applied to the Player yet.");
+    }
 }

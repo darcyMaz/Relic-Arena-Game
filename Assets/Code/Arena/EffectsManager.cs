@@ -45,7 +45,7 @@ public class EffectsManager : MonoBehaviour
     /// <param name="endPos"> The destination of the line renderer. </param>
     public void Lightning(Vector3 endPos)
     {
-        // 
+        LightningSource.LightningStrike(endPos);
     }
 
     public async void EffectTest()
