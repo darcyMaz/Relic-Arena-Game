@@ -28,28 +28,42 @@ public class Lightning : MonoBehaviour
     /// </summary>
     [SerializeField] private float LightningKinkDistance = 3;
 
+    /// <summary>
+    /// The lifetime of the lightning strike in milliseconds.
+    /// </summary>
+    [SerializeField] private int LightningLifetime = 750;
+
+    /// <summary>
+    /// Initializations before the game starts.
+    /// </summary>
     private void Awake()
     {
-        _lineRenderer = GetComponent<LineRenderer>();
-    }
-    private void Start()
-    {
-        LightningStrike(Vector3.zero);
+        InitComponents();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="endPos"></param>
     public async void LightningStrike(Vector3 endPos)
     {
         // Create the lightning line    
         BuildLine(endPos);
 
-        await Task.Delay(750);
+        // Allow the lightning to exist for a short time.
+        await Task.Delay(LightningLifetime);
 
-        // destroy the lightning line
+        // Destroy the lightning line
         RemoveLine();
     }
 
     /// <summary>
     /// Builds the line using the line renderer which represents the lightning strike.
+    /// This function 
+    ///     (1) Creates a vector between the start and end of the lightning strike,
+    ///     (2) Cuts this line by the number of kinks set in the inspector,
+    ///     (3) Builds the lightning strike with the line renderer based on those cuts, where those cuts have small variance.
+    ///         This gives the line the appearance of a straight line with kinks, i.e. a lightning strike.
     /// </summary>
     private void BuildLine(Vector3 endPos)
     {
@@ -84,12 +98,20 @@ public class Lightning : MonoBehaviour
         _lineRenderer.SetPosition(positionIndex, endPos);
     }
 
+    /// <summary>
+    /// End the lightning strike by removing the line from LineRenderer.
+    /// </summary>
     private void RemoveLine()
     {
         _lineRenderer.positionCount = 0;
         _lineRenderer.SetPositions(new Vector3[0]);
     }
 
+    /// <summary>
+    /// Take a Vector3 point as input and randomly move its three values according to a range.
+    /// </summary>
+    /// <param name="point"> The input point. </param>
+    /// <returns> The input point with random adjustments. </returns>
     private Vector3 SmallRandomVariance(Vector3 point)
     {
         // Point to change and return.
@@ -104,5 +126,10 @@ public class Lightning : MonoBehaviour
         newPoint.z = UnityEngine.Random.Range(newPoint.z - range, range + newPoint.z);
 
         return newPoint;
+    }
+
+    private void InitComponents()
+    {
+        _lineRenderer = GetComponent<LineRenderer>();
     }
 }

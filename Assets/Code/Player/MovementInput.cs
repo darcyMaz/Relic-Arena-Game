@@ -27,6 +27,10 @@ public class MovementInput : MonoBehaviour
     /// </summary>
     [SerializeField] private float Speed = 2f;
 
+    private Vector3 _input = Vector3.zero;
+    private Vector3 _gravity = Vector3.zero;
+    [SerializeField] private float GravityFloat = 9.8f;
+
     /// <summary>
     /// Initialization before the game starts.
     /// </summary>
@@ -62,9 +66,11 @@ public class MovementInput : MonoBehaviour
     /// <summary>
     /// Every frame, check for movement.
     /// </summary>
-    private void Update()
+    private void FixedUpdate()
     {
         Input();
+        Gravity();
+        Move();
     }
 
     /// <summary>
@@ -90,9 +96,30 @@ public class MovementInput : MonoBehaviour
     /// </summary>
     private void Input()
     {
+        // Poll the movement from the Input Action.
         Vector2 pollMovement = _move.ReadValue<Vector2>();
-        Vector3 movementVector3 = new Vector3(pollMovement.x, 0, pollMovement.y);
-        _characterController.Move((movementVector3 * Speed).normalized * Time.deltaTime);
+
+        // Translate the polled value from Vect2 to vect3.
+        Vector3 movement = new Vector3(pollMovement.x, 0, pollMovement.y);
+
+        // Set the _input vector such that Speed and normalization are accounted for.
+        _input = movement.normalized * Speed;
+    }
+
+    /// <summary>
+    /// Set the gravity.
+    /// </summary>
+    private void Gravity()
+    {
+        _gravity = new Vector3(0,-GravityFloat,0);
+    }
+
+    /// <summary>
+    /// Move the character controller.
+    /// </summary>
+    private void Move()
+    {
+        _characterController.Move( (_gravity + _input) * Time.fixedDeltaTime);
     }
 
     /// <summary>
@@ -103,6 +130,9 @@ public class MovementInput : MonoBehaviour
         _actions = new InputSystem_Actions();
     }
 
+    /// <summary>
+    /// Initialize the components.
+    /// </summary>
     private void ComponentsInit()
     {
         _characterController = GetComponent<CharacterController>();
