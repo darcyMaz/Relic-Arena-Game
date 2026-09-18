@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
+    [SerializeField] private AudioSource _audioSource;
     /// <summary>
     /// Singleton instance of Sound Manager.
     /// </summary>
@@ -43,9 +44,11 @@ public class SoundManager : MonoBehaviour
             _ongoingMetalDetectors.Add(audioClip);
 
             // Get the duration of the audio clip.
-            int audioClipDuration = 0;
+            int audioClipDuration = (int) audioClip.length * 1000;
 
             // PLAY the audio clip.
+            _audioSource.PlayOneShot(audioClip);
+        
             // Debug.Log("Sound Manager tried to play Metal Detector noises but the Sound Management was not implemented: " + audioClip.name);
 
             await Task.Delay(audioClipDuration);
