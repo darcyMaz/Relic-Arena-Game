@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// [RequireComponent(typeof(BoxCollider))]
 public class InputMovement2D : MonoBehaviour
 {
     [SerializeField] private float Speed = 2f;
@@ -11,6 +12,9 @@ public class InputMovement2D : MonoBehaviour
     private Rigidbody2D _rigidBody;
     private bool _hasRB = false;
 
+    // private BoxCollider _boxCollider;
+
+
     private void Awake()
     {
         // Initialize the Input System object.
@@ -19,6 +23,8 @@ public class InputMovement2D : MonoBehaviour
         // Try to get the RigidBody2D
         if (TryGetComponent(out _rigidBody)) _hasRB = true;
         else Debug.Log("A PlayerMovement component could not find its respective Rigidbody2D.");
+
+        // _boxCollider = GetComponent<BoxCollider>();
     }
 
     private void OnEnable()

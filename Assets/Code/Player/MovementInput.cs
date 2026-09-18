@@ -100,10 +100,10 @@ public class MovementInput : MonoBehaviour
         Vector2 pollMovement = _move.ReadValue<Vector2>();
 
         // Translate the polled value from Vect2 to vect3.
-        Vector3 movement = new Vector3(pollMovement.x, 0, pollMovement.y);
+        // Vector3 movement = new Vector3(pollMovement.x, 0, pollMovement.y);
 
         // Set the _input vector such that Speed and normalization are accounted for.
-        _input = movement.normalized * Speed;
+        _input = pollMovement.normalized * Speed;
     }
 
     /// <summary>
