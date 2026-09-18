@@ -83,7 +83,7 @@ public abstract class IEffectable: MonoBehaviour
     /// The OnCollisionEnter method is where Effects start being applied to IEffectables.
     /// </summary>
     /// <param name="collision"> The body colliding with the IEffectable. </param>
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
 
         // If the collision object has a Relic component on it, then the IEffectable has been hit by a Relic.
@@ -104,8 +104,6 @@ public abstract class IEffectable: MonoBehaviour
             // Inform listeners of the Effect starting.
             OnEffectReceived?.Invoke(relic.GetEffect());
             effectAction.Invoke(relic.GetEffectDetails(), relic.GetEffect());
-
-            // Debug.Log(relic.GetEffect());
         }
     }
 

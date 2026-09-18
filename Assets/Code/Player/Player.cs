@@ -49,7 +49,6 @@ public class Player : IEffectable
         if (PlayerNumber == 1)
         {
             _dig = _actions.Player1.Interact;
-            Debug.Log("Player 1 found.");
         }
         else if (PlayerNumber == 2)
         {
@@ -209,11 +208,19 @@ public class Player : IEffectable
         Debug.Log("Knockout Effect not implemented onto the Player.");
     }
 
+    /// <summary>
+    /// Apply a speed change for a certain duration.
+    /// </summary>
+    /// <param name="speed"> Change in speed as percentage. </param>
+    /// <param name="duration"> Length of speed change. </param>
     protected override void ApplyChangeSpeed(float speed, float duration)
     {
         Debug.Log("ChangeSpeed Effect nto implemented by Player.");
     }
 
+    /// <summary>
+    /// Apply the Lightning Effect.
+    /// </summary>
     protected override void ApplyLightning()
     {
         Debug.Log("A Player was struck by lightning but the effect is not applied to the Player yet.");
