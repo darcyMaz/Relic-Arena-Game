@@ -188,6 +188,11 @@ public class Player : IEffectable
                 _isRelicFound = false;
                 _relicFound = null;
                 _buriedRelicFound = null;
+
+                foreach (var item in _inventory)
+                {
+                    item.GetName();
+                }
             }
 
             // When no longer digging, set this to false.

@@ -29,6 +29,11 @@ public class SoundManager : MonoBehaviour
 
     private List<AudioClip> _ongoingMetalDetectors = new List<AudioClip>();
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="audioClip"></param>
+    /// <param name="intensity"></param>
     public async void PlayMetalDetector(AudioClip audioClip)
     {
         // If this audio clip is not in the ongoingMetalDetector list, then it is not already playing.
