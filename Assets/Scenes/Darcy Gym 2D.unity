@@ -496,6 +496,7 @@ GameObject:
   - component: {fileID: 748622966}
   - component: {fileID: 748622965}
   - component: {fileID: 748622964}
+  - component: {fileID: 748622968}
   m_Layer: 0
   m_Name: Buried Relic
   m_TagString: Untagged
@@ -518,7 +519,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -596,6 +597,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &748622968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 748622963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3681492a5015fa4cbb724d4a2e5fadb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuriedRelic
+  _relicSO: {fileID: 11400000, guid: 582f54ff2b61b794bb73d46121c839bd, type: 2}
 --- !u!1 &866263242
 GameObject:
   m_ObjectHideFlags: 0
@@ -958,6 +972,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1463937430
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1463937432}
+  - component: {fileID: 1463937431}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1463937431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463937430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 783ac1470fab1df4c987e78bfe14d9dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoundManager
+--- !u!4 &1463937432
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463937430}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.39894, y: -0, z: -9.10316}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1808776585
 GameObject:
   m_ObjectHideFlags: 0
@@ -1191,10 +1249,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1878963810}
-  - component: {fileID: 1878963809}
   - component: {fileID: 1878963807}
   - component: {fileID: 1878963812}
+  - component: {fileID: 1878963809}
   - component: {fileID: 1878963811}
+  - component: {fileID: 1878963813}
+  - component: {fileID: 1878963814}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1283,7 +1343,7 @@ Transform:
   m_GameObject: {fileID: 1878963805}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.59, y: -0.07, z: -5}
+  m_LocalPosition: {x: -0.31, y: -0.52, z: -5}
   m_LocalScale: {x: 0.75, y: 0.75, z: 1.8836249}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1328,6 +1388,32 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1878963813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1878963805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d671c0fb417341a4b9b97739f3f4dc6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MetalDetector
+  _closeSound: {fileID: 8300000, guid: 68aab7b61f217724fa1ebb3902ffb88b, type: 3}
+  _veryCloseSound: {fileID: 8300000, guid: 8da35e81e8ee3584e9c3533765b3d96e, type: 3}
+--- !u!114 &1878963814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1878963805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3735aafef31146843aa16a17036ff847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Inventory
 --- !u!1 &1889937690
 GameObject:
   m_ObjectHideFlags: 0
@@ -1422,3 +1508,4 @@ SceneRoots:
   - {fileID: 1839104743}
   - {fileID: 866263246}
   - {fileID: 748622967}
+  - {fileID: 1463937432}

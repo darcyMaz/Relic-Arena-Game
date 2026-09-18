@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : IEffectable
 {
+
     /// <summary>
     /// The Player's number, set in the inspector.
     /// </summary>
@@ -18,7 +22,55 @@ public class Player : IEffectable
     /// The Player's Metal Detector.
     /// </summary>
     private MetalDetector _metalDetector;
-    private bool _hasMetalDetector = false;
+    // private bool _hasMetalDetector = false;
+
+    private InputSystem_Actions _actions;
+    private InputAction _dig;
+
+    private bool _isDigging = false;
+    private bool _isRelicFound = false;
+    private BuriedRelic _buriedRelicFound;
+    private Relic _relicFound;
+
+    /// <summary>
+    /// Intizalize before start.
+    /// </summary>
+    private void Awake()
+    {
+        AwakeInit();
+    }
+
+    /// <summary>
+    /// When this gameObject is Enabled.
+    /// </summary>
+    private void OnEnable()
+    {
+        // I AM AWARE that this is not a good way to do this.
+        if (PlayerNumber == 1)
+        {
+            _dig = _actions.Player1.Interact;
+            Debug.Log("Player 1 found.");
+        }
+        else if (PlayerNumber == 2)
+        {
+            _dig = _actions.Player2.Interact;
+        }
+        else
+        {
+            _dig = _actions.Player.Interact;
+        }
+
+        _dig.performed += Dig;
+        _dig.Enable();
+    }
+
+    /// <summary>
+    /// When this gameObject is disabled.
+    /// </summary>
+    private void OnDisable()
+    {
+        _dig.Disable();
+    }
 
     /// <summary>
     /// Initialize the components of the Player.
@@ -53,7 +105,8 @@ public class Player : IEffectable
         }
         if (TryGetComponent(out _metalDetector))
         {
-            _hasMetalDetector = true;
+            // _hasMetalDetector = true;
+            _metalDetector.OnRelicVeryClose += AcceptRelic;
         }
         else
         {
@@ -62,22 +115,85 @@ public class Player : IEffectable
     }
 
     /// <summary>
-    /// Accepts a Relic into the inventory.
+    /// Method holding initializations for the Awake function.
     /// </summary>
-    public void AcceptRelic(Relic relic)
+    private void AwakeInit()
     {
-        _inventory.AddItem(relic);
+        _actions = new InputSystem_Actions();
     }
-    /*
-    public void ConsumeRelic(Relic relic)
-    {
 
-    }
-    public void ConsumeRelicAt(int index)
+    /// <summary>
+    /// Accepts a Relic into the inventory.
+    /// Runs when _metalDetector invokes an event for proximity to relic and dig is pressed.
+    /// Will also play animations for picking up relics.
+    /// </summary>
+    private void AcceptRelic(Relic relic, BuriedRelic buriedRelic)
     {
-
+        if (_hasInventory && _isDigging && !_isRelicFound)
+        { 
+            _isRelicFound = true;
+            _relicFound = relic;
+            _buriedRelicFound = buriedRelic;
+        }
     }
-    */
+    
+    
+
+    /// <summary>
+    /// Consume a relic. In other words delete it.
+    /// </summary>
+    /// <param name="relic"> The relic to remove. </param>
+    private void ConsumeRelic(Relic relic)
+    {
+        _inventory.RemoveItem(relic);
+    }
+    /// <summary>
+    /// Consume a relic at an index. In other words delete it.
+    /// </summary>
+    /// <param name="index"> The inventory index to remove a relic. </param>
+    private void ConsumeRelicAt(int index)
+    {
+        _inventory.RemoveItemAt(index);
+    }
+
+    private async void Dig(InputAction.CallbackContext context)
+    {
+        if (context.performed && !_isDigging)
+        {
+
+            // The Player is digging.
+            _isDigging = true;
+
+            // Play the digging animation.
+            ////
+
+            // Await the duration of the animation.
+            //// For now, 3 seconds.
+            await Task.Delay(3000);
+
+            // If the Player found a relic.
+            if (_isRelicFound && (_relicFound != null && _buriedRelicFound != null))
+            {
+
+                // Add it to the inventory.
+                _inventory.AddItem(_relicFound);
+
+                // Play found relic animation.
+                ////
+
+                // Destroy the buried relic.
+                Destroy(_buriedRelicFound.gameObject);
+
+                // Reset relic found vars.
+                _isRelicFound = false;
+                _relicFound = null;
+                _buriedRelicFound = null;
+            }
+
+            // When no longer digging, set this to false.
+            _isDigging = false;
+        }
+    }
 
     /// <summary>
     /// Applies the knockout effect.
@@ -97,4 +213,6 @@ public class Player : IEffectable
     {
         Debug.Log("A Player was struck by lightning but the effect is not applied to the Player yet.");
     }
+
+    
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -86,9 +87,16 @@ public abstract class IEffectable: MonoBehaviour
     {
 
         // If the collision object has a Relic component on it, then the IEffectable has been hit by a Relic.
-        Relic relic;
-        if (collision.gameObject.TryGetComponent(out relic))
+        ThrownRelic thrownRelic;
+        if (collision.gameObject.TryGetComponent(out thrownRelic))
         {
+            Relic relic = thrownRelic.GetRelic();
+            if (relic == null)
+            {
+                Debug.LogError("A ThrownRelic hit an IEffectable but it did not have a Relic.");
+                return;
+            }
+
             // Apply the Effect.
             Action<string, Effect> effectAction;
 
@@ -97,7 +105,7 @@ public abstract class IEffectable: MonoBehaviour
             OnEffectReceived?.Invoke(relic.GetEffect());
             effectAction.Invoke(relic.GetEffectDetails(), relic.GetEffect());
 
-            Debug.Log(relic.GetEffect());
+            // Debug.Log(relic.GetEffect());
         }
     }
 

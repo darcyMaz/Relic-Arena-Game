@@ -4,29 +4,18 @@ public class BuriedRelic : MonoBehaviour
 {
     /// <summary>
     /// Distance at which those with Metal Detectors can pick up BuriedRelics.
+    /// I'd like to find a way to set static variable in the inspector.
     /// </summary>
-    private static float _closeDistance;
-    
-    /// <summary>
-    /// Ensures the initialization of this distance only happens once.
-    /// </summary>
-    private bool DistanceSetBool = false;
-
-    private void Awake()
-    {
-        if (!DistanceSetBool) 
-        {
-            InitDistance();
-            DistanceSetBool = true;
-        }
-    }
+    private static float _closeDistance = 0.25f;
 
     /// <summary>
-    /// Set the distance where the BuriedRelics beep vigorously and can be picked up.
+    /// Relic data associated with this BuriedRelic.
     /// </summary>
-    private void InitDistance()
+    [SerializeField] private RelicSO _relicSO;
+
+    public void SetRelicData(RelicSO relicSO)
     {
-        _closeDistance = 2;
+        _relicSO = relicSO;
     }
 
     /// <summary>
@@ -36,15 +25,28 @@ public class BuriedRelic : MonoBehaviour
     /// <param name="other"> Collider which is in this trigger. </param>
     private void OnTriggerStay(Collider other)
     {
-        // if other has a metal detector
-        //  if distance is near: soundmanager.NearRelic(sound)
-        //  if distance is right under: soundManager.OverRelic(sound)
-
         // If this component has a Metal Detector.
         MetalDetector metalDetector;
         if (other.TryGetComponent(out metalDetector))
         {
-            
+            // If the gameObject is within the "very close range"
+            if (Vector3.Distance(other.transform.position, transform.position) <= _closeDistance)
+            {
+                // Tell the SoundManager to play the Very Close Sound.
+                SoundManager.Instance.PlayMetalDetector(metalDetector.GetVeryCloseSound());
+
+                // Instantiate the relic object.
+                Relic relic = new Relic(_relicSO);
+
+                // Give the Relic to the metal detector, which the player listens to.
+                metalDetector.InvokeRelicVeryClose(relic, this);
+            }
+            // If the gameObject is within the trigger but not the "very close range"
+            else
+            {
+                // Tell the SoundManager to play the Near Sound.
+                SoundManager.Instance.PlayMetalDetector(metalDetector.GetCloseSound());
+            }
         }
     }
 }

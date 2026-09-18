@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Relic : MonoBehaviour
+public class Relic
 {
     [SerializeField] private RelicSO _relic;
 
