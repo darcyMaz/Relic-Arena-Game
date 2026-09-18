@@ -37,16 +37,6 @@ public class Player : IEffectable
         return PlayerNumber;
     }
 
-    private void RelicHitPlayer()
-    {
-        // When the player gets hit by an item.
-        // Need specification.
-        // Does the player lose all of their items?
-        // Lose (idk) 40% at random?
-
-        throw new NotImplementedException();
-    }
-
     /// <summary>
     /// The method holding all of the initializations that the Player component must do at the Start function. 
     /// </summary>
@@ -70,6 +60,24 @@ public class Player : IEffectable
             Debug.Log("Player #" + PlayerNumber + " does not have a Metal Detector component. The game will still work but the player will not be able to find items.");
         }
     }
+
+    /// <summary>
+    /// Accepts a Relic into the inventory.
+    /// </summary>
+    public void AcceptRelic(Relic relic)
+    {
+        _inventory.AddItem(relic);
+    }
+    /*
+    public void ConsumeRelic(Relic relic)
+    {
+
+    }
+    public void ConsumeRelicAt(int index)
+    {
+
+    }
+    */
 
     /// <summary>
     /// Applies the knockout effect.

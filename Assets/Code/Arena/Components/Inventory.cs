@@ -2,17 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class Inventory : MonoBehaviour, IEnumerable<Item>
+public class Inventory : MonoBehaviour, IEnumerable<Relic>
 {
 
     // A private list of Items.
-    private List<Item> _inventory = new List<Item>();
+    private List<Relic> _inventory = new List<Relic>();
 
     // An event that informs whoever is listening that the inventory has changed.
-    public event Action<IEnumerator<Item>> OnInventoryChange;
+    public event Action<IEnumerator<Relic>> OnInventoryChange;
 
     // Implement the IEnumerable class with these two functions.
-    public IEnumerator<Item> GetEnumerator()
+    public IEnumerator<Relic> GetEnumerator()
     {
         // Get the Enumeator from the inventory list.
         return _inventory.GetEnumerator();
@@ -24,13 +24,13 @@ public class Inventory : MonoBehaviour, IEnumerable<Item>
 
 
     // Methods that can change the inventory.
-    public void AddItem(Item newItem)
+    public void AddItem(Relic newItem)
     {
         _inventory.Add(newItem);
         // Invoke the event which informs others that the inventory has been changed.
         OnInventoryChange?.Invoke(GetEnumerator());
     }
-    public void RemoveItem(Item newItem)
+    public void RemoveItem(Relic newItem)
     {
         _inventory.Remove(newItem);
         OnInventoryChange?.Invoke(GetEnumerator());
