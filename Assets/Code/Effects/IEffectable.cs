@@ -14,8 +14,7 @@ public abstract class IEffectable: MonoBehaviour
     //              (2) have some functionality for receiving and losing effects and
     //              (3) implement each possible effect
 
-    public event Action <Effect> OnEffectReceived;
-    public event Action <Effect> OnEffectLost;
+    public event Action<List<Effect>> OnUpdatePassiveEffects;
     
     /// <summary>
     /// The Effects Dictionary, Effect enums are mapped to class methods that take a string as input.
@@ -101,8 +100,7 @@ public abstract class IEffectable: MonoBehaviour
             Action<string, Effect> effectAction;
 
             _effectsDict.TryGetValue(relic.GetEffect(), out effectAction);
-            // Inform listeners of the Effect starting.
-            OnEffectReceived?.Invoke(relic.GetEffect());
+
             effectAction.Invoke(relic.GetEffectDetails(), relic.GetEffect());
         }
     }
