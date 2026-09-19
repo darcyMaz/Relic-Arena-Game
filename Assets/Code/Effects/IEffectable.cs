@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -10,12 +9,16 @@ using UnityEngine;
 /// </summary>
 public abstract class IEffectable: MonoBehaviour
 {
-    // IEffectables (1) inform others that they have received or lost effects
-    //              (2) have some functionality for receiving and losing effects and
-    //              (3) implement each possible effect
+    /// <summary>
+    /// Event that announces the current list of Passive Effects.
+    /// </summary>
+    public event Action<List<Relic>> OnUpdateEffectRelics;
 
-    public event Action<List<Effect>> OnUpdatePassiveEffects;
-    
+    /// <summary>
+    /// List holding all passive effects attached to this IEffectable.
+    /// </summary>
+    protected List<Effect> _currentPassiveEffects = new List<Effect>();
+
     /// <summary>
     /// The Effects Dictionary, Effect enums are mapped to class methods that take a string as input.
     /// </summary>
@@ -25,15 +28,19 @@ public abstract class IEffectable: MonoBehaviour
     /// The Format Dictionary, Effect enums are mapped to strings representing the correct format for each Effect's details string.
     /// </summary>
     protected Dictionary<Effect, string> _formatDict = new Dictionary<Effect, string>();
+
+    /// <summary>
+    /// Method that runs on Awake. Initializations.
+    /// </summary>
     private void Awake()
     {
-        Init();
+        AwakeInit();
     }
 
     /// <summary>
     /// Initializing function. To be called in the Awake function.
     /// </summary>
-    private void Init()
+    private void AwakeInit()
     {
         InitEffectDict();
         InitFormatDict();
@@ -75,7 +82,6 @@ public abstract class IEffectable: MonoBehaviour
         _formatDict.TryAdd(Effect.DelayedLightning, "Integer representing milliseconds: 3000");
         _formatDict.TryAdd(Effect.Knockout, "float: 1.4");
         _formatDict.TryAdd(Effect.ChangeSpeed, "Non-negative float,non-negative float: 0.1,1.2");
-
     }
 
     /// <summary>
@@ -84,7 +90,6 @@ public abstract class IEffectable: MonoBehaviour
     /// <param name="collision"> The body colliding with the IEffectable. </param>
     private void OnTriggerEnter(Collider collision)
     {
-
         // If the collision object has a Relic component on it, then the IEffectable has been hit by a Relic.
         ThrownRelic thrownRelic;
         if (collision.gameObject.TryGetComponent(out thrownRelic))
@@ -106,13 +111,34 @@ public abstract class IEffectable: MonoBehaviour
     }
 
     /// <summary>
+    /// Method which invokes the OnUpdateEffectRelics.
+    /// This method invokes the event from implementing classes only.
+    /// </summary>
+    protected void InvokePassiveEffectEvent(List<Relic> effectRelics)
+    {
+        OnUpdateEffectRelics?.Invoke(effectRelics);
+    }
+    protected abstract void BuildEffectRelicList();
+    private void CheckPassiveEffects(List<Relic> effectRelics)
+    {
+        /*
+         * Use the effect dict somehow
+         * Activate or deactivate
+         * there can be a comparison between effectRelics and _currentActiveEffects
+         *      those missing were removed, those added were well... added
+         * ok so i don't have to handle activation or deactivation here
+         * in each implementing function, check whether the effect is in the passive list and do that check
+         * or whatever
+         */
+    }
+
+    /// <summary>
     /// Apply the DelayedLightning Effect. This Effect will mainly be handled by the Effect Manager.
     /// </summary>
     /// <param name="delay"> The delay before the lightning strikes. </param>
     /// <param name="currentEffect"> The DelayedLightning Effect. </param>
     private async void DelayedLightning(string delay, Effect currentEffect)
     {
-
         // Convert from string to float
         // Tell the effect manager to do this effect onto this IEffectable.
         try

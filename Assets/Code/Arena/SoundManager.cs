@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
+    /// <summary>
+    /// AudioSource to play audio.
+    /// </summary>
     [SerializeField] private AudioSource _audioSource;
+
     /// <summary>
     /// Singleton instance of Sound Manager.
     /// </summary>
@@ -31,10 +35,9 @@ public class SoundManager : MonoBehaviour
     private List<AudioClip> _ongoingMetalDetectors = new List<AudioClip>();
 
     /// <summary>
-    /// 
+    /// Plays metal detector noises.
     /// </summary>
-    /// <param name="audioClip"></param>
-    /// <param name="intensity"></param>
+    /// <param name="audioClip"> The audio clip to play. </param>
     public async void PlayMetalDetector(AudioClip audioClip)
     {
         // If this audio clip is not in the ongoingMetalDetector list, then it is not already playing.
@@ -48,13 +51,23 @@ public class SoundManager : MonoBehaviour
 
             // PLAY the audio clip.
             _audioSource.PlayOneShot(audioClip);
-        
-            // Debug.Log("Sound Manager tried to play Metal Detector noises but the Sound Management was not implemented: " + audioClip.name);
 
             await Task.Delay(audioClipDuration);
 
             _ongoingMetalDetectors.Remove(audioClip);
         }
-
     }
+
+    /**
+     * Todo:
+     * Make the metal detector noises a queue.
+     * So, PlayMetalDetector changes to QueueMetalDetector
+     * If that clip is in the queue, do nothing
+     * Else, Add it to the queue
+     * Every frame:
+     *      Check if something is currently playing
+     *      Check if something is in the queue
+     *      Play or don't play
+     * 
+     */
 }

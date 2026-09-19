@@ -121,6 +121,28 @@ public class Player : IEffectable
         _actions = new InputSystem_Actions();
     }
 
+    
+    /// <summary>
+    /// Build the EffectRelic list and call the function which invokes the OnUpdateEffectRelics
+    /// </summary>
+    protected override void BuildEffectRelicList()
+    {
+        List<Relic> effectRelics = new List<Relic>();
+
+        foreach (Relic relic in _inventory)
+        {
+            // If this relic has an effect.
+            if (relic.GetEffect() != Effect.None)
+            {
+                // Add it to the list.
+                effectRelics.Add(relic);
+            }
+        }
+
+        InvokePassiveEffectEvent(effectRelics);
+    }
+    
+
     /// <summary>
     /// Accepts a Relic into the inventory.
     /// Runs when _metalDetector invokes an event for proximity to relic and dig is pressed.
@@ -135,8 +157,6 @@ public class Player : IEffectable
             _buriedRelicFound = buriedRelic;
         }
     }
-    
-    
 
     /// <summary>
     /// Consume a relic. In other words delete it.

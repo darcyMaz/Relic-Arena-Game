@@ -4,64 +4,114 @@ using System;
 
 public class ArenaManager : MonoBehaviour
 {
+    /// <summary>
+    /// Event called when the number of buried relics is lower than the maximum.
+    /// </summary>
+    public event Action OnLackingBuriedRelics;
 
-    // the arena manager's first purpose is to spawn in RelicSOs at random and communicate their position for anyone to hear
-    // So the arena needs a coordinate system and access to the RelicSOs themselves
-    // I'll need to load in the RelicSOs from here or have a seperate class which does that and ArenaManager quickly grabs them.
+    /// <summary>
+    /// Rows in the arena grid. The grid represents where relics are buried.
+    /// </summary>
+    [SerializeField] private int GridRows = 10;
 
-    public event Action OnLackingBuriedRelicSOs;
+    /// <summary>
+    /// Columns in the arena grid. The grid represents where relics are buried.
+    /// </summary>
+    [SerializeField] private int GridColumns = 10;
 
-    private SpriteRenderer _spriteRenderer;
-    private bool _hasSR = false;
+    /// <summary>
+    /// All RelicSOs with no effect.
+    /// </summary>
+    private List<RelicSO> _relicSOs = new List<RelicSO>();
 
+    /// <summary>
+    /// All RelicSOs with an effect.
+    /// </summary>
+    private List<RelicSO> _relicSOsEffect = new List<RelicSO>();
 
-    // private EffectRelicSO[] _effectRelicSOs;
-    // private RelicSO[] _RelicSOs;
-    private List<RelicSO> _RelicSOs;
-
+    /// <summary>
+    /// Spawn rate of Relics with effects.
+    /// </summary>
     [SerializeField] private float EffectRelicSOSpawnRate = 0.1666f;
-    [SerializeField] private float RelicSOSpawnRate = 1;
 
-    [SerializeField] private int MaxRelicSOsBuried = 10;
-    private TwoDTree _RelicSOTree = new TwoDTree();
+    /// <summary>
+    /// Maximum number of Relics that can be buried at a time.
+    /// </summary>
+    [SerializeField] private int MaxRelicsBuried = 10;
 
+    /// <summary>
+    /// Buried relics in a dictionary mapping grid position to buried relics.
+    /// </summary>
+    private Dictionary<Vector2, BuriedRelic> _buriedRelics = new Dictionary<Vector2, BuriedRelic>();
 
+    /// <summary>
+    /// Prefab of a BuriedRelic.
+    /// </summary>
+    [SerializeField] private GameObject BuriedRelicPrefab;
+
+    /// <summary>
+    /// Function called before the game starts.
+    /// </summary>
     private void Awake()
     {
-        // TO DO: Make this a singleton.
+        InitAwake();
+    }
 
+    /// <summary>
+    /// Initialization in the Awake function.
+    /// </summary>
+    private void InitAwake()
+    {
+        GetRelicSOs();
+    }
 
-        // Load in all of the RelicSO scriptable objects.
-        // Load in all of the EffectRelicSO scriptable objects.
-
-        // EffectRelicSO[] effectRelicSOs = Resources.LoadAll<EffectRelicSO>("EffectRelicSOs");
+    /// <summary>
+    /// Get all RelicSOs from the resource folder.
+    /// </summary>
+    private void GetRelicSOs()
+    {
+        // Grab the RelicSOs from the resources folder.
         RelicSO[] RelicSOs = Resources.LoadAll<RelicSO>("RelicSOs");
 
+        // Organize them into Effect and No Effect lists.
         foreach (RelicSO RelicSO in RelicSOs)
         {
-
-        }
-
-        // __effectRelicSOs = new List<EffectRelicSO>(_effectRelicSOs);  // Error here!
-
-        // TO DO: Switching from the resources folder to addressables.
-
-        // Get values representing the bounds of the coordinate system for spawning RelicSOs.
-        if (TryGetComponent(out _spriteRenderer))
-        {
-            _hasSR = true;
-        }
-        else
-        {
-            Debug.Log("The ArenaManager could not find its Sprite Renderer.");
+            if (RelicSO.GetEffect() == Effect.None)
+            {
+                _relicSOs.Add(RelicSO);
+            }
+            else
+            {
+                _relicSOsEffect.Add(RelicSO);
+            }
         }
     }
 
-    // This is async as burying a RelicSO could take more than one frame. Maybe not.
-    private void Update()
+    /// <summary>
+    /// Instantiate a BuriedRelic, set its Relic to a randomly chosen one, and then bury it at a grid position.
+    /// </summary>
+    private void BuryRelicSO()
     {
-        
 
+    }
+
+    /// <summary>
+    /// Randomly select a RelicSO from the lists of RelicSOs.
+    /// </summary>
+    /// <returns> A RelicSO at random. </returns>
+    private RelicSO GetRandomRelicSO()
+    {
+        return null;
+    }
+
+    /// <summary>
+    /// Instantiate and return a BuriedRelic GameObject. 
+    /// </summary>
+    /// <param name="relicSO"> The RelicSO whose data will create the BuriedRelic. </param>
+    /// <returns> A GameObject of the BuriedRelic prefab. </returns>
+    private GameObject InstantiateBuriedRelic(RelicSO relicSO)
+    {
+        return null;
     }
 
     private void Start()
@@ -98,6 +148,7 @@ public class ArenaManager : MonoBehaviour
 
     }
 
+    /*
     private Vector2 GetRandomPosition()
     {
         // This function creates a random coordinate inside of the 2D arena.
@@ -107,13 +158,10 @@ public class ArenaManager : MonoBehaviour
 
         return new Vector2(randX, randY);
     }
+    */
 
 
-
-    private void BuryRelicSO(RelicSO RelicSOToBury)
-    {
-
-    }
+    
 
     
 
@@ -142,4 +190,5 @@ public class ArenaManager : MonoBehaviour
         }
     }
     */
+
 }
