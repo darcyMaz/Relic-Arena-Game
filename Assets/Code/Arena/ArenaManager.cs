@@ -1,21 +1,35 @@
-using UnityEngine;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
 
+
+/// <summary>
+/// A singleton class which manages the arena.
+/// To be precise, it spawns in buried relics for the players to find.
+/// </summary>
+[RequireComponent (typeof(Renderer))]
 public class ArenaManager : MonoBehaviour
 {
     /// <summary>
+    /// Boolean that determines whether relics will be buried or whether the game is done.
+    /// </summary>
+    [SerializeField] private bool IsGameActive = true;
+
+    /// <summary>
     /// Event called when the number of buried relics is lower than the maximum.
     /// </summary>
-    public event Action OnLackingBuriedRelics;
+    // public event Action OnLackingBuriedRelics;
 
     /// <summary>
     /// Rows in the arena grid. The grid represents where relics are buried.
+    /// Where the Row/X coordinate starts counting from the top at 1.
     /// </summary>
     [SerializeField] private int GridRows = 10;
 
     /// <summary>
     /// Columns in the arena grid. The grid represents where relics are buried.
+    /// Where the Column/Z coordinate starts counting from the left at 1.
     /// </summary>
     [SerializeField] private int GridColumns = 10;
 
@@ -32,7 +46,7 @@ public class ArenaManager : MonoBehaviour
     /// <summary>
     /// Spawn rate of Relics with effects.
     /// </summary>
-    [SerializeField] private float EffectRelicSOSpawnRate = 0.1666f;
+    [SerializeField] private float EffectRelicSOSpawnRate = 0.01f;
 
     /// <summary>
     /// Maximum number of Relics that can be buried at a time.
@@ -50,6 +64,16 @@ public class ArenaManager : MonoBehaviour
     [SerializeField] private GameObject BuriedRelicPrefab;
 
     /// <summary>
+    /// The arena's renderer. So that its size can be understood.
+    /// </summary>
+    private Renderer _renderer;
+
+    /// <summary>
+    /// The shop gameObject so that its size can be understood.
+    /// </summary>
+    [SerializeField] private GameObject _shop;
+
+    /// <summary>
     /// Function called before the game starts.
     /// </summary>
     private void Awake()
@@ -63,6 +87,17 @@ public class ArenaManager : MonoBehaviour
     private void InitAwake()
     {
         GetRelicSOs();
+        CheckArenaSize();
+        _renderer = GetComponent<Renderer>();
+    }
+
+    private void Update()
+    {
+        // Check whether the number of relics is too low.
+        if (_buriedRelics.Count < MaxRelicsBuried && IsGameActive)
+        {
+            BuryRelic();
+        }
     }
 
     /// <summary>
@@ -76,6 +111,8 @@ public class ArenaManager : MonoBehaviour
         // Organize them into Effect and No Effect lists.
         foreach (RelicSO RelicSO in RelicSOs)
         {
+            Debug.Log("RelicSO grabbed: " + RelicSO.GetName());
+
             if (RelicSO.GetEffect() == Effect.None)
             {
                 _relicSOs.Add(RelicSO);
@@ -88,11 +125,52 @@ public class ArenaManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Function that ensures the size of the arena in terms of where relics can be buried is not less than the Maximum Number of buried relics at a time.
+    /// </summary>
+    private void CheckArenaSize()
+    {
+        // If there are fewer spots for relics than the max number allowed, lower the number allowed to bury.
+        MaxRelicsBuried = (GridColumns * GridRows < MaxRelicsBuried) ? GridColumns * GridRows : MaxRelicsBuried;
+    }
+
+    /// <summary>
     /// Instantiate a BuriedRelic, set its Relic to a randomly chosen one, and then bury it at a grid position.
     /// </summary>
-    private void BuryRelicSO()
+    private void BuryRelic()
     {
+        // Generate a random coordinate position for the relic.
+        Vector2 randomCoord = GenerateCoords();
+        if (randomCoord.x == int.MinValue)
+        {
+            Debug.Log("The ArenaManager tried to bury a relic but there were no available arena coordinates to bury it in.");
+            return;
+        }
 
+        Debug.Log("Coord successfully generated: " + randomCoord);
+
+        // Translate the coordinates to a position in world space.
+        Vector3 relicPosition = CoordToPosition(randomCoord);
+
+        Debug.Log("World position of generated coord: " + (relicPosition+transform.position));
+
+        // Clone a new BuriedRelic and give it a random RelicSO.
+        GameObject buriedRelicClone = InstantiateBuriedRelic(GetRandomRelicSO(), relicPosition);
+
+        // Finally, add the BuriedRelic to the list.
+        AddBuriedRelicToList(buriedRelicClone, randomCoord);
+    }
+
+    private void AddBuriedRelicToList(GameObject goBuriedRelic, Vector2 coords)
+    {
+        BuriedRelic buriedRelic;
+        if (TryGetComponent(out buriedRelic))
+        {
+            _buriedRelics.Add(coords, buriedRelic);
+        }
+        else
+        {
+            Debug.Log("The ArenaManager tried to add a BuriedRelic to its respective dictionary. However, the cloned gameObject did not have the component.");
+        }
     }
 
     /// <summary>
@@ -101,94 +179,147 @@ public class ArenaManager : MonoBehaviour
     /// <returns> A RelicSO at random. </returns>
     private RelicSO GetRandomRelicSO()
     {
-        return null;
+        // Randomly enerate a float in the range from 0 to 1.
+        float rand = UnityEngine.Random.Range(0f, 1f);
+        int randIndex;
+
+        // If the float is higher than the effect relic spawn rate, return a normal relic.
+        if (rand > EffectRelicSOSpawnRate)
+        {
+            randIndex = UnityEngine.Random.Range(0, _relicSOs.Count);
+            return _relicSOs[randIndex];
+        }
+        // If the float is lower, return an effect relic.
+        else
+        {
+            randIndex = UnityEngine.Random.Range(0, _relicSOsEffect.Count);
+            return _relicSOsEffect[randIndex];
+        }
     }
 
     /// <summary>
     /// Instantiate and return a BuriedRelic GameObject. 
+    /// Set its relic data before returning it.
     /// </summary>
     /// <param name="relicSO"> The RelicSO whose data will create the BuriedRelic. </param>
     /// <returns> A GameObject of the BuriedRelic prefab. </returns>
-    private GameObject InstantiateBuriedRelic(RelicSO relicSO)
+    private GameObject InstantiateBuriedRelic(RelicSO relicSO, Vector3 position)
     {
-        return null;
-    }
+        // Instantiate the clone.
+        GameObject buriedRelicObj = Instantiate(BuriedRelicPrefab, position, Quaternion.identity);
 
-    private void Start()
-    {
-
-        /*
-        // TO-DO: Change this such that the code can use a maximum range to see if there are any RelicSOs nearby (so RelicSOs don't spawn in too close).
-        // I can use or create a comparator for this. Go through all other positions, O(n).
-        for (int RelicSOIndex = 0; RelicSOIndex < 10; RelicSOIndex++)
+        // Change the RelicSO data from the default to the input.
+        // Subscribe to its OnDestroy event.
+        BuriedRelic buriedRelic;
+        if (buriedRelicObj.TryGetComponent(out buriedRelic))
         {
-            int RelicSOAttempts = 0;
-            int maxRelicSOAttempts = 20;
-
-            // Bury 10 RelicSOs.
-            for (; RelicSOAttempts < maxRelicSOAttempts; RelicSOAttempts++)
-            {
-                // Check if we are randomly generating duplicates.
-                // 20 attempts, and if we somehow generate 20 duplicates attempting to bury 1 RelicSO, we'll throw an error.
-                Vector2 potentialRelicSOPosition = GetRandomPosition();
-                if (_RelicSOTree.Search( potentialRelicSOPosition ))
-                {
-                    continue;
-                }
-                break;
-            }
-            
-            if (maxRelicSOAttempts == 20)
-            {
-                Debug.LogError("The ArenaManager treid to bury a RelicSO but it generated duplicate coordinates (tried to bury a RelicSO on top of another) 20 times in a row. There is likely a flaw in the code logic.");
-            }
-
-        }
-        */
-
-    }
-
-    /*
-    private Vector2 GetRandomPosition()
-    {
-        // This function creates a random coordinate inside of the 2D arena.
-        // It finds a random x and y position by taking the x and y positions and adding/subtracting half of the scale to get a range.
-        float randX = UnityEngine.Random.Range(transform.position.x - (transform.localScale.x / 2), transform.position.x + (transform.localScale.x / 2));
-        float randY = UnityEngine.Random.Range(transform.position.y - (transform.localScale.y / 2), transform.position.y + (transform.localScale.y / 2));
-
-        return new Vector2(randX, randY);
-    }
-    */
-
-
-    
-
-    
-
-    /*
-    private RelicSO RandomlyChooseRelicSO()
-    {
-        // There is certainly a more concise way to do this random choice of Item type.
-        float randResult = UnityEngine.Random.Range(0,1);
-        if (randResult >= 0 && randResult < EffectRelicSOSpawnRate)
-        {
-            //return _effectRelicSOs[UnityEngine.Random.Range(0,_effectRelicSOs.Length)];
-        }
-        else if (randResult >= EffectRelicSOSpawnRate && randResult < RelicSOSpawnRate)
-        {
-            //return _RelicSOs[UnityEngine.Random.Range(0,_RelicSOs.Length)];
-        }
-        else if (randResult >= RelicSOSpawnRate || randResult <= 1)
-        {
-            Debug.Log("ArenaManager.BurRelicSO() tried to randomly choose what kind of Item to spawn, but the random number did not fit the code logic: " + randResult);
-            return null;
+            buriedRelic.OnBuriedRelicDugUp += RemoveRelic;
+            buriedRelic.SetRelicData(relicSO);
+            return buriedRelicObj;
         }
         else
         {
-            Debug.Log("ArenaManager.BurRelicSO() tried to randomly choose what kind of Item to spawn, but the random number did not fit the code logic: " + randResult);
-            return null;
+            throw new Exception("There was an attempt by the Arena Manager to bury a BuriedRelic but the prefab did not have the BuriedRelic component.");
         }
     }
-    */
 
+    /// <summary>
+    /// This function translate a vector2 representing a coordinate in the arena to an in-game position.
+    /// </summary>
+    /// <param name="coord"> The coordinate to translate. </param>
+    private Vector3 CoordToPosition(Vector2 coord)
+    {
+        // Get the center of the arena.
+        Vector3 center = transform.position;
+
+        // Get the size of the arena.
+        Vector3 size = _renderer.bounds.size;
+
+        // Build the position vector.
+        Vector3 position = new Vector3(GetXPosFromCoord((int)coord.x, size.x), 0, GetZPosFromCoord((int)coord.y, size.z));
+
+        Debug.Log("Local position of generated coord: " + position);
+
+        // Return the coordinate also adding the transform.position as the derived coordinate is a local position.
+        return position + transform.position;
+    }
+
+    /// <summary>
+    /// Return the local x position of the row coordinate.
+    /// </summary>
+    /// <param name="coord"> The x coordinate. </param>
+    /// <param name="xLength"> The vertical length of the arena. </param>
+    /// <returns></returns>
+    private float GetXPosFromCoord(int coord, float xLength)
+    {
+        float cut = xLength / (GridColumns + 1);
+
+        float topOfColumn = transform.localPosition.x + (xLength/2);
+
+        Debug.Log(topOfColumn - (cut * coord));
+        return topOfColumn - (cut * coord);
+    }
+
+    /// <summary>
+    /// Return the local z position of the grid coordinate.
+    /// </summary>
+    /// <param name="coord"> The z coordinate. </param>
+    /// <param name="zLength"> The horizontal length of the arena. </param>
+    /// <returns></returns>
+    private float GetZPosFromCoord(int coord, float zLength)
+    {
+        float cut = zLength / (GridRows + 1);
+
+        float leftOfRow = transform.localPosition.z + (zLength / 2);
+
+        Debug.Log(leftOfRow - (cut * coord));
+        return leftOfRow - (cut * coord);
+    }
+
+    /// <summary>
+    /// Get a set of arena coordinates that are not occupied by a BuriedRelic.
+    /// If the result is a Vector2 with the min integer value, then it means all coordinates are occupied.
+    /// </summary>
+    /// <returns> A Vector2 representing a coordinate in the arena. </returns>
+    private Vector2 GenerateCoords()
+    {
+        // Make a list of all coordinates which are not already occupied by BuriedRelics.
+        List<Vector2> allCoords = new List<Vector2>();
+        for (int i=1; i<GridRows+1; i++)
+        {
+            for (int j=1; j<GridColumns+1; j++)
+            {
+                if (!_buriedRelics.TryGetValue(new Vector2(i, j), out _))
+                {
+                    allCoords.Add(new Vector2(i, j));
+                }
+            }
+        }
+
+        if (allCoords.Count == 0)
+        {
+            return new Vector2(int.MinValue, int.MinValue);
+        }
+
+        // Randomly select one of those coordinates.
+        return allCoords[UnityEngine.Random.Range(0, allCoords.Count)];
+    }
+
+    /// <summary>
+    /// This function checks if a coordinate is inside of the shop.
+    /// </summary>
+    /// <returns></returns>
+    private bool IsCoordInShop()
+    {
+        // Access the shops transform
+        // compare the coordination's position to the range representing the shop's area
+        // return
+
+        return false;
+    }
+
+    private void RemoveRelic(Vector2 coords)
+    {
+        _buriedRelics.Remove(coords);
+    }
 }

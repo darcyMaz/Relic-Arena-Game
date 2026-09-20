@@ -1,7 +1,13 @@
+using System;
 using UnityEngine;
 
 public class BuriedRelic : MonoBehaviour
 {
+    /// <summary>
+    /// Event which fire when a BuriedRelic is unearthed.
+    /// </summary>
+    public event Action<Vector2> OnBuriedRelicDugUp;
+
     /// <summary>
     /// Distance at which those with Metal Detectors can pick up BuriedRelics.
     /// I'd like to find a way to set static variable in the inspector.
@@ -12,6 +18,11 @@ public class BuriedRelic : MonoBehaviour
     /// Relic data associated with this BuriedRelic.
     /// </summary>
     [SerializeField] private RelicSO _relicSO;
+
+    /// <summary>
+    /// The arena coordinates where this BuriedRelic is situated.
+    /// </summary>
+    private Vector2 BuriedRelicCoordinates = new Vector2();
 
     public void SetRelicData(RelicSO relicSO)
     {
@@ -48,5 +59,15 @@ public class BuriedRelic : MonoBehaviour
                 SoundManager.Instance.PlayMetalDetector(metalDetector.GetCloseSound());
             }
         }
+    }
+
+    public Vector2 GetArenaCoords()
+    {
+        return BuriedRelicCoordinates;
+    }
+
+    private void OnDestroy()
+    {
+        OnBuriedRelicDugUp?.Invoke(GetArenaCoords());
     }
 }
