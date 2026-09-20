@@ -10,7 +10,9 @@ public class BulletTemplate : MonoBehaviour
     /// The bullet's Rigidbody.
     /// </summary>
     [SerializeField] private Rigidbody2D _rb;
-
+    /// <summary>
+    /// Speed of the bullet.
+    /// </summary>
     [SerializeField] private float _speed = 20f;
 
     private void Awake()
