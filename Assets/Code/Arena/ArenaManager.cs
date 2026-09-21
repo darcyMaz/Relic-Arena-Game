@@ -144,12 +144,12 @@ public class ArenaManager : MonoBehaviour
             return;
         }
 
-        Debug.Log("Coord successfully generated: " + randomCoord);
+        ////Debug.Log("Coord successfully generated: " + randomCoord);
 
         // Translate the coordinates to a position in world space.
         Vector3 relicPosition = CoordToPosition(randomCoord);
 
-        Debug.Log("World position of generated coord: " + (relicPosition+transform.position));
+        //Debug.Log("World position of generated coord: " + (relicPosition+transform.position));
 
         // Clone a new BuriedRelic and give it a random RelicSO.
         GameObject buriedRelicClone = InstantiateBuriedRelic(GetRandomRelicSO(), relicPosition, randomCoord);
@@ -234,10 +234,12 @@ public class ArenaManager : MonoBehaviour
         // Get the size of the arena.
         Vector3 size = _renderer.bounds.size;
 
-        // Build the position vector.
-        Vector3 position = new Vector3(GetXPosFromCoord((int)coord.x, size.x), GetZPosFromCoord((int)coord.y, size.y) + 5, -5);
+        //Debug.Log("Renderer size: " + size);
 
-        Debug.Log("Local position of generated coord: " + position);
+        // Build the position vector.
+        Vector3 position = new Vector3(GetXPosFromCoord((int)coord.x, size.x), GetZPosFromCoord((int)coord.y, size.y), -5);
+
+        //Debug.Log("Local position of generated coord: " + position);
 
         // Return the coordinate also adding the transform.position as the derived coordinate is a local position.
         return position;
@@ -253,9 +255,9 @@ public class ArenaManager : MonoBehaviour
     {
         float cut = xLength / (GridColumns + 1);
 
-        float topOfColumn = transform.localPosition.x + (xLength/2);
+        float topOfColumn = transform.position.x + (xLength/2);
 
-        Debug.Log(topOfColumn - (cut * coord));
+        //Debug.Log(topOfColumn - (cut * coord));
         return topOfColumn - (cut * coord);
     }
 
@@ -269,9 +271,9 @@ public class ArenaManager : MonoBehaviour
     {
         float cut = zLength / (GridRows + 1);
 
-        float leftOfRow = transform.localPosition.z + (zLength / 2);
+        float leftOfRow = transform.position.y + (zLength / 2);
 
-        Debug.Log("GetZPos() ~ leftOfRow var: " + (leftOfRow - (cut * coord)) + " trans.locPos.z: " + transform.localPosition.z);
+        //Debug.Log("GetZPos() ~ leftOfRow var: " + (leftOfRow - (cut * coord)) + " trans.pos.y: " + transform.position.y);
         return leftOfRow - (cut * coord);
     }
 

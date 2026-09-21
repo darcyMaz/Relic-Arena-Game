@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// Reads and interprets movement input using the New Input System and a CharacterController.
 /// </summary>
-[RequireComponent (typeof(CharacterController))]
+// [RequireComponent (typeof(Rigidbody))]
 public class MovementInput : MonoBehaviour
 {
 
@@ -20,7 +20,12 @@ public class MovementInput : MonoBehaviour
     /// <summary>
     /// Character controller on this gameObject.
     /// </summary>
-    private CharacterController _characterController;
+    // private CharacterController _characterController;
+
+    /// <summary>
+    /// Rigidbody on the player. Used to move and for collisions.
+    /// </summary>
+    private Rigidbody _rigidbody;
 
     /// <summary>
     /// Movement speed.
@@ -119,7 +124,8 @@ public class MovementInput : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        _characterController.Move( (_gravity + _input) * Time.fixedDeltaTime);
+        // _characterController.Move( (_gravity + _input) * Time.fixedDeltaTime);
+        _rigidbody.linearVelocity = (_gravity + _input) * Time.fixedDeltaTime;
     }
 
     /// <summary>
@@ -135,6 +141,7 @@ public class MovementInput : MonoBehaviour
     /// </summary>
     private void ComponentsInit()
     {
-        _characterController = GetComponent<CharacterController>();
+        // _characterController = GetComponent<CharacterController>();
+        _rigidbody = GetComponent<Rigidbody>();
     }
 }

@@ -1322,7 +1322,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1878963810}
   - component: {fileID: 1878963807}
-  - component: {fileID: 1878963812}
+  - component: {fileID: 1878963815}
+  - component: {fileID: 1878963816}
   - component: {fileID: 1878963809}
   - component: {fileID: 1878963811}
   - component: {fileID: 1878963813}
@@ -1433,33 +1434,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6faf22b9e8e080a4bbf6bd98b7b4da16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovementInput
-  Speed: 8
+  Speed: 124
   GravityFloat: 0
---- !u!143 &1878963812
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1878963805}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 1
-  m_Radius: 0.2
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1878963813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1486,6 +1462,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3735aafef31146843aa16a17036ff847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Inventory
+--- !u!54 &1878963815
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1878963805}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 120
+  m_CollisionDetection: 1
+--- !u!65 &1878963816
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1878963805}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1889937690
 GameObject:
   m_ObjectHideFlags: 0
@@ -1601,7 +1625,7 @@ MonoBehaviour:
   GridRows: 10
   GridColumns: 10
   EffectRelicSOSpawnRate: 0.05
-  MaxRelicsBuried: 12
+  MaxRelicsBuried: 8
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
   _shop: {fileID: 0}
 --- !u!64 &1926875181
