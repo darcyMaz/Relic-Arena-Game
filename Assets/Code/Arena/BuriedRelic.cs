@@ -65,9 +65,14 @@ public class BuriedRelic : MonoBehaviour
     {
         return BuriedRelicCoordinates;
     }
+    public void SetArenaCoords(Vector2 coords)
+    {
+        BuriedRelicCoordinates = coords;
+    }
 
     private void OnDestroy()
     {
+        Debug.Log("BuriedRelic OnDestroy");
         OnBuriedRelicDugUp?.Invoke(GetArenaCoords());
     }
 }

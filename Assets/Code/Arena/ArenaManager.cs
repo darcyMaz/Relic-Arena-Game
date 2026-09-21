@@ -111,8 +111,6 @@ public class ArenaManager : MonoBehaviour
         // Organize them into Effect and No Effect lists.
         foreach (RelicSO RelicSO in RelicSOs)
         {
-            Debug.Log("RelicSO grabbed: " + RelicSO.GetName());
-
             if (RelicSO.GetEffect() == Effect.None)
             {
                 _relicSOs.Add(RelicSO);
@@ -154,7 +152,7 @@ public class ArenaManager : MonoBehaviour
         Debug.Log("World position of generated coord: " + (relicPosition+transform.position));
 
         // Clone a new BuriedRelic and give it a random RelicSO.
-        GameObject buriedRelicClone = InstantiateBuriedRelic(GetRandomRelicSO(), relicPosition);
+        GameObject buriedRelicClone = InstantiateBuriedRelic(GetRandomRelicSO(), relicPosition, randomCoord);
 
         // Finally, add the BuriedRelic to the list.
         AddBuriedRelicToList(buriedRelicClone, randomCoord);
@@ -163,7 +161,7 @@ public class ArenaManager : MonoBehaviour
     private void AddBuriedRelicToList(GameObject goBuriedRelic, Vector2 coords)
     {
         BuriedRelic buriedRelic;
-        if (TryGetComponent(out buriedRelic))
+        if (goBuriedRelic.TryGetComponent(out buriedRelic))
         {
             _buriedRelics.Add(coords, buriedRelic);
         }
@@ -203,7 +201,7 @@ public class ArenaManager : MonoBehaviour
     /// </summary>
     /// <param name="relicSO"> The RelicSO whose data will create the BuriedRelic. </param>
     /// <returns> A GameObject of the BuriedRelic prefab. </returns>
-    private GameObject InstantiateBuriedRelic(RelicSO relicSO, Vector3 position)
+    private GameObject InstantiateBuriedRelic(RelicSO relicSO, Vector3 position, Vector2 coords)
     {
         // Instantiate the clone.
         GameObject buriedRelicObj = Instantiate(BuriedRelicPrefab, position, Quaternion.identity);
@@ -215,6 +213,7 @@ public class ArenaManager : MonoBehaviour
         {
             buriedRelic.OnBuriedRelicDugUp += RemoveRelic;
             buriedRelic.SetRelicData(relicSO);
+            buriedRelic.SetArenaCoords(coords);
             return buriedRelicObj;
         }
         else
@@ -236,12 +235,12 @@ public class ArenaManager : MonoBehaviour
         Vector3 size = _renderer.bounds.size;
 
         // Build the position vector.
-        Vector3 position = new Vector3(GetXPosFromCoord((int)coord.x, size.x), 0, GetZPosFromCoord((int)coord.y, size.z));
+        Vector3 position = new Vector3(GetXPosFromCoord((int)coord.x, size.x), GetZPosFromCoord((int)coord.y, size.y) + 5, -5);
 
         Debug.Log("Local position of generated coord: " + position);
 
         // Return the coordinate also adding the transform.position as the derived coordinate is a local position.
-        return position + transform.position;
+        return position;
     }
 
     /// <summary>
@@ -272,7 +271,7 @@ public class ArenaManager : MonoBehaviour
 
         float leftOfRow = transform.localPosition.z + (zLength / 2);
 
-        Debug.Log(leftOfRow - (cut * coord));
+        Debug.Log("GetZPos() ~ leftOfRow var: " + (leftOfRow - (cut * coord)) + " trans.locPos.z: " + transform.localPosition.z);
         return leftOfRow - (cut * coord);
     }
 
