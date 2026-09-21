@@ -16,7 +16,7 @@ public class EffectsManager : MonoBehaviour
 
     private bool TestEffectLock = false;
 
-    private Dictionary<IEffectable, List<Effect>> _effectables = new Dictionary<IEffectable, List<Effect>>();  
+    // private Dictionary<IEffectable, List<Effect>> _effectables = new Dictionary<IEffectable, List<Effect>>();  
 
     /// <summary>
     /// The Awake function checks if the current object is the singleton.

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -35,16 +36,19 @@ public class Player : IEffectable
     /// <summary>
     /// Intizalize before start.
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         AwakeInit();
     }
 
     /// <summary>
     /// When this gameObject is Enabled.
     /// </summary>
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         // I AM AWARE that this is not a good way to do this.
         if (PlayerNumber == 1)
         {
@@ -66,16 +70,18 @@ public class Player : IEffectable
     /// <summary>
     /// When this gameObject is disabled.
     /// </summary>
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         _dig.Disable();
     }
 
     /// <summary>
     /// Initialize the components of the Player.
     /// </summary>
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         StartInit();
     }
 

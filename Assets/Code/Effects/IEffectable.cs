@@ -39,11 +39,36 @@ public abstract class IEffectable: MonoBehaviour
     protected Dictionary<Effect, string> _formatDict = new Dictionary<Effect, string>();
 
     /// <summary>
-    /// Method that runs on Awake. Initializations.
+    /// Method that runs on Awake.
     /// </summary>
-    private void Awake()
+    protected virtual void Awake()
     {
         AwakeInit();
+        Debug.Log("Awake in IEffectable");
+    }
+
+    /// <summary>
+    /// Method that runs on Enable.
+    /// </summary>
+    protected virtual void OnEnable()
+    {
+        Debug.Log("OnEnable(): IEffectable");
+        OnUpdateEffectRelics += CheckPassiveEffects;
+    }
+    /// <summary>
+    /// Method that runs on Disable.
+    /// </summary>
+    protected virtual void OnDisable()
+    {
+        OnUpdateEffectRelics -= CheckPassiveEffects;
+    }
+
+    /// <summary>
+    /// Method that runs at the Start of the game.
+    /// </summary>
+    protected virtual void Start()
+    {
+
     }
 
     /// <summary>
@@ -54,7 +79,6 @@ public abstract class IEffectable: MonoBehaviour
         InitCancellationDict();
         InitEffectDict();
         InitFormatDict();
-        OnUpdateEffectRelics += CheckPassiveEffects;
     }
 
     /// <summary>
@@ -100,6 +124,8 @@ public abstract class IEffectable: MonoBehaviour
     /// </summary>
     private void InitCancellationDict()
     {
+        Debug.Log("InitCancellationDict in IEffectable");
+
         // For each Effect, there must be a source for cancellation tokens.
         foreach (Effect effect in Enum.GetValues(typeof(Effect))) 
         {
@@ -153,6 +179,20 @@ public abstract class IEffectable: MonoBehaviour
     /// </summary>
     protected void InvokePassiveEffectEvent(List<Relic> effectRelics)
     {
+        Debug.Log("---");
+        Debug.Log("InvokePassiveEffectEvent() in IEffectable.");
+        foreach (Relic rel in effectRelics) { Debug.Log(rel.GetName() + " " + rel.GetEffect()); }
+        Debug.Log("---");
+
+        /*
+
+        for (int i=0; i< OnUpdateEffectRelics.GetInvocationList().Length; i++)
+        {
+            Debug.Log("invoc list for event: " + OnUpdateEffectRelics.GetInvocationList()[i]);
+        }
+
+        */
+
         OnUpdateEffectRelics?.Invoke(effectRelics);
     }
     protected abstract void BuildEffectRelicList();
@@ -163,6 +203,8 @@ public abstract class IEffectable: MonoBehaviour
     /// <param name="effectRelics"> The updated list of EffectRelics. </param>
     private void CheckPassiveEffects(List<Relic> effectRelics)
     {
+        Debug.Log("CheckPassiveEffects() in IEffectable");
+
         // Received as a parameter is a list of Relics, this part of the method prunes the list of any duplicate effects.
         // A list of Effects is created so that each relic does not need to compare itself to every other relic, just the effects that have already showed up.
         List<Relic> prunedEffectRelics = new List<Relic>();
@@ -170,6 +212,8 @@ public abstract class IEffectable: MonoBehaviour
 
         foreach (Relic relic in effectRelics) 
         {
+            Debug.Log(relic.GetEffect() + " " + relic.GetName());
+
             // If the currentPassiveEffects list does NOT contain the effect already, then add it to the list.
             if (!newPassiveEffects.Contains(relic.GetEffect()))
             {
@@ -225,6 +269,8 @@ public abstract class IEffectable: MonoBehaviour
         {
             _effectsDict.Remove(removeThis);
         }
+
+        Debug.Log("---");
     }
 
     /// <summary>
@@ -238,12 +284,11 @@ public abstract class IEffectable: MonoBehaviour
         // Tell the effect manager to do this effect onto this IEffectable.
         try
         {
-            //float delayFloat = float.Parse(delay);
             // Debug.Log("Delayed Lightning Effect not implemented in IEffectable. Requires EffectManager to exist.");
             int delayInt = int.Parse(delay);
 
-            // Need to make a task that listens for an effect being cancelled.
-            await Task.Delay(delayInt);
+            // Wait for the delay or cancel the delay and this func if the token hears about a cancel.
+            await Task.Delay(delayInt, token);
 
             // Strike lightning!
             EffectsManager.Instance.Lightning(transform.position);
