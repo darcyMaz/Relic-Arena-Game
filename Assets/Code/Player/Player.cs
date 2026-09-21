@@ -137,12 +137,20 @@ public class Player : IEffectable
 
         foreach (Relic relic in _inventory)
         {
+            // relic.GetPassiveEffects();
+            foreach (Effect passiveEffect in relic.GetPassiveEffects())
+            {
+                // if (relic.
+            }
+
+            /*
             // If this relic has an effect.
             if (relic.GetEffect() != Effect.None)
             {
                 // Add it to the list.
                 effectRelics.Add(relic);
             }
+            */
         }
 
         InvokePassiveEffectEvent(effectRelics);
@@ -223,25 +231,6 @@ public class Player : IEffectable
             // When no longer digging, set this to false.
             _isDigging = false;
         }
-    }
-
-    /// <summary>
-    /// Applies the knockout effect.
-    /// </summary>
-    /// <param name="knockoutTime"> Amount of time to be knocked out. </param>
-    protected override void ApplyKnockout(float knockoutTime)
-    {
-        Debug.Log("Knockout Effect not implemented onto the Player.");
-    }
-
-    /// <summary>
-    /// Apply a speed change for a certain duration.
-    /// </summary>
-    /// <param name="speed"> Change in speed as percentage. </param>
-    /// <param name="duration"> Length of speed change. </param>
-    protected override void ApplyChangeSpeed(float speed, float duration)
-    {
-        Debug.Log("ChangeSpeed Effect nto implemented by Player.");
     }
 
     /// <summary>

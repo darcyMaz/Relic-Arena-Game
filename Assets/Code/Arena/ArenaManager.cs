@@ -114,7 +114,10 @@ public class ArenaManager : MonoBehaviour
         // Organize them into Effect and No Effect lists.
         foreach (RelicSO RelicSO in RelicSOs)
         {
-            if (RelicSO.GetEffect() == Effect.None)
+            
+
+            /*
+            if (RelicSO.GetPassiveEffects() == 0)
             {
                 _relicSOs.Add(RelicSO);
             }
@@ -122,6 +125,8 @@ public class ArenaManager : MonoBehaviour
             {
                 _relicSOsEffect.Add(RelicSO);
             }
+             */
+
         }
     }
 

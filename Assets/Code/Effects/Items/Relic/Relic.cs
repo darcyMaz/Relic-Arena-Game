@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Relic
@@ -14,11 +16,26 @@ public class Relic
         CheckRelic();
         return _relic.GetName();
     }
+
+    /*
     public Effect GetEffect()
     {
         CheckRelic();
         return _relic.GetEffect();
     }
+    */
+
+    public Effect GetActiveEffect()
+    {
+        CheckRelic();
+        return _relic.GetActiveEffect();
+    }
+    public List<Effect> GetPassiveEffects()
+    {
+        CheckRelic();
+        return _relic.GetPassiveEffects();
+    }
+
     public float GetPrice()
     {
         CheckRelic();

@@ -44,7 +44,6 @@ public abstract class IEffectable: MonoBehaviour
     protected virtual void Awake()
     {
         AwakeInit();
-        Debug.Log("Awake in IEffectable");
     }
 
     /// <summary>
@@ -52,7 +51,6 @@ public abstract class IEffectable: MonoBehaviour
     /// </summary>
     protected virtual void OnEnable()
     {
-        Debug.Log("OnEnable(): IEffectable");
         OnUpdateEffectRelics += CheckPassiveEffects;
     }
     /// <summary>
@@ -88,11 +86,8 @@ public abstract class IEffectable: MonoBehaviour
     private void InitEffectDict()
     {
         // Add all Effects to the dictionary, where each Effect has a corresponding function.
-        _effectsDict.TryAdd(Effect.Test, this.EffectTest);
         _effectsDict.TryAdd(Effect.None, this.NoEffect);
         _effectsDict.TryAdd(Effect.DelayedLightning, this.DelayedLightning);
-        _effectsDict.TryAdd(Effect.Knockout, this.Knockout);
-        _effectsDict.TryAdd(Effect.ChangeSpeed, this.ChangeSpeed);
 
         // Then do a check at the end to see if the size of the dictionary matches up with the number of Effects.
         int EffectCount = Enum.GetNames(typeof(Effect)).Length;
@@ -112,11 +107,8 @@ public abstract class IEffectable: MonoBehaviour
     /// </summary>
     private void InitFormatDict()
     {
-        _formatDict.TryAdd(Effect.Test, "This is a test effect, there is no format.");
         _formatDict.TryAdd(Effect.None, "Empty String");
         _formatDict.TryAdd(Effect.DelayedLightning, "Integer representing milliseconds: 3000");
-        _formatDict.TryAdd(Effect.Knockout, "float: 1.4");
-        _formatDict.TryAdd(Effect.ChangeSpeed, "Non-negative float,non-negative float: 0.1,1.2");
     }
 
     /// <summary>
@@ -124,11 +116,11 @@ public abstract class IEffectable: MonoBehaviour
     /// </summary>
     private void InitCancellationDict()
     {
-        Debug.Log("InitCancellationDict in IEffectable");
-
         // For each Effect, there must be a source for cancellation tokens.
         foreach (Effect effect in Enum.GetValues(typeof(Effect))) 
         {
+            // CancellationTokenSource cts = new CancellationTokenSource();
+
             _effectsCancellationTokens.Add(effect, new CancellationTokenSource());
         }
     }
@@ -137,11 +129,11 @@ public abstract class IEffectable: MonoBehaviour
     /// The OnCollisionEnter method is where Effects start being applied to IEffectables.
     /// </summary>
     /// <param name="collision"> The body colliding with the IEffectable. </param>
-    private void OnTriggerEnter(Collider collision)
+    private void OnTriggerEnter(Collider other)
     {
         // If the collision object has a Relic component on it, then the IEffectable has been hit by a Relic.
         ThrownRelic thrownRelic;
-        if (collision.gameObject.TryGetComponent(out thrownRelic))
+        if (other.gameObject.TryGetComponent(out thrownRelic))
         {
             Relic relic = thrownRelic.GetRelic();
             if (relic == null)
@@ -150,7 +142,7 @@ public abstract class IEffectable: MonoBehaviour
                 return;
             }
 
-            RunEffectAction(relic.GetEffect(), relic.GetEffectDetails());
+            // RunEffectAction(relic.GetEffect(), relic.GetEffectDetails());
         }
     }
 
@@ -179,23 +171,14 @@ public abstract class IEffectable: MonoBehaviour
     /// </summary>
     protected void InvokePassiveEffectEvent(List<Relic> effectRelics)
     {
-        Debug.Log("---");
-        Debug.Log("InvokePassiveEffectEvent() in IEffectable.");
-        foreach (Relic rel in effectRelics) { Debug.Log(rel.GetName() + " " + rel.GetEffect()); }
-        Debug.Log("---");
-
-        /*
-
-        for (int i=0; i< OnUpdateEffectRelics.GetInvocationList().Length; i++)
-        {
-            Debug.Log("invoc list for event: " + OnUpdateEffectRelics.GetInvocationList()[i]);
-        }
-
-        */
-
         OnUpdateEffectRelics?.Invoke(effectRelics);
     }
+
+    /// <summary>
+    /// This method builds the effect relic list and then should call the function InvokePassiveEffectEvent();
+    /// </summary>
     protected abstract void BuildEffectRelicList();
+
     /// <summary>
     /// This function updates the current passive effects on the player.
     /// It runs async functions related to those passive effects, and cancels them when they are complete.
@@ -212,12 +195,12 @@ public abstract class IEffectable: MonoBehaviour
 
         foreach (Relic relic in effectRelics) 
         {
-            Debug.Log(relic.GetEffect() + " " + relic.GetName());
+            //Debug.Log(relic.GetEffect() + " " + relic.GetName());
 
             // If the currentPassiveEffects list does NOT contain the effect already, then add it to the list.
-            if (!newPassiveEffects.Contains(relic.GetEffect()))
+            //if (!newPassiveEffects.Contains(relic.GetEffect()))
             {
-                newPassiveEffects.Add(relic.GetEffect());
+                //newPassiveEffects.Add(relic.GetEffect());
                 prunedEffectRelics.Add(relic);
             }
         }
@@ -226,13 +209,13 @@ public abstract class IEffectable: MonoBehaviour
         foreach (Relic relic in prunedEffectRelics)
         {
             // If the passive effects dictionary does not have that effect, run that effects async function and get the cancellation token.
-            if (!_currentPassiveEffects.Contains(relic.GetEffect()))
+            //if (!_currentPassiveEffects.Contains(relic.GetEffect()))
             {
                 // Run the async func and get its cancellation token source.
                 // Debug.Log("A new passive effect would have been added. But the implementation is not complete: " + effect);
 
-                _currentPassiveEffects.Add(relic.GetEffect());
-                RunEffectAction(relic.GetEffect(), relic.GetEffectDetails());
+                //_currentPassiveEffects.Add(relic.GetEffect());
+                //RunEffectAction(relic.GetEffect(), relic.GetEffectDetails());
             }
         }
 
@@ -287,11 +270,18 @@ public abstract class IEffectable: MonoBehaviour
             // Debug.Log("Delayed Lightning Effect not implemented in IEffectable. Requires EffectManager to exist.");
             int delayInt = int.Parse(delay);
 
-            // Wait for the delay or cancel the delay and this func if the token hears about a cancel.
-            await Task.Delay(delayInt, token);
+            try
+            {
+                // Wait for the delay or upon cancellation, skip the lightning strike. 
+                await Task.Delay(delayInt, token);
 
-            // Strike lightning!
-            EffectsManager.Instance.Lightning(transform.position);
+                // Strike lightning!
+                EffectsManager.Instance.Lightning(transform.position);
+            }
+            catch (OperationCanceledException) { }
+
+            // Make sure this effect is removed from the list of current effects when finished.
+            _currentPassiveEffects.Remove(currentEffect);
         }
         catch (FormatException fe)
         {
@@ -300,55 +290,10 @@ public abstract class IEffectable: MonoBehaviour
     }
     protected abstract void ApplyLightning();
 
-    private void EffectTest(string test, Effect currentEffect, CancellationToken token)
-    {
-        // EffectsManager.Instance.EffectTest();
-    }
     private void NoEffect(string noEffect, Effect currentEffect, CancellationToken token)
     {
-        Debug.Log("The no effect effect has been called. Here's the associated details string: " + noEffect);
+        // Debug.Log("The no effect effect has been called. Here's the associated details string: " + noEffect);
     }
-
-    /// <summary>
-    /// Apply the Knockout Effect.
-    /// </summary>
-    /// <param name="knockoutTime"> The knockout time as a string to be reformatted. </param>
-    /// <param name="currentEffect"> The Knockout Effect. </param>
-    private void Knockout(string knockoutTime, Effect currentEffect, CancellationToken token)
-    {
-        try
-        {
-            float knockoutTimeFloat = float.Parse(knockoutTime);
-            ApplyKnockout(knockoutTimeFloat);
-        }
-        catch (FormatException fe)
-        {
-            LogFormatException(fe, currentEffect);
-        }
-    }
-    /// <summary>
-    /// Apply the Knockout Effect. This Effect requires an abstract method because this gameObject must implement the Knockout effect for itself, as opposed to other gameObjects affecting this.
-    /// </summary>
-    /// <param name="knockoutTime"> Time for which this body is knocked out. </param>
-    protected abstract void ApplyKnockout(float knockoutTime);
-
-    private void ChangeSpeed(string speedAndDuration, Effect currentEffect, CancellationToken token)
-    {
-        try
-        {
-            // This could cover more edge cases than just format exception.
-            string[] infoSplit = speedAndDuration.Split(',');
-            float speed = float.Parse(infoSplit[0]);
-            float duration = float.Parse(infoSplit[1]);
-            ApplyChangeSpeed(speed, duration);
-        }
-        catch (FormatException fe)
-        {
-            LogFormatException(fe, currentEffect);
-        }
-    }
-
-    protected abstract void ApplyChangeSpeed(float speed, float duration);
 
     /// <summary>
     /// This function logs the error for the case where the format of a Relic's details string is incorrect.

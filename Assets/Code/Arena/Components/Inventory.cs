@@ -39,5 +39,5 @@ public class Inventory : MonoBehaviour, IEnumerable<Relic>
     {
         _inventory.RemoveAt(index);
         OnInventoryChange?.Invoke(GetEnumerator());
-    } 
+    }
 }
