@@ -165,6 +165,7 @@ public class Player : IEffectable
     private void ConsumeRelic(Relic relic)
     {
         _inventory.RemoveItem(relic);
+        BuildEffectRelicList();
     }
     /// <summary>
     /// Consume a relic at an index. In other words delete it.
@@ -173,6 +174,7 @@ public class Player : IEffectable
     private void ConsumeRelicAt(int index)
     {
         _inventory.RemoveItemAt(index);
+        BuildEffectRelicList();
     }
 
     private async void Dig(InputAction.CallbackContext context)
@@ -196,6 +198,8 @@ public class Player : IEffectable
 
                 // Add it to the inventory.
                 _inventory.AddItem(_relicFound);
+                BuildEffectRelicList();
+
 
                 // Play found relic animation.
                 ////
@@ -208,10 +212,6 @@ public class Player : IEffectable
                 _relicFound = null;
                 _buriedRelicFound = null;
 
-                foreach (var item in _inventory)
-                {
-                    item.GetName();
-                }
             }
 
             // When no longer digging, set this to false.

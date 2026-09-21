@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -15,9 +16,9 @@ public abstract class IEffectable: MonoBehaviour
     public event Action<List<Relic>> OnUpdateEffectRelics;
 
     /// <summary>
-    /// List holding all passive effects attached to this IEffectable.
+    /// Dictionary holding all passive effects currently on this IEffectable, mappes to their cancellation token.
     /// </summary>
-    protected List<Effect> _currentPassiveEffects = new List<Effect>();
+    protected Dictionary<Effect, CancellationToken> _currentPassiveEffects = new Dictionary<Effect, CancellationToken>();
 
     /// <summary>
     /// The Effects Dictionary, Effect enums are mapped to class methods that take a string as input.
@@ -44,6 +45,7 @@ public abstract class IEffectable: MonoBehaviour
     {
         InitEffectDict();
         InitFormatDict();
+        OnUpdateEffectRelics += CheckPassiveEffects;
     }
 
     /// <summary>
@@ -130,6 +132,20 @@ public abstract class IEffectable: MonoBehaviour
          * in each implementing function, check whether the effect is in the passive list and do that check
          * or whatever
          */
+
+        // What I want:
+        //     - Here, we get an updated list of effectRelics
+        //     - So, if that effect is already running, do nothing.
+        //     - If that effect was running, then stop it.
+        //     - If that effect was not running, start it.
+
+        foreach (Relic effectRelic in  effectRelics)
+        {
+            // Compare this list to the effects dictionary
+            // If it's not there, add it and run the async func. Make sure to add the cancellation token to the dictionary
+            // If it's there already, do nothing
+            // Also have to check if anything's removed... annoying
+        }
     }
 
     /// <summary>

@@ -91,6 +91,9 @@ public class ArenaManager : MonoBehaviour
         _renderer = GetComponent<Renderer>();
     }
 
+    /// <summary>
+    /// Runs every frame. It checks to see whether relics need to be buried.
+    /// </summary>
     private void Update()
     {
         // Check whether the number of relics is too low.
