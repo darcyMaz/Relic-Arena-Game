@@ -72,7 +72,6 @@ public class BuriedRelic : MonoBehaviour
 
     private void OnDestroy()
     {
-        Debug.Log("BuriedRelic OnDestroy");
         OnBuriedRelicDugUp?.Invoke(GetArenaCoords());
     }
 }
