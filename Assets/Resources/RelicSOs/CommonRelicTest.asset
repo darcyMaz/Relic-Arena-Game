@@ -15,8 +15,8 @@ MonoBehaviour:
   Name: Coin
   Sprite: {fileID: 0}
   Price: 50
-  Effect: 0
-  EffectDetails: 
-  PassiveEffects: 
-  PassiveEffectsDetails: []
   ActiveEffect: 0
+  ActiveEffectDetails: 
+  PassiveEffects: 00000000
+  PassiveEffectsDetails:
+  - 

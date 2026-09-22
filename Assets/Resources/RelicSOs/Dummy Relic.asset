@@ -15,5 +15,8 @@ MonoBehaviour:
   Name: Inert Relic
   Sprite: {fileID: 0}
   Price: 1
-  Effect: 0
-  EffectDetails: 
+  ActiveEffect: 0
+  ActiveEffectDetails: 
+  PassiveEffects: 00000000
+  PassiveEffectsDetails:
+  - 

@@ -251,5 +251,13 @@ public class Player : IEffectable
         Debug.Log("A Player was struck by lightning but the effect is not applied to the Player yet.");
     }
 
-    
+    protected override void ApplyFog()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void ApplyExtraLife()
+    {
+        throw new NotImplementedException();
+    }
 }
