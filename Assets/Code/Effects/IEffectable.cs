@@ -4,6 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
+// Note on compressing this class:
+//      The formatDict could be changed to lambda funcs
+//      A function called EffectFunc() could have most of what's in the Effect funcs already made and then make smaller funcs for each effect
+
 /// <summary>
 /// Abstract class where those implementing it become Effectable.
 /// They may receive Effects, for which there are in-game consequences attached.
@@ -92,6 +96,7 @@ public abstract class IEffectable: MonoBehaviour
         _effectsDict.TryAdd(Effect.None, this.NoEffect);
         _effectsDict.TryAdd(Effect.DelayedLightning, this.DelayedLightning);
         _effectsDict.TryAdd(Effect.Fog, this.Fog);
+        _effectsDict.TryAdd(Effect.ExtraLives, this.ExtraLives);
 
         // Then do a check at the end to see if the size of the dictionary matches up with the number of Effects.
         int EffectCount = Enum.GetNames(typeof(Effect)).Length;
@@ -108,12 +113,14 @@ public abstract class IEffectable: MonoBehaviour
     /// <summary>
     /// Initialize the format dictionary.
     /// The Format Dictionary has as keys Effect enums, and as values the expected format of the details string.
+    /// This could be changed to take in lamba functions instead of string explainers.
     /// </summary>
     private void InitFormatDict()
     {
         _formatDict.TryAdd(Effect.None, "Empty String");
         _formatDict.TryAdd(Effect.DelayedLightning, "Integer representing milliseconds: 3000");
         _formatDict.TryAdd(Effect.Fog, "Integer representing milliseconds: 3000");
+        _formatDict.TryAdd(Effect.ExtraLives, "Integer representing the number of extra lives: 3");
     }
 
     /// <summary>
@@ -185,6 +192,7 @@ public abstract class IEffectable: MonoBehaviour
 
     /// <summary>
     /// This function updates the current passive effects on the player.
+    /// It receives a list of Relics whose passive effects are read and applied.
     /// It runs async functions related to those passive effects.
     /// </summary>
     /// <param name="effectRelics"> The updated list of EffectRelics. </param>
@@ -288,6 +296,7 @@ public abstract class IEffectable: MonoBehaviour
 
                 // Strike lightning!
                 EffectsManager.Instance.Lightning(transform.position);
+                ApplyLightning();
             }
             catch (OperationCanceledException) 
             {
@@ -297,7 +306,6 @@ public abstract class IEffectable: MonoBehaviour
             // Make sure this effect is removed from the list of current effects when finished.
             _currentPassiveEffects.Remove(currentEffect);
             OnRelicConsumed?.Invoke(thisRelic);
-
         }
         catch (FormatException fe)
         {
@@ -315,7 +323,7 @@ public abstract class IEffectable: MonoBehaviour
     /// <param name="thisRelic"> The Relic this effect comes from. </param>
     /// <param name="token"> The cancellation token for this async function. </param>
     /// <exception cref="NotImplementedException"></exception>
-    private void Fog(string details, Effect effect, Relic thisRelic, CancellationToken token)
+    private async void Fog(string details, Effect effect, Relic thisRelic, CancellationToken token)
     {
         // ask the effectmanager for a clone of the fog prefab
         // place it at transform.position + z pos
@@ -335,21 +343,50 @@ public abstract class IEffectable: MonoBehaviour
     /// <param name="effect"> The Effect itself. </param>
     /// <param name="thisRelic"> The Relic this effect comes from. </param>
     /// <param name="token"> The cancellation token for this async function. </param>
-    private void ExtraLife(string details, Effect effect, Relic thisRelic, CancellationToken token)
+    private async void ExtraLives(string details, Effect currentEffect, Relic thisRelic, CancellationToken token)
     {
-        // the extra life effect wouldn't actually do much
-        // it would need to wait until..
-        // interesting conundrum: if applyfog ends before extralife, how does extralife get cancelled?
-        // ok no it'll work
-        // because! removing a relic calls the check for passive effects
-        // and that check will lead to extralife being cancelled.
+        // Ensure the format is correct for this effect.
+        try
+        {
+            int extraLives = int.Parse(details);
+
+            try
+            {
+                ApplyExtraLives(extraLives);
+                await Task.Delay(Timeout.Infinite, token);
+            }
+            catch (OperationCanceledException)
+            {
+                CancelExtraLives();
+            }
+
+            _currentPassiveEffects.Remove(currentEffect);
+            OnRelicConsumed?.Invoke(thisRelic);
+        }
+        catch (FormatException fe)
+        {
+            _currentPassiveEffects.Remove(currentEffect);
+            LogFormatException(fe, currentEffect);
+        }
     }
     /// <summary>
     /// Method which applies custom aspects of the ExtraLife effect to each implementation.
     /// </summary>
-    protected abstract void ApplyExtraLife();
+    protected abstract void ApplyExtraLives(int extraLives);
 
-    private void NoEffect(string noEffect, Effect currentEffect, Relic thisRelic, CancellationToken token)
+    /// <summary>
+    /// 
+    /// </summary>
+    protected abstract void CancelExtraLives();
+
+    /// <summary>
+    /// A function which runs when the None Effect runs. It does nothing.
+    /// </summary>
+    /// <param name="details"> The string details for this Effect. </param>
+    /// <param name="effect"> The Effect itself. </param>
+    /// <param name="thisRelic"> The Relic this effect comes from. </param>
+    /// <param name="token"> The cancellation token for this async function. </param>
+    private async void NoEffect(string noEffect, Effect currentEffect, Relic thisRelic, CancellationToken token)
     {
         // Debug.Log("The no effect effect has been called. Here's the associated details string: " + noEffect);
     }

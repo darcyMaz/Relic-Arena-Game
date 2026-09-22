@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,6 +16,9 @@ public class Player : IEffectable
     /// The Player's Inventory.
     /// </summary>
     private Inventory _inventory;
+    /// <summary>
+    /// Bool var which says whether this player has an inventory.
+    /// </summary>
     private bool _hasInventory = false;
     
     /// <summary>
@@ -28,30 +30,92 @@ public class Player : IEffectable
     private InputSystem_Actions _actions;
     private InputAction _dig;
 
+    /// <summary>
+    /// Bool variable that is true when the player is digging.
+    /// </summary>
     private bool _isDigging = false;
+    /// <summary>
+    /// Bool variable that is true when a relic has been found. Used for the digging mechanic.
+    /// </summary>
     private bool _isRelicFound = false;
+    /// <summary>
+    /// BuriedRelic variable used to store buried relics that have just been found. Used for the digging mechanic. This variable will be null nearly all the time.
+    /// </summary>
     private BuriedRelic _buriedRelicFound;
+    /// <summary>
+    /// Relic variable used to store relics that have just been found. Used for the digging mechanic. This variable will be null nearly all the time.
+    /// </summary>
     private Relic _relicFound;
 
     /// <summary>
-    /// Intizalize before start.
+    /// Int variable which indicates the number of extra lives the player has.
+    /// </summary>
+    private int _extraLives = 0;
+    private Relic _currentExtraLifeRelic;
+
+    /// <summary>
+    /// Method which runs on awake.
     /// </summary>
     protected override void Awake()
     {
-        base.Awake();
         AwakeInit();
     }
 
     /// <summary>
-    /// When this gameObject is Enabled.
+    /// Runs when this gameObject is Enabled.
     /// </summary>
     protected override void OnEnable()
     {
+        OnEnableInit();
+    }
+
+    /// <summary>
+    /// When this gameObject is disabled.
+    /// </summary>
+    protected override void OnDisable()
+    {
+        OnDisableInit();
+    }
+
+    /// <summary>
+    /// Method which runs on Start.
+    /// </summary>
+    protected override void Start()
+    {
+        StartInit();
+    }
+
+    /// <summary>
+    /// Method holding initializations for the Awake function.
+    /// </summary>
+    private void AwakeInit()
+    {
+        base.Awake();
+        _actions = new InputSystem_Actions();
+    }
+
+    /// <summary>
+    /// Initializations for the OnEnable function.
+    /// </summary>
+    private void OnEnableInit()
+    {
+        // Subscribe to the OnRelicConsumed event.
         OnRelicConsumed += ConsumeRelic;
 
+        // Run the IEffectable OnEnable().
         base.OnEnable();
 
+        // Initialize the input system.
+        DigInit();
+    }
+
+    /// <summary>
+    /// Initialize the digging mechanic.
+    /// </summary>
+    private void DigInit()
+    {
         // I AM AWARE that this is not a good way to do this.
+        // Depending on the player number, grab the correct input map.
         if (PlayerNumber == 1)
         {
             _dig = _actions.Player1.Interact;
@@ -65,35 +129,18 @@ public class Player : IEffectable
             _dig = _actions.Player.Interact;
         }
 
+        // Initialize the dig mechanic.
         _dig.performed += Dig;
         _dig.Enable();
     }
 
     /// <summary>
-    /// When this gameObject is disabled.
+    /// Initializations for the OnDisable function.
     /// </summary>
-    protected override void OnDisable()
+    private void OnDisableInit()
     {
         base.OnDisable();
         _dig.Disable();
-    }
-
-    /// <summary>
-    /// Initialize the components of the Player.
-    /// </summary>
-    protected override void Start()
-    {
-        base.Start();
-        StartInit();
-    }
-
-    /// <summary>
-    /// Get this Player's number.
-    /// </summary>
-    /// <returns> The Player's number as an integer. </returns>
-    public int GetPlayerNumber()
-    {
-        return PlayerNumber;
     }
 
     /// <summary>
@@ -101,6 +148,9 @@ public class Player : IEffectable
     /// </summary>
     private void StartInit()
     {
+        // Call the IEffectable Start function.
+        base.Start();
+
         // The Player has many components, try to find them and get them.
         if (TryGetComponent(out _inventory))
         {
@@ -122,14 +172,14 @@ public class Player : IEffectable
     }
 
     /// <summary>
-    /// Method holding initializations for the Awake function.
+    /// Get this Player's number.
     /// </summary>
-    private void AwakeInit()
+    /// <returns> The Player's number as an integer. </returns>
+    public int GetPlayerNumber()
     {
-        _actions = new InputSystem_Actions();
+        return PlayerNumber;
     }
 
-    
     /// <summary>
     /// Build the EffectRelic list and call the function which invokes the OnUpdateEffectRelics
     /// </summary>
@@ -166,7 +216,6 @@ public class Player : IEffectable
         InvokePassiveEffectEvent(effectRelics);
     }
     
-
     /// <summary>
     /// Accepts a Relic into the inventory.
     /// Runs when _metalDetector invokes an event for proximity to relic and dig is pressed.
@@ -200,6 +249,20 @@ public class Player : IEffectable
         _inventory.RemoveItemAt(index);
         BuildEffectRelicList();
     }
+
+
+    private void PlayerHit()
+    {
+        // if extra lives is greater than 1, then subtract and tank hit
+        // if extra lives is 1, then subtract, destroy relic, and then tank hit
+        // if extra lives is less than 1, set it to 0, and accept a hit
+        
+        if (_extraLives > 1)
+        {
+
+        }
+    }
+    
 
     private async void Dig(InputAction.CallbackContext context)
     {
@@ -256,7 +319,12 @@ public class Player : IEffectable
         throw new NotImplementedException();
     }
 
-    protected override void ApplyExtraLife()
+    protected override void ApplyExtraLives(int extraLives)
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void CancelExtraLives()
     {
         throw new NotImplementedException();
     }
