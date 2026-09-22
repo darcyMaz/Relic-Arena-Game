@@ -114,19 +114,25 @@ public class ArenaManager : MonoBehaviour
         // Organize them into Effect and No Effect lists.
         foreach (RelicSO RelicSO in RelicSOs)
         {
-            
-
-            /*
-            if (RelicSO.GetPassiveEffects() == 0)
+            // If this relic has at least one Effect that is not the None effect.
+            int notNoneEffectCount = 0;
+            foreach (Effect effect in RelicSO.GetPassiveEffects())
             {
-                _relicSOs.Add(RelicSO);
+                if (effect != Effect.None)
+                {
+                    notNoneEffectCount++;
+                }
             }
-            else
+
+            //  das  
+            if (notNoneEffectCount > 0)
             {
                 _relicSOsEffect.Add(RelicSO);
             }
-             */
-
+            else
+            {
+                _relicSOs.Add(RelicSO);
+            }
         }
     }
 

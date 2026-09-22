@@ -10,9 +10,9 @@ public class RelicSO : ItemSO
     [SerializeField] private float Price;
 
     /// <summary>
-    /// The effect that this relic has (deprecated soon).
+    /// The active effect attached to this relic.
     /// </summary>
-    [SerializeField] private Effect Effect;
+    [SerializeField] private Effect ActiveEffect;
 
     /// <summary>
     /// The details of the active effect.
@@ -28,11 +28,6 @@ public class RelicSO : ItemSO
     /// Details of the passive effects on this relic.
     /// </summary>
     [SerializeField] private List<string> PassiveEffectsDetails = new List<string>();
-
-    /// <summary>
-    /// The active effect attached to this relic.
-    /// </summary>
-    [SerializeField] private Effect ActiveEffect;
 
     public float GetPrice()
     {

@@ -1,10 +1,8 @@
-using NUnit.Framework.Internal;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.XR;
 
 /// <summary>
 /// Abstract class where those implementing it become Effectable.
@@ -18,6 +16,11 @@ public abstract class IEffectable: MonoBehaviour
     public event Action<List<Relic>> OnUpdateEffectRelics;
 
     /// <summary>
+    /// Event that announces when a Relic has been destroyed due to an Effect.
+    /// </summary>
+    public event Action<Relic> OnRelicConsumed;
+
+    /// <summary>
     /// Dictionary holding all passive effects currently on this IEffectable, mappes to their cancellation token.
     /// </summary>
     protected List<Effect> _currentPassiveEffects = new List<Effect>();
@@ -25,7 +28,7 @@ public abstract class IEffectable: MonoBehaviour
     /// <summary>
     /// The Effects Dictionary, Effect enums are mapped to class methods that take a string as input.
     /// </summary>
-    protected Dictionary<Effect, Action<string, Effect, CancellationToken>> _effectsDict = new Dictionary<Effect, Action<string, Effect, CancellationToken>>();
+    protected Dictionary<Effect, Action<string, Effect, Relic, CancellationToken>> _effectsDict = new Dictionary<Effect, Action<string, Effect, Relic, CancellationToken>>();
 
     /// <summary>
     /// The cancellation tokens tied to each effect.
@@ -88,6 +91,7 @@ public abstract class IEffectable: MonoBehaviour
         // Add all Effects to the dictionary, where each Effect has a corresponding function.
         _effectsDict.TryAdd(Effect.None, this.NoEffect);
         _effectsDict.TryAdd(Effect.DelayedLightning, this.DelayedLightning);
+        _effectsDict.TryAdd(Effect.Fog, this.Fog);
 
         // Then do a check at the end to see if the size of the dictionary matches up with the number of Effects.
         int EffectCount = Enum.GetNames(typeof(Effect)).Length;
@@ -101,6 +105,11 @@ public abstract class IEffectable: MonoBehaviour
         }
     }
 
+    private void Fog(string details, Effect effect, Relic thisRelic, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
     /// <summary>
     /// Initialize the format dictionary.
     /// The Format Dictionary has as keys Effect enums, and as values the expected format of the details string.
@@ -109,6 +118,7 @@ public abstract class IEffectable: MonoBehaviour
     {
         _formatDict.TryAdd(Effect.None, "Empty String");
         _formatDict.TryAdd(Effect.DelayedLightning, "Integer representing milliseconds: 3000");
+        _formatDict.TryAdd(Effect.Fog, "Integer representing milliseconds: 3000");
     }
 
     /// <summary>
@@ -119,8 +129,6 @@ public abstract class IEffectable: MonoBehaviour
         // For each Effect, there must be a source for cancellation tokens.
         foreach (Effect effect in Enum.GetValues(typeof(Effect))) 
         {
-            // CancellationTokenSource cts = new CancellationTokenSource();
-
             _effectsCancellationTokens.Add(effect, new CancellationTokenSource());
         }
     }
@@ -143,22 +151,22 @@ public abstract class IEffectable: MonoBehaviour
                 return;
             }
 
-            RunEffectAction(relic.GetActiveEffect(), relic.GetActiveEffectDetails());
+            RunEffectAction(relic.GetActiveEffect(), relic.GetActiveEffectDetails(), relic);
         }
     }
 
-    private void RunEffectAction(Effect effect, string effectDetails)
+    private void RunEffectAction(Effect effect, string effectDetails, Relic relic)
     {
         // Try to get a cancellation token source for the effect at hand.
         CancellationTokenSource cancellationTokenSource;
         // Try to get the effect function for the effect at hand.
-        Action<string, Effect, CancellationToken> effectAction;
+        Action<string, Effect, Relic, CancellationToken> effectAction;
 
         // If either of these things are not found, then do not invoke the repsective function.
         if (_effectsCancellationTokens.TryGetValue(effect, out cancellationTokenSource) && _effectsDict.TryGetValue(effect, out effectAction))
         {
             // Apply the effect.
-            effectAction.Invoke(effectDetails, effect, cancellationTokenSource.Token);
+            effectAction.Invoke(effectDetails, effect, relic, cancellationTokenSource.Token);
         }
         else
         {
@@ -189,13 +197,26 @@ public abstract class IEffectable: MonoBehaviour
     {
         Debug.Log("CheckPassiveEffects() in IEffectable");
 
+        Debug.Log("\tCurrentPassiveEffects: ");
+        foreach (Effect effect in _currentPassiveEffects)
+        {
+            Debug.Log("\t\t" + effect);
+        }
+
         // Build this list which gathers every unique effect in the effectRelics list.
         // This will be useful when checking which effects to remove.
         List<Effect> uniqueEffects = new List<Effect>();
 
+        // effectrelics is sending in all the effect relics
+        // oooooh
+        // i get it
+        // the end of a passive effect should remove an item from the inventory!!! eureka!
+        // ok... shit how do I do that
+
         // Go through each relic and add new effects to the _currentPassiveEffects list.
         foreach (Relic relic in effectRelics)
         {
+
             // Go through each Effect in this particular relic and see if any of them are not already active.
             foreach (Effect effectKey in relic.GetPassiveEffects().Keys)
             {
@@ -217,7 +238,10 @@ public abstract class IEffectable: MonoBehaviour
                         // Add the effect.
                         _currentPassiveEffects.Add(effectKey);
                         // Run the effect action.
-                        RunEffectAction(effectKey, effectDetails);
+
+                        Debug.Log("\tRunEffectAction call.");
+
+                        RunEffectAction(effectKey, effectDetails, relic);
                     }
                     else
                     {
@@ -227,11 +251,15 @@ public abstract class IEffectable: MonoBehaviour
             } 
         }
 
+
+        Debug.Log("\tRemoval Check:");
         // This foreach loop will remove effects from the _effectsDict dictionary if they no longer appear on the new effectsList.
         // The removal cannot be dynamic, so we'll add them to the list which will then be used for removal.
         List<Effect> nonDynamicRemoval = new List<Effect>();
         foreach (Effect passiveEffect in _currentPassiveEffects)
         {
+            Debug.Log("\t\t" + passiveEffect);
+            Debug.Log("\t\t" + !uniqueEffects.Contains(passiveEffect));
             if (!uniqueEffects.Contains(passiveEffect))
             {
                 // Queue it for removal from the dictionary.
@@ -254,11 +282,15 @@ public abstract class IEffectable: MonoBehaviour
             }
         }
 
+        Debug.Log("\tEffects to remove");
         // Remove these effects from the _effectsDict dictionary.
         foreach (Effect removeThis in nonDynamicRemoval)
         {
-            _effectsDict.Remove(removeThis);
+            Debug.Log("\t\tEffect to remove: " + removeThis);
+            _currentPassiveEffects.Remove(removeThis);
         }
+
+
 
         Debug.Log("---");
     }
@@ -268,7 +300,7 @@ public abstract class IEffectable: MonoBehaviour
     /// </summary>
     /// <param name="delay"> The delay before the lightning strikes. </param>
     /// <param name="currentEffect"> The DelayedLightning Effect. </param>
-    private async void DelayedLightning(string delay, Effect currentEffect, CancellationToken token)
+    private async void DelayedLightning(string delay, Effect currentEffect, Relic thisRelic, CancellationToken token)
     {
         // Convert from string to float
         // Tell the effect manager to do this effect onto this IEffectable.
@@ -285,19 +317,31 @@ public abstract class IEffectable: MonoBehaviour
                 // Strike lightning!
                 EffectsManager.Instance.Lightning(transform.position);
             }
-            catch (OperationCanceledException) { }
+            catch (OperationCanceledException) 
+            {
+                
+            }
+
+            Debug.Log("DelayedLightning after try catch");
 
             // Make sure this effect is removed from the list of current effects when finished.
             _currentPassiveEffects.Remove(currentEffect);
+            OnRelicConsumed?.Invoke(thisRelic);
+
+            foreach (Effect effect in _currentPassiveEffects)
+            {
+                Debug.Log("In DelayedLightning: " + effect);
+            }
         }
         catch (FormatException fe)
         {
+            _currentPassiveEffects.Remove(currentEffect);
             LogFormatException(fe, currentEffect);
         }
     }
     protected abstract void ApplyLightning();
 
-    private void NoEffect(string noEffect, Effect currentEffect, CancellationToken token)
+    private void NoEffect(string noEffect, Effect currentEffect, Relic thisRelic, CancellationToken token)
     {
         // Debug.Log("The no effect effect has been called. Here's the associated details string: " + noEffect);
     }

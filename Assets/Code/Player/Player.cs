@@ -47,6 +47,8 @@ public class Player : IEffectable
     /// </summary>
     protected override void OnEnable()
     {
+        OnRelicConsumed += ConsumeRelic;
+
         base.OnEnable();
 
         // I AM AWARE that this is not a good way to do this.
@@ -141,7 +143,7 @@ public class Player : IEffectable
         foreach (Relic relic in _inventory)
         {
             // All the passive effects on this relic.
-            List<Effect> thisRelicsEffects = relic.GetPassiveEffects();
+            Dictionary<Effect, string>.KeyCollection thisRelicsEffects = relic.GetPassiveEffects().Keys;
 
             // If this list is greater than 0, then double check to see if they're not all the None Effect.
             // Yes, I know this would be strange.
