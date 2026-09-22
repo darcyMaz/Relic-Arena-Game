@@ -15,9 +15,9 @@ public class RelicSO : ItemSO
     [SerializeField] private Effect Effect;
 
     /// <summary>
-    /// The details of the effect (deprecated soon).
+    /// The details of the active effect.
     /// </summary>
-    [SerializeField] private string EffectDetails;
+    [SerializeField] private string ActiveEffectDetails;
 
     /// <summary>
     /// Passive Effects on this relic.
@@ -44,9 +44,9 @@ public class RelicSO : ItemSO
         return Effect;
     }
     */
-    public string GetEffectDetails()
+    public string GetActiveEffectDetails()
     {
-        return EffectDetails;
+        return ActiveEffectDetails;
     }
     /// <summary>
     /// Method which returns the list of passive effects associated with this relic.
@@ -56,6 +56,16 @@ public class RelicSO : ItemSO
     {
         List<Effect> shallowCopy = new List<Effect>();
         foreach (var effect in PassiveEffects) { shallowCopy.Add(effect); }
+        return shallowCopy;
+    }
+    /// <summary>
+    /// Method which returns the list of details for each passive effect.
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetPassiveEffectDetails()
+    {
+        List<string> shallowCopy = new List<string>();
+        foreach (var effect in PassiveEffectsDetails) { shallowCopy.Add(effect); }
         return shallowCopy;
     }
     public Effect GetActiveEffect()

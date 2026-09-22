@@ -135,22 +135,30 @@ public class Player : IEffectable
     {
         List<Relic> effectRelics = new List<Relic>();
 
+        // This foreach loop will check each relic.
+        // If they have effects then add them to the list.
+        // Otherwise, don't.
         foreach (Relic relic in _inventory)
         {
-            // relic.GetPassiveEffects();
-            foreach (Effect passiveEffect in relic.GetPassiveEffects())
-            {
-                // if (relic.
-            }
+            // All the passive effects on this relic.
+            List<Effect> thisRelicsEffects = relic.GetPassiveEffects();
 
-            /*
-            // If this relic has an effect.
-            if (relic.GetEffect() != Effect.None)
+            // If this list is greater than 0, then double check to see if they're not all the None Effect.
+            // Yes, I know this would be strange.
+            if (thisRelicsEffects.Count > 0)
             {
-                // Add it to the list.
-                effectRelics.Add(relic);
+                // Use a counter. If it is greater than 0 at the end of the below foreach loop, then it has an actual passive effect.
+                int checkForNonNoneEffect = 0;
+                foreach (Effect passiveEffect in thisRelicsEffects)
+                {
+                    if (passiveEffect == Effect.None) continue;
+                    checkForNonNoneEffect++;
+                }
+                if (checkForNonNoneEffect > 0)
+                {
+                    effectRelics.Add(relic);
+                }
             }
-            */
         }
 
         InvokePassiveEffectEvent(effectRelics);

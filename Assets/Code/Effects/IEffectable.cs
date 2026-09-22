@@ -127,6 +127,7 @@ public abstract class IEffectable: MonoBehaviour
 
     /// <summary>
     /// The OnCollisionEnter method is where Effects start being applied to IEffectables.
+    /// This may be changed away from an OnTriggerEnter to better suit the needs of the project.
     /// </summary>
     /// <param name="collision"> The body colliding with the IEffectable. </param>
     private void OnTriggerEnter(Collider other)
@@ -142,7 +143,7 @@ public abstract class IEffectable: MonoBehaviour
                 return;
             }
 
-            // RunEffectAction(relic.GetEffect(), relic.GetEffectDetails());
+            RunEffectAction(relic.GetActiveEffect(), relic.GetActiveEffectDetails());
         }
     }
 
@@ -181,42 +182,49 @@ public abstract class IEffectable: MonoBehaviour
 
     /// <summary>
     /// This function updates the current passive effects on the player.
-    /// It runs async functions related to those passive effects, and cancels them when they are complete.
+    /// It runs async functions related to those passive effects.
     /// </summary>
     /// <param name="effectRelics"> The updated list of EffectRelics. </param>
     private void CheckPassiveEffects(List<Relic> effectRelics)
     {
         Debug.Log("CheckPassiveEffects() in IEffectable");
 
-        // Received as a parameter is a list of Relics, this part of the method prunes the list of any duplicate effects.
-        // A list of Effects is created so that each relic does not need to compare itself to every other relic, just the effects that have already showed up.
-        List<Relic> prunedEffectRelics = new List<Relic>();
-        List<Effect> newPassiveEffects = new List<Effect>();
+        // Build this list which gathers every unique effect in the effectRelics list.
+        // This will be useful when checking which effects to remove.
+        List<Effect> uniqueEffects = new List<Effect>();
 
-        foreach (Relic relic in effectRelics) 
+        // Go through each relic and add new effects to the _currentPassiveEffects list.
+        foreach (Relic relic in effectRelics)
         {
-            //Debug.Log(relic.GetEffect() + " " + relic.GetName());
-
-            // If the currentPassiveEffects list does NOT contain the effect already, then add it to the list.
-            //if (!newPassiveEffects.Contains(relic.GetEffect()))
+            // Go through each Effect in this particular relic and see if any of them are not already active.
+            foreach (Effect effectKey in relic.GetPassiveEffects().Keys)
             {
-                //newPassiveEffects.Add(relic.GetEffect());
-                prunedEffectRelics.Add(relic);
-            }
-        }
+                // If this effect hasn't been added to uniqueEffects, add it.
+                if (!uniqueEffects.Contains(effectKey) && effectKey != Effect.None)
+                {
+                    uniqueEffects.Add(effectKey);
+                }
 
-        // Go through each pruned relic and add new effects to the _currentPassiveEffects list.
-        foreach (Relic relic in prunedEffectRelics)
-        {
-            // If the passive effects dictionary does not have that effect, run that effects async function and get the cancellation token.
-            //if (!_currentPassiveEffects.Contains(relic.GetEffect()))
-            {
-                // Run the async func and get its cancellation token source.
-                // Debug.Log("A new passive effect would have been added. But the implementation is not complete: " + effect);
+                // If one of the effects in this relic is not in the _currentPassiveEffects List.
+                if (!_currentPassiveEffects.Contains(effectKey) && effectKey != Effect.None)
+                {
+                    // The details of this effect.
+                    string effectDetails;
 
-                //_currentPassiveEffects.Add(relic.GetEffect());
-                //RunEffectAction(relic.GetEffect(), relic.GetEffectDetails());
-            }
+                    // If this effect has effect details in the relic.
+                    if (relic.GetPassiveEffects().TryGetValue(effectKey, out effectDetails))
+                    {
+                        // Add the effect.
+                        _currentPassiveEffects.Add(effectKey);
+                        // Run the effect action.
+                        RunEffectAction(effectKey, effectDetails);
+                    }
+                    else
+                    {
+                        Debug.Log("There was an attempt by IEffectable to access Passive Effects but it failed. In particular, there was an attempt to access the Dictionary<Effect, string> that offers the details of each passive effect, but no string was returned.");
+                    }
+                }
+            } 
         }
 
         // This foreach loop will remove effects from the _effectsDict dictionary if they no longer appear on the new effectsList.
@@ -224,8 +232,7 @@ public abstract class IEffectable: MonoBehaviour
         List<Effect> nonDynamicRemoval = new List<Effect>();
         foreach (Effect passiveEffect in _currentPassiveEffects)
         {
-            // If an effect in the _currentPassiveEffects List is not in the updated list of effects, then the effect has ended.
-            if (!newPassiveEffects.Contains(passiveEffect) && !nonDynamicRemoval.Contains(passiveEffect))
+            if (!uniqueEffects.Contains(passiveEffect))
             {
                 // Queue it for removal from the dictionary.
                 nonDynamicRemoval.Add(passiveEffect);
