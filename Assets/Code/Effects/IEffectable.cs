@@ -105,11 +105,6 @@ public abstract class IEffectable: MonoBehaviour
         }
     }
 
-    private void Fog(string details, Effect effect, Relic thisRelic, CancellationToken token)
-    {
-        throw new NotImplementedException();
-    }
-
     /// <summary>
     /// Initialize the format dictionary.
     /// The Format Dictionary has as keys Effect enums, and as values the expected format of the details string.
@@ -195,23 +190,10 @@ public abstract class IEffectable: MonoBehaviour
     /// <param name="effectRelics"> The updated list of EffectRelics. </param>
     private void CheckPassiveEffects(List<Relic> effectRelics)
     {
-        Debug.Log("CheckPassiveEffects() in IEffectable");
-
-        Debug.Log("\tCurrentPassiveEffects: ");
-        foreach (Effect effect in _currentPassiveEffects)
-        {
-            Debug.Log("\t\t" + effect);
-        }
 
         // Build this list which gathers every unique effect in the effectRelics list.
         // This will be useful when checking which effects to remove.
         List<Effect> uniqueEffects = new List<Effect>();
-
-        // effectrelics is sending in all the effect relics
-        // oooooh
-        // i get it
-        // the end of a passive effect should remove an item from the inventory!!! eureka!
-        // ok... shit how do I do that
 
         // Go through each relic and add new effects to the _currentPassiveEffects list.
         foreach (Relic relic in effectRelics)
@@ -238,9 +220,6 @@ public abstract class IEffectable: MonoBehaviour
                         // Add the effect.
                         _currentPassiveEffects.Add(effectKey);
                         // Run the effect action.
-
-                        Debug.Log("\tRunEffectAction call.");
-
                         RunEffectAction(effectKey, effectDetails, relic);
                     }
                     else
@@ -252,14 +231,11 @@ public abstract class IEffectable: MonoBehaviour
         }
 
 
-        Debug.Log("\tRemoval Check:");
         // This foreach loop will remove effects from the _effectsDict dictionary if they no longer appear on the new effectsList.
         // The removal cannot be dynamic, so we'll add them to the list which will then be used for removal.
         List<Effect> nonDynamicRemoval = new List<Effect>();
         foreach (Effect passiveEffect in _currentPassiveEffects)
         {
-            Debug.Log("\t\t" + passiveEffect);
-            Debug.Log("\t\t" + !uniqueEffects.Contains(passiveEffect));
             if (!uniqueEffects.Contains(passiveEffect))
             {
                 // Queue it for removal from the dictionary.
@@ -282,17 +258,13 @@ public abstract class IEffectable: MonoBehaviour
             }
         }
 
-        Debug.Log("\tEffects to remove");
         // Remove these effects from the _effectsDict dictionary.
         foreach (Effect removeThis in nonDynamicRemoval)
         {
-            Debug.Log("\t\tEffect to remove: " + removeThis);
             _currentPassiveEffects.Remove(removeThis);
         }
 
 
-
-        Debug.Log("---");
     }
 
     /// <summary>
@@ -322,16 +294,10 @@ public abstract class IEffectable: MonoBehaviour
                 
             }
 
-            Debug.Log("DelayedLightning after try catch");
-
             // Make sure this effect is removed from the list of current effects when finished.
             _currentPassiveEffects.Remove(currentEffect);
             OnRelicConsumed?.Invoke(thisRelic);
 
-            foreach (Effect effect in _currentPassiveEffects)
-            {
-                Debug.Log("In DelayedLightning: " + effect);
-            }
         }
         catch (FormatException fe)
         {
@@ -340,6 +306,48 @@ public abstract class IEffectable: MonoBehaviour
         }
     }
     protected abstract void ApplyLightning();
+
+    /// <summary>
+    /// Method which implements the Fog effect.
+    /// </summary>
+    /// <param name="details"> The string details for this Effect. </param>
+    /// <param name="effect"> The Effect itself. </param>
+    /// <param name="thisRelic"> The Relic this effect comes from. </param>
+    /// <param name="token"> The cancellation token for this async function. </param>
+    /// <exception cref="NotImplementedException"></exception>
+    private void Fog(string details, Effect effect, Relic thisRelic, CancellationToken token)
+    {
+        // ask the effectmanager for a clone of the fog prefab
+        // place it at transform.position + z pos
+        // then wait details amount of seconds with cancellation in mind
+        // then destroy relic
+    }
+
+    /// <summary>
+    /// Method which applies custom aspects of the Fog effect to each implementation.
+    /// </summary>
+    protected abstract void ApplyFog();
+
+    /// <summary>
+    /// Method which implements the ExtraLife effect.
+    /// </summary>
+    /// <param name="details"> The string details for this Effect. </param>
+    /// <param name="effect"> The Effect itself. </param>
+    /// <param name="thisRelic"> The Relic this effect comes from. </param>
+    /// <param name="token"> The cancellation token for this async function. </param>
+    private void ExtraLife(string details, Effect effect, Relic thisRelic, CancellationToken token)
+    {
+        // the extra life effect wouldn't actually do much
+        // it would need to wait until..
+        // interesting conundrum: if applyfog ends before extralife, how does extralife get cancelled?
+        // ok no it'll work
+        // because! removing a relic calls the check for passive effects
+        // and that check will lead to extralife being cancelled.
+    }
+    /// <summary>
+    /// Method which applies custom aspects of the ExtraLife effect to each implementation.
+    /// </summary>
+    protected abstract void ApplyExtraLife();
 
     private void NoEffect(string noEffect, Effect currentEffect, Relic thisRelic, CancellationToken token)
     {

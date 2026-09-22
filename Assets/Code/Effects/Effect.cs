@@ -4,6 +4,7 @@ public enum Effect
 {
     None,
     DelayedLightning,
-    Fog
+    Fog,
+    ExtraLife
 
 }
