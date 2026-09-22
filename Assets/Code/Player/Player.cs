@@ -441,9 +441,18 @@ public class Player : IEffectable
         }
     }
 
+    /// <summary>
+    /// Method which helps remove the extra lives.
+    /// This method is called when the relic which offered those extra lives is destroyed.
+    /// </summary>
     protected override void CancelExtraLives()
     {
-        throw new NotImplementedException();
+        if (_extraLives > 0)
+        {
+            OnExtraLifeChanged?.Invoke(0);
+        }
+        _extraLives = 0;
+        _currentExtraLifeRelic = null;
     }
     
     private void ExtraLifeTest(int currentLives)
