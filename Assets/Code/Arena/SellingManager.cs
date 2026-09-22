@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -39,11 +40,36 @@ public class SellingManager : MonoBehaviour
     /// </summary>
     [SerializeField] private float _P2SellTimer;
 
-
+    //Countdown timers for relics.
+    private float P1timer = 0f;
+    private float P2timer = 0f;
+    private bool P1timerActive = false;
+    private bool P2timerActive = false;
 
     private void Update()
     {
-        
+        if (P1timerActive)
+        {
+            P1timer += Time.deltaTime;
+            if (P1timer >= 2f)
+            {
+                P1timerActive = false;
+                P1timer = 0f;
+                P1SellRelics();
+
+            }
+        }
+        if (P2timerActive)
+        {
+            P2timer += Time.deltaTime;
+            if (P2timer >= 2f)
+            {
+                P2timerActive = false;
+                P2timer = 0f;
+                P2SellRelics();
+
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -53,7 +79,7 @@ public class SellingManager : MonoBehaviour
         Inventory inventory;
         if (collision.TryGetComponent(out inventory))
         {
-            Debug.Log("Something with an inventory entered the shop");
+            
             Player player;
             if (collision.TryGetComponent(out player))
             {
@@ -61,13 +87,15 @@ public class SellingManager : MonoBehaviour
                 playerID = player.GetPlayerNumber();
                 if (playerID == 1)
                 {
+                    Debug.Log("P1 entered the shop");
                     _P1inventory = inventory;
-                    
+                    P1timerActive = true;
                 }
                 else if(playerID == 2)
                 {
+                    Debug.Log("P2 entered the shop");
                     _P2inventory = inventory;
-
+                    P2timerActive = true;
                 }
             }
             else
@@ -75,7 +103,6 @@ public class SellingManager : MonoBehaviour
                 Debug.Log("Inventory holder does not have a Player script");
             }
             
-            //SellAll();
         }
         else
         {
@@ -85,20 +112,86 @@ public class SellingManager : MonoBehaviour
 
     }
 
+    //When a player leaves, the sell timer resets. Doesn't work. Will need to investigate further.
     private void OnTriggerLeave(Collider collision)
     {
-        //Check if what enters is a Player.
-        if (collision.gameObject.CompareTag("Player"))
+        Player player;
+        if (collision.TryGetComponent(out player))
         {
-            //_P1inventory = collision.GetComponent<Inventory>();
-            Debug.Log("Player Left");
+            int playerID;
+            playerID = player.GetPlayerNumber();
+            if (playerID == 1)
+            {
+                P1timer = 0f;
+                P1timerActive= false;
+                Debug.Log("Player1 Left");
+            }
+            else if (playerID == 2)
+            {
+                P2timer = 0f;
+                P2timerActive= false;
+                Debug.Log("Player2 Left");
+
+            }
+            
         }
+        
+        
+        
     }
-    private void SellAll()
+    /// <summary>
+    /// Takes P1's inventory and sells it, clearing their inventory and giving them score.
+    /// </summary>
+    private void P1SellRelics()
     {
+        Debug.Log("Player 1 sells their relics.");
+        float relicSubtotal = 0f;
+        float relicTotal = 0;
+
         foreach (Relic relic in _P1inventory)
         {
-            Debug.Log(relic.GetName());
+            relicSubtotal += relic.GetPrice();
+        }
+
+        Debug.Log("Total Price: " + relicSubtotal);
+        Debug.Log("Total amount of relics: " + _P1inventory.Count());
+
+        relicTotal = (relicSubtotal * (1f + (_P1inventory.Count() * 0.1f)));
+        Debug.Log("Total with multiplier: " + relicTotal);
+
+        //line of code that adds the total to the score goes here
+
+        //Remove all the relics from their inventory.
+        foreach (Relic relic in _P1inventory)
+        {
+            _P1inventory.RemoveItem(relic);
+        }
+ 
+    }
+
+    private void P2SellRelics()
+    {
+        Debug.Log("Player 2 sells their relics.");
+        float relicSubtotal = 0f;
+        float relicTotal = 0;
+
+        foreach (Relic relic in _P2inventory)
+        {
+            relicSubtotal += relic.GetPrice();
+        }
+
+        Debug.Log("Total Price: " + relicSubtotal);
+        Debug.Log("Total amount of relics: " + _P2inventory.Count());
+
+        relicTotal = (relicSubtotal * (1f + (_P2inventory.Count() * 0.1f)));
+        Debug.Log("Total with multiplier: " + relicTotal);
+
+        //line of code that adds the total to the score goes here
+
+        //Remove all the relics from their inventory.
+        foreach (Relic relic in _P2inventory)
+        {
+            _P2inventory.RemoveItem(relic);
         }
     }
 }
