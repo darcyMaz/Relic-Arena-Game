@@ -294,6 +294,15 @@ public class Player : IEffectable
         Debug.Log("There was an attempt ");
     }
 
+    /// <summary>
+    /// Implemented method which launches active effects.
+    /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
+    protected override void LaunchActiveEffect()
+    {
+        throw new NotImplementedException();
+    }
+
     private async void Dig(InputAction.CallbackContext context)
     {
         if (context.performed && !_isDigging)
@@ -307,7 +316,7 @@ public class Player : IEffectable
 
             // Await the duration of the animation.
             //// For now, 3 seconds.
-            await Task.Delay(3000);
+            await Task.Delay(1000);
 
             // If the Player found a relic.
             if (_isRelicFound && (_relicFound != null && _buriedRelicFound != null))
@@ -336,6 +345,15 @@ public class Player : IEffectable
         }
     }
 
+    private void StopMovement()
+    {
+
+    }
+    private void PlayMovement()
+    {
+
+    }
+
     /// <summary>
     /// Apply the Lightning Effect.
     /// </summary>
@@ -358,4 +376,5 @@ public class Player : IEffectable
     {
         throw new NotImplementedException();
     }
+    
 }

@@ -14,9 +14,10 @@ public class EffectsManager : MonoBehaviour
     /// </summary>
     [SerializeField] private Lightning LightningSource;
 
-    private bool TestEffectLock = false;
-
-    // private Dictionary<IEffectable, List<Effect>> _effectables = new Dictionary<IEffectable, List<Effect>>();  
+    /// <summary>
+    /// A GameObject that can be cloned and accessed representing the display before launching a scarab attack.
+    /// </summary>
+    [SerializeField] private GameObject ScarabDisplay;
 
     /// <summary>
     /// The Awake function checks if the current object is the singleton.
@@ -47,19 +48,15 @@ public class EffectsManager : MonoBehaviour
     {
         LightningSource.LightningStrike(endPos);
     }
-
-    public async void EffectTest()
+    
+    /// <summary>
+    /// Returns a GameObject representing the display aid for the scarab active Effect.
+    /// </summary>
+    /// <param name="initialPosition"> The position this gameobject will start. </param>
+    /// <returns> The scarab aid GameObject to display. </returns>
+    public GameObject GetDisplayScarab(Vector3 initialPosition)
     {
-        if (TestEffectLock)
-        {
-            return;
-        }
-
-        TestEffectLock = true;
-        UIManager.Instance.TestUIUpdate("Effect Test");
-        await Task.Delay(3000);
-        UIManager.Instance.TestUIUpdate("");
-        TestEffectLock = false;
+        return Instantiate(ScarabDisplay, initialPosition, Quaternion.identity);
     }
-        
+    
 }

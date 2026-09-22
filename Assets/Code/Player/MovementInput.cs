@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Reads and interprets movement input using the New Input System and a CharacterController.
+/// Reads and interprets movement input using the New Input System and a Rigidbody.
 /// </summary>
 // [RequireComponent (typeof(Rigidbody))]
 public class MovementInput : MonoBehaviour
@@ -28,9 +28,14 @@ public class MovementInput : MonoBehaviour
     private Rigidbody _rigidbody;
 
     /// <summary>
-    /// Movement speed.
+    /// Base movement speed.
     /// </summary>
-    [SerializeField] private float Speed = 2f;
+    [SerializeField] private float BaseSpeed = 2f;
+
+    /// <summary>
+    /// Dynamic movement speed.
+    /// </summary>
+    private float _speed;
 
     private Vector3 _input = Vector3.zero;
     private Vector3 _gravity = Vector3.zero;
@@ -42,6 +47,7 @@ public class MovementInput : MonoBehaviour
     private void Awake()
     {
         ActionsInit();
+        _speed = BaseSpeed;
     }
 
     /// <summary>
@@ -79,21 +85,38 @@ public class MovementInput : MonoBehaviour
     }
 
     /// <summary>
+    /// Initialize the actions.
+    /// </summary>
+    private void ActionsInit()
+    {
+        _actions = new InputSystem_Actions();
+    }
+
+    /// <summary>
+    /// Initialize the components.
+    /// </summary>
+    private void ComponentsInit()
+    {
+        // _characterController = GetComponent<CharacterController>();
+        _rigidbody = GetComponent<Rigidbody>();
+    }
+
+    /// <summary>
     /// Set the movement speed.
     /// </summary>
     /// <param name="speed"> The new speed. </param>
-    public void SetSpeed(float speed)
+    public void AffectSpeed(float multiplier)
     {
-        Speed = speed;
+        _speed = BaseSpeed * multiplier;
     }
 
     /// <summary>
     /// Get the movement speed.
     /// </summary>
     /// <returns> The speed of this gameObject as a float. </returns>
-    public float GetSpeed()
+    public float GetCurrentSpeed()
     {
-        return Speed;
+        return _speed;
     }
 
     /// <summary>
@@ -104,11 +127,8 @@ public class MovementInput : MonoBehaviour
         // Poll the movement from the Input Action.
         Vector2 pollMovement = _move.ReadValue<Vector2>();
 
-        // Translate the polled value from Vect2 to vect3.
-        // Vector3 movement = new Vector3(pollMovement.x, 0, pollMovement.y);
-
         // Set the _input vector such that Speed and normalization are accounted for.
-        _input = pollMovement.normalized * Speed;
+        _input = pollMovement.normalized * _speed;
     }
 
     /// <summary>
@@ -128,20 +148,5 @@ public class MovementInput : MonoBehaviour
         _rigidbody.linearVelocity = (_gravity + _input) * Time.fixedDeltaTime;
     }
 
-    /// <summary>
-    /// Initialize the actions.
-    /// </summary>
-    private void ActionsInit()
-    {
-        _actions = new InputSystem_Actions();
-    }
-
-    /// <summary>
-    /// Initialize the components.
-    /// </summary>
-    private void ComponentsInit()
-    {
-        // _characterController = GetComponent<CharacterController>();
-        _rigidbody = GetComponent<Rigidbody>();
-    }
+    
 }
