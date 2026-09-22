@@ -17,5 +17,7 @@ MonoBehaviour:
   Price: 120
   ActiveEffect: 0
   ActiveEffectDetails: 
-  PassiveEffects: 0200000000000000
-  PassiveEffectsDetails: []
+  PassiveEffects: 0200000003000000
+  PassiveEffectsDetails:
+  - 3000
+  - 3

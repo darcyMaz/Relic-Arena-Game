@@ -18,11 +18,6 @@ public class MovementInput : MonoBehaviour
     private InputAction _move;
 
     /// <summary>
-    /// Character controller on this gameObject.
-    /// </summary>
-    // private CharacterController _characterController;
-
-    /// <summary>
     /// Rigidbody on the player. Used to move and for collisions.
     /// </summary>
     private Rigidbody _rigidbody;
@@ -37,9 +32,25 @@ public class MovementInput : MonoBehaviour
     /// </summary>
     private float _speed;
 
+    /// <summary>
+    /// Input vector for the movement.
+    /// </summary>
     private Vector3 _input = Vector3.zero;
+
+    /// <summary>
+    /// Gravity vector.
+    /// </summary>
     private Vector3 _gravity = Vector3.zero;
+
+    /// <summary>
+    /// Gravity.
+    /// </summary>
     [SerializeField] private float GravityFloat = 9.8f;
+
+    /// <summary>
+    /// Int variable indicating the player number. This variable will be removed upon proper implementation of multiplayer.
+    /// </summary>
+    [SerializeField] private int PlayerNumber = 0;
 
     /// <summary>
     /// Initialization before the game starts.
@@ -63,8 +74,7 @@ public class MovementInput : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        _move = _actions.Player.Move;
-        _move.Enable();
+        InputInit();
     }
     /// <summary>
     /// When disabling the game object.
@@ -93,11 +103,32 @@ public class MovementInput : MonoBehaviour
     }
 
     /// <summary>
+    /// Initialize the movement input action.
+    /// </summary>
+    private void InputInit()
+    {
+        if (PlayerNumber == 1)
+        {
+            _move = _actions.Player1.Move;
+        }
+        else if (PlayerNumber == 2)
+        {
+            _move = _actions.Player2.Move;
+        }
+        else
+        {
+            Debug.Log("A MovementInput script did not have its player number set correctly.");
+            _move = _actions.Player.Move;
+        }
+        
+        _move.Enable();
+    }
+
+    /// <summary>
     /// Initialize the components.
     /// </summary>
     private void ComponentsInit()
     {
-        // _characterController = GetComponent<CharacterController>();
         _rigidbody = GetComponent<Rigidbody>();
     }
 

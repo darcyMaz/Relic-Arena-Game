@@ -383,7 +383,7 @@ public abstract class IEffectable: MonoBehaviour
 
             try
             {
-                ApplyExtraLives(extraLives);
+                ApplyExtraLives(extraLives, thisRelic);
                 await Task.Delay(Timeout.Infinite, token);
             }
             catch (OperationCanceledException)
@@ -403,7 +403,7 @@ public abstract class IEffectable: MonoBehaviour
     /// <summary>
     /// Method which applies custom aspects of the ExtraLife effect to each implementation.
     /// </summary>
-    protected abstract void ApplyExtraLives(int extraLives);
+    protected abstract void ApplyExtraLives(int extraLives, Relic extraLifeRelic);
 
     /// <summary>
     /// 

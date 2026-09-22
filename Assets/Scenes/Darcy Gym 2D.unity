@@ -1230,6 +1230,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EffectsManager
   LightningSource: {fileID: 1968340102}
+  ScarabDisplay: {fileID: 0}
 --- !u!4 &1539130024
 Transform:
   m_ObjectHideFlags: 0
@@ -1540,7 +1541,7 @@ MonoBehaviour:
   IsGameActive: 1
   GridRows: 10
   GridColumns: 10
-  EffectRelicSOSpawnRate: 0.5
+  EffectRelicSOSpawnRate: 0.8
   MaxRelicsBuried: 8
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
   _shop: {fileID: 0}
@@ -1844,6 +1845,14 @@ PrefabInstance:
     - target: {fileID: 3157534535904684024, guid: 6f025364fae39a3458d1f587a911bddf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4744797384855256097, guid: 6f025364fae39a3458d1f587a911bddf, type: 3}
+      propertyPath: BaseSpeed
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 4744797384855256097, guid: 6f025364fae39a3458d1f587a911bddf, type: 3}
+      propertyPath: PlayerNumber
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7649312942991597728, guid: 6f025364fae39a3458d1f587a911bddf, type: 3}
       propertyPath: m_Name

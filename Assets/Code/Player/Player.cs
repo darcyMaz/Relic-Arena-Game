@@ -25,9 +25,24 @@ public class Player : IEffectable
     /// The Player's Metal Detector.
     /// </summary>
     private MetalDetector _metalDetector;
-    // private bool _hasMetalDetector = false;
 
+    /// <summary>
+    /// The Movement Input component attached to this Player.
+    /// </summary>
+    private MovementInput _movementInput;
+    /// <summary>
+    /// A bool variable that indicates whether a Player has a Movement Input component.
+    /// </summary>
+    private bool _hasMovementInput = false;
+
+    /// <summary>
+    /// Input system actions variable.
+    /// </summary>
     private InputSystem_Actions _actions;
+
+    /// <summary>
+    /// The Dig input action.
+    /// </summary>
     private InputAction _dig;
 
     /// <summary>
@@ -51,7 +66,17 @@ public class Player : IEffectable
     /// Int variable which indicates the number of extra lives the player has.
     /// </summary>
     private int _extraLives = 0;
+    /// <summary>
+    /// Relic variable which holds the Relic which currently effects the extra life Effect.  
+    /// </summary>
     private Relic _currentExtraLifeRelic;
+
+    /// <summary>
+    /// event which announces the amount of extra lives a player has.
+    /// </summary>
+    public event Action<int> OnExtraLifeChanged;
+
+    private InputAction _getHitTest;
 
     /// <summary>
     /// Method which runs on awake.
@@ -92,6 +117,9 @@ public class Player : IEffectable
     {
         base.Awake();
         _actions = new InputSystem_Actions();
+
+        OnExtraLifeChanged += ExtraLifeTest;
+
     }
 
     /// <summary>
@@ -107,6 +135,10 @@ public class Player : IEffectable
 
         // Initialize the input system.
         DigInit();
+
+        _getHitTest = _actions.Player.Crouch;
+        _getHitTest.Enable();
+        _getHitTest.performed += HitPlayerTest;
     }
 
     /// <summary>
@@ -141,6 +173,8 @@ public class Player : IEffectable
     {
         base.OnDisable();
         _dig.Disable();
+
+        _getHitTest.Disable();
     }
 
     /// <summary>
@@ -162,12 +196,19 @@ public class Player : IEffectable
         }
         if (TryGetComponent(out _metalDetector))
         {
-            // _hasMetalDetector = true;
             _metalDetector.OnRelicVeryClose += AcceptRelic;
         }
         else
         {
             Debug.Log("Player #" + PlayerNumber + " does not have a Metal Detector component. The game will still work but the player will not be able to find items.");
+        }
+        if (TryGetComponent(out _movementInput))
+        {
+            _hasMovementInput = true;
+        }
+        else
+        {
+            Debug.Log("Player #" + PlayerNumber + " does not have a Movement Input component. The game will still work but the player will not be able to move.");
         }
     }
 
@@ -258,12 +299,15 @@ public class Player : IEffectable
         // If there are more than 0 extra lives.
         if (_extraLives >= 1)
         {
-            _extraLives--;
+            // Reduce and announce the loss of a life.
+            OnExtraLifeChanged?.Invoke(--_extraLives);
+            // Tank the hit.
             TankHit();
 
-            // If the extraLives var has gone from 1 to 0.
-            if (_extraLives == 0) 
+            // If the extraLives var has gone from 1 to 0, meaning the Relic must now be consumed.
+            if (_extraLives == 0)
             {
+                // The relic at that variable should exist, if it does not then it is logged and consuming the relic is ignored.
                 if (_currentExtraLifeRelic != null) ConsumeRelic(_currentExtraLifeRelic);
                 else Debug.Log("There was an attempt by a player to destroy a relic which gave the player an extra hit. The Relic was not properly assigned to the _currentExtraLifeRelic variable: " + PlayerNumber);
                 _currentExtraLifeRelic = null;
@@ -303,6 +347,10 @@ public class Player : IEffectable
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Async method which actviates when the player digs.
+    /// </summary>
+    /// <param name="context"> The CallbackContext for this action.   </param>
     private async void Dig(InputAction.CallbackContext context)
     {
         if (context.performed && !_isDigging)
@@ -314,9 +362,14 @@ public class Player : IEffectable
             // Play the digging animation.
             ////
 
+            // Stop the player's movement.
+            ChangeSpeed(0);
+
             // Await the duration of the animation.
             //// For now, 3 seconds.
             await Task.Delay(1000);
+
+            ChangeSpeed(1);
 
             // If the Player found a relic.
             if (_isRelicFound && (_relicFound != null && _buriedRelicFound != null))
@@ -345,13 +398,17 @@ public class Player : IEffectable
         }
     }
 
-    private void StopMovement()
+    /// <summary>
+    /// Change the speed of the player if they have a Movement Input component.
+    /// This function is not additive. That is, every call to this function sets the speed to be a percentage of the base speed.
+    /// </summary>
+    /// <param name="percentage"> Percentage of the base speed. </param>
+    private void ChangeSpeed(float percentage)
     {
-
-    }
-    private void PlayMovement()
-    {
-
+        if (_hasMovementInput)
+        {
+            _movementInput.AffectSpeed(percentage);
+        }
     }
 
     /// <summary>
@@ -359,7 +416,7 @@ public class Player : IEffectable
     /// </summary>
     protected override void ApplyLightning()
     {
-        Debug.Log("A Player was struck by lightning but the effect is not applied to the Player yet.");
+        PlayerHit();
     }
 
     protected override void ApplyFog()
@@ -367,9 +424,21 @@ public class Player : IEffectable
         throw new NotImplementedException();
     }
 
-    protected override void ApplyExtraLives(int extraLives)
+    protected override void ApplyExtraLives(int extraLives, Relic extraLivesRelic)
     {
-        throw new NotImplementedException();
+        // If there is not already a relic applying this effect.
+        if (_extraLives == 0 && _currentExtraLifeRelic == null)
+        {
+            // Set the extra life variables.
+            _extraLives = extraLives;
+            _currentExtraLifeRelic = extraLivesRelic;
+            // Announce the extra life info to event listeners.
+            OnExtraLifeChanged?.Invoke(_extraLives);
+        }
+        else
+        {
+            Debug.Log("The Player #" + PlayerNumber + " tried to apply the ExtraLives effect to itself but found that there was already a relic applying that effect.");
+        }
     }
 
     protected override void CancelExtraLives()
@@ -377,4 +446,12 @@ public class Player : IEffectable
         throw new NotImplementedException();
     }
     
+    private void ExtraLifeTest(int currentLives)
+    {
+        Debug.Log("extra life called: " + currentLives + " and the class variable: " + _extraLives);
+    }
+    private void HitPlayerTest(InputAction.CallbackContext context)
+    {
+        if (context.performed) PlayerHit();
+    }
 }
