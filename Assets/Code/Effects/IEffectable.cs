@@ -50,7 +50,7 @@ public abstract class IEffectable: MonoBehaviour
     /// </summary>
     protected virtual void Awake()
     {
-        AwakeInit();
+        InitAwake();
     }
 
     /// <summary>
@@ -58,14 +58,14 @@ public abstract class IEffectable: MonoBehaviour
     /// </summary>
     protected virtual void OnEnable()
     {
-        OnUpdateEffectRelics += CheckPassiveEffects;
+        InitOnEnable();
     }
     /// <summary>
     /// Method that runs on Disable.
     /// </summary>
     protected virtual void OnDisable()
     {
-        OnUpdateEffectRelics -= CheckPassiveEffects;
+        InitOnDisable();
     }
 
     /// <summary>
@@ -73,13 +73,13 @@ public abstract class IEffectable: MonoBehaviour
     /// </summary>
     protected virtual void Start()
     {
-
+        InitStart();
     }
 
     /// <summary>
     /// Initializing function. To be called in the Awake function.
     /// </summary>
-    private void AwakeInit()
+    private void InitAwake()
     {
         InitCancellationDict();
         InitEffectDict();
@@ -136,6 +136,30 @@ public abstract class IEffectable: MonoBehaviour
     }
 
     /// <summary>
+    /// Method which provides initializatons for the OnEnable function.
+    /// </summary>
+    private void InitOnEnable()
+    {
+        OnUpdateEffectRelics += CheckPassiveEffects;
+    }
+
+    /// <summary>
+    /// Method which provides initializations for the OnDisable function.
+    /// </summary>
+    private void InitOnDisable()
+    {
+        OnUpdateEffectRelics -= CheckPassiveEffects;
+    }
+
+    /// <summary>
+    /// Method which provides initilizations on start.
+    /// </summary>
+    private void InitStart()
+    {
+
+    }
+
+    /// <summary>
     /// The OnCollisionEnter method is where Effects start being applied to IEffectables.
     /// This may be changed away from an OnTriggerEnter to better suit the needs of the project.
     /// </summary>
@@ -156,6 +180,13 @@ public abstract class IEffectable: MonoBehaviour
             RunEffectAction(relic.GetActiveEffect(), relic.GetActiveEffectDetails(), relic);
         }
     }
+
+
+    public void ReceiveActiveEffect()
+    {
+
+    }
+    protected abstract void LaunchActiveEffect();
 
     private void RunEffectAction(Effect effect, string effectDetails, Relic relic)
     {

@@ -250,19 +250,49 @@ public class Player : IEffectable
         BuildEffectRelicList();
     }
 
-
+    /// <summary>
+    /// This method runs when a Player is hit. Whether they tank the hit or receive it is determined by this method.
+    /// </summary>
     private void PlayerHit()
     {
-        // if extra lives is greater than 1, then subtract and tank hit
-        // if extra lives is 1, then subtract, destroy relic, and then tank hit
-        // if extra lives is less than 1, set it to 0, and accept a hit
-        
-        if (_extraLives > 1)
+        // If there are more than 0 extra lives.
+        if (_extraLives >= 1)
         {
+            _extraLives--;
+            TankHit();
 
+            // If the extraLives var has gone from 1 to 0.
+            if (_extraLives == 0) 
+            {
+                if (_currentExtraLifeRelic != null) ConsumeRelic(_currentExtraLifeRelic);
+                else Debug.Log("There was an attempt by a player to destroy a relic which gave the player an extra hit. The Relic was not properly assigned to the _currentExtraLifeRelic variable: " + PlayerNumber);
+                _currentExtraLifeRelic = null;
+            }
         }
+        else
+        {
+            // Ensure that the _extraLives var does not go below zero.
+            _extraLives = 0;
+            ReceiveHit();
+        }
+        
     }
     
+    /// <summary>
+    /// This method is run when a Player "tanks a hit." I.e. they are hit but it has no effect.
+    /// </summary>
+    private void TankHit()
+    {
+
+    }
+
+    /// <summary>
+    /// This method is run when a Player receives a hit. I.e. they are hit and must face the consequences.
+    /// </summary>
+    private void ReceiveHit()
+    {
+        Debug.Log("There was an attempt ");
+    }
 
     private async void Dig(InputAction.CallbackContext context)
     {
