@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2434983994669602563}
   - component: {fileID: 7177873281060764925}
   m_Layer: 0
-  m_Name: Buried Relic visible
+  m_Name: Buried Relic 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
