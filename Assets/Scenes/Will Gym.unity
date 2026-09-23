@@ -788,8 +788,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7649312942991597728, guid: 6f025364fae39a3458d1f587a911bddf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 943838496}
   m_SourcePrefab: {fileID: 100100000, guid: 6f025364fae39a3458d1f587a911bddf, type: 3}
+--- !u!1 &943838495 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7649312942991597728, guid: 6f025364fae39a3458d1f587a911bddf, type: 3}
+  m_PrefabInstance: {fileID: 943838494}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &943838496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943838495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b24e4138588a14a40925c86bfbcae18d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &972158774
 GameObject:
   m_ObjectHideFlags: 0
@@ -1215,7 +1235,7 @@ PrefabInstance:
     - target: {fileID: 7177873281060764925, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
       propertyPath: _relicSO
       value: 
-      objectReference: {fileID: 11400000, guid: 913d5f7ab794a0a4e97bc2c7714e2905, type: 2}
+      objectReference: {fileID: 11400000, guid: 8b7dddc99956fea449e774a15a8b4e9a, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
