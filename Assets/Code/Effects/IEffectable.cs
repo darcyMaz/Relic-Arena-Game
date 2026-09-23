@@ -15,9 +15,6 @@ using UnityEngine;
 /// </summary>
 public abstract class IEffectable: MonoBehaviour
 {
-    //int tempIntClass = 0;
-
-
     /// <summary>
     /// Event that announces the current list of Passive Effects.
     /// </summary>
@@ -31,8 +28,8 @@ public abstract class IEffectable: MonoBehaviour
     /// <summary>
     /// Dictionary holding all passive effects currently on this IEffectable, mappes to the Relic which is powering that Effect.
     /// </summary>
-    //protected List<Effect> _currentPassiveEffects = new List<Effect>();
-    protected Dictionary<Effect, Relic> _currentPassiveEffects = new Dictionary<Effect, Relic>();
+    //protected List<Effect> _passiveEffects = new List<Effect>();
+    protected Dictionary<Effect, Relic> _passiveEffects = new Dictionary<Effect, Relic>();
 
 
     /// <summary>
@@ -50,6 +47,11 @@ public abstract class IEffectable: MonoBehaviour
     /// The Format Dictionary, Effect enums are mapped to strings representing the correct format for each Effect's details string.
     /// </summary>
     protected Dictionary<Effect, string> _formatDict = new Dictionary<Effect, string>();
+
+    /// <summary>
+    /// The List of all active Effects.
+    /// </summary>
+    protected List<Effect> _activeEffects = new List<Effect>();
 
     /// <summary>
     /// Method that runs on Awake.
@@ -187,9 +189,25 @@ public abstract class IEffectable: MonoBehaviour
         }
     }
 
-    public void ReceiveActiveEffect()
+    /// <summary>
+    /// This method is called by those seeking to apply active Effects to this IEffectable. 
+    /// </summary>
+    /// <param name="activeEffect"> Active effect being applied. </param>
+    /// <param name="activeEffectDetails"> Details to the active effect being applied. </param>
+    public void ReceiveActiveEffect(Effect activeEffect, string activeEffectDetails)
     {
-
+        // If the incoming active effect is neither in the active effects list or the passive effects dictionary then activate this effect.
+        if (!_activeEffects.Contains(activeEffect) && !_passiveEffects.TryGetValue(activeEffect, out _) && activeEffect != Effect.None)
+        {
+            // Add this active effect to the list.
+            _activeEffects.Add(activeEffect);
+            // Run the Effect Action where the relic is null.
+            RunEffectAction(activeEffect, activeEffectDetails, null);
+        }
+        else
+        {
+            Debug.Log("An active Effect was receieved by an IEffectable but it was already active on the IEffectable so it was ignored.");
+        }
     }
     protected abstract void LaunchActiveEffect();
 
@@ -241,30 +259,17 @@ public abstract class IEffectable: MonoBehaviour
     /// <param name="effectRelics"> The updated list of EffectRelics. </param>
     private void CheckPassiveEffects(List<Relic> effectRelics)
     {
-        // Build this list which gathers every unique effect in the effectRelics list.
-        // This will be useful when checking which effects to remove.
-        // List<Effect> uniqueEffects = new List<Effect>();
-        //tempIntClass++;
-        //int tempInt = tempIntClass;
-
-        //Debug.Log("CheckPassiveEffects " + tempInt);
-        // Go through each relic and add new effects to the _currentPassiveEffects list.
+        
+        // Go through each relic and add new effects to the _passiveEffects list.
         foreach (Relic relic in effectRelics)
         {
             //Debug.Log("\t\t" + relic.GetName() + " " + tempInt);
             // Go through each Effect in this particular relic and see if any of them are not already active.
             foreach (Effect effectKey in relic.GetPassiveEffects().Keys)
             {
-                /*
-                // If this effect hasn't been added to uniqueEffects, add it.
-                if (!uniqueEffects.Contains(effectKey) && effectKey != Effect.None)
-                {
-                    uniqueEffects.Add(effectKey);
-                }
-                */
 
-                // If one of the effects in this relic is not in the _currentPassiveEffects List.
-                if (!_currentPassiveEffects.TryGetValue(effectKey, out _) && effectKey != Effect.None)
+                // If one of the effects in this relic is not in the _passiveEffects List or the _activeEffects list.
+                if ( !_activeEffects.Contains(effectKey) && !_passiveEffects.TryGetValue(effectKey, out _) && effectKey != Effect.None)
                 {
                     //Debug.Log("\t\tEffect is not in the currentPassiveEffects dict " + tempInt);
 
@@ -277,7 +282,7 @@ public abstract class IEffectable: MonoBehaviour
                         //Debug.Log("\t\tBefore adding it to currentpasseffect " + tempInt);
 
                         // Add the effect to the dictionary, making sure the relic associated with it is saved.
-                        _currentPassiveEffects.Add(effectKey, relic);
+                        _passiveEffects.Add(effectKey, relic);
 
                         //Debug.Log("\t\tAfter adding in to currentPassiveEffects dict / before running effect action" + tempInt);
 
@@ -303,34 +308,12 @@ public abstract class IEffectable: MonoBehaviour
 
         }
 
-        Debug.Log("At end of checkpassiveeffects: see all effects in _currPassEffects ");
-        foreach (Effect dictEffect in _currentPassiveEffects.Keys)
-        {
-            Debug.Log("\t\t" + dictEffect);
-        }
-
-
-        /*
-        // This foreach loop will remove effects from the _currentPassiveEffects dictionary if they no longer appear on the new effectsList.
-        // The removal cannot be dynamic, so we'll add them to the list which will then be used for removal.
-        List<Effect> nonDynamicRemoval = new List<Effect>();
-        foreach (Effect passiveEffect in _currentPassiveEffects.Keys)
-        {
-            if (!uniqueEffects.Contains(passiveEffect))
-            {
-                // Queue it for removal from the dictionary.
-                nonDynamicRemoval.Add(passiveEffect);
-            }
-        }
-
-        // Remove these effects from the _effectsDict dictionary.
-        foreach (Effect removeThis in nonDynamicRemoval)
-        {
-            _currentPassiveEffects.Remove(removeThis);
-        }
-        */
-
-
+        //Debug.Log("At end of checkpassiveeffects: see all effects in _currPassEffects ");
+        //foreach (Effect dictEffect in _passiveEffects.Keys)
+        //{
+            //Debug.Log("\t\t" + dictEffect);
+        //}
+        
     }
 
     /// <summary>
@@ -339,7 +322,7 @@ public abstract class IEffectable: MonoBehaviour
     /// <param name="relic"> The relic whose effects must be cancelled. </param>
     protected void CancelEffectsOnRelic(Relic relic)
     {
-        Debug.Log("Cancel effects on relics: ");
+        //Debug.Log("Cancel effects on relics: ");
 
         Dictionary<Effect,string>.KeyCollection effectsToCancel = relic.GetPassiveEffects().Keys;
 
@@ -348,13 +331,13 @@ public abstract class IEffectable: MonoBehaviour
         {
             // If this Effect even is active (it should be logically).
             Relic associatedRelic;
-            if (_currentPassiveEffects.TryGetValue(effect, out associatedRelic))
+            if (_passiveEffects.TryGetValue(effect, out associatedRelic))
             {
                 // If the incoming relic and the relic associated with this effect are the same then this Effect will be removed.
                 if (relic == associatedRelic)
                 {
                     // Remove this Effect from the dictionary.
-                    _currentPassiveEffects.Remove(effect);
+                    _passiveEffects.Remove(effect);
 
                     // Cancel the task at hand using the cancellation token source.
                     CancellationTokenSource token;
@@ -364,7 +347,7 @@ public abstract class IEffectable: MonoBehaviour
                     if (tokenFound)
                     {
                         token.Cancel();
-                        Debug.Log("The following has been cancelled: " + effect);
+                        //.Log("The following has been cancelled: " + effect);
 
                         // Here, make a new cancellationtokensource and replace the old one.
                         _effectsCancellationTokens.Remove(effect);
@@ -438,16 +421,17 @@ public abstract class IEffectable: MonoBehaviour
             }
 
             // Make sure this effect is removed from the list of current effects when finished.
-            // _currentPassiveEffects.Remove(currentEffect);
+            // _passiveEffects.Remove(currentEffect);
             // OnRelicConsumed?.Invoke(thisRelic);
         }
         catch (FormatException fe)
         {
-            // _currentPassiveEffects.Remove(currentEffect);
+            // _passiveEffects.Remove(currentEffect);
             LogFormatException(fe, currentEffect);
         }
 
-        CancelEffectsOnRelic(thisRelic);
+        // If this is a passive Effect related to a Relic.
+        if (thisRelic != null) CancelEffectsOnRelic(thisRelic);
     }
     protected abstract void ApplyLightning();
 
@@ -478,7 +462,7 @@ public abstract class IEffectable: MonoBehaviour
 
                     if (token.IsCancellationRequested) 
                     {
-                        Debug.Log("Fog cancelled");
+                        //Debug.Log("Fog cancelled");
                         break;
                     }
                     await Task.Delay(100);
@@ -500,7 +484,8 @@ public abstract class IEffectable: MonoBehaviour
 
         // Cancel all effects related to this relic when this one is complete.
         // Effects associated with a different relic will not be cancelled.
-        CancelEffectsOnRelic(thisRelic);
+        // Active Effects will not run this line of code.
+        if (thisRelic != null) CancelEffectsOnRelic(thisRelic);
     }
 
     /// <summary>
@@ -525,14 +510,13 @@ public abstract class IEffectable: MonoBehaviour
             try
             {
                 ApplyExtraLives(extraLives, thisRelic);
-                // await Task.Delay(Timeout.Infinite, token);
 
                 while (true)
                 {
                     // Debug.Log("Yes, extra lives is still running.");
                     if (token.IsCancellationRequested)
                     {
-                        Debug.Log("ExtraLives is cancelled");
+                        //Debug.Log("ExtraLives is cancelled");
                         break;
                     }
                     await Task.Delay(100);
@@ -550,10 +534,10 @@ public abstract class IEffectable: MonoBehaviour
             LogFormatException(fe, currentEffect);
         }
 
-        Debug.Log("end of ExtraLives");
+        //Debug.Log("end of ExtraLives");
         // Cancel all effects related to this relic when this one is complete.
         // Effects associated with a different relic will not be cancelled.
-        CancelEffectsOnRelic(thisRelic);
+        if (thisRelic != null) CancelEffectsOnRelic(thisRelic);
     }
     /// <summary>
     /// Method which applies custom aspects of the ExtraLife effect to each implementation.

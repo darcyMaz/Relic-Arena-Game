@@ -312,8 +312,9 @@ public class Player : IEffectable
                 // The relic at that variable should exist, if it does not then it is logged and consuming the relic is ignored.
                 if (_currentExtraLifeRelic != null)
                 {
-                    // ConsumeRelic(_currentExtraLifeRelic);
-
+                    // Cancel the Effects that are active on this relic.
+                    // I'm wondering if this is necessary or if this should be replaced by something that cancels the effect.
+                    // Either way this works right now.
                     CancelEffectsOnRelic(_currentExtraLifeRelic);
                 }
                 else
