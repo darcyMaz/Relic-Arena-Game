@@ -40,4 +40,21 @@ public class Inventory : MonoBehaviour, IEnumerable<Relic>
         _inventory.RemoveAt(index);
         OnInventoryChange?.Invoke(GetEnumerator());
     }
+
+    /// <summary>
+    /// Returns the count of the inventory.
+    /// </summary>
+    /// <returns></returns>
+    public int Count()
+    {
+        return _inventory.Count;
+    }
+
+    /// <summary>
+    /// Clears the inventory.
+    /// </summary>
+    public void Clear()
+    {
+        _inventory.Clear();
+    }
 }

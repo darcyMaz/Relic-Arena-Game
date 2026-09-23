@@ -14,6 +14,13 @@ public class Player : IEffectable
     [SerializeField] private int PlayerNumber = 0;
 
     /// <summary>
+    /// The Relic currently in the player's hand.
+    /// </summary>
+    // private Relic _relicInHand;
+
+    private int _relicInHandIndex = -1;
+
+    /// <summary>
     /// The Player's Inventory.
     /// </summary>
     private Inventory _inventory;
@@ -77,6 +84,9 @@ public class Player : IEffectable
     /// </summary>
     public event Action<int> OnExtraLifeChanged;
 
+    /// <summary>
+    /// Variable which allows a Player to get hit as a test.
+    /// </summary>
     private InputAction _getHitTest;
 
     /// <summary>
@@ -291,6 +301,24 @@ public class Player : IEffectable
     {
         _inventory.RemoveItemAt(index);
         BuildEffectRelicList();
+    }
+
+    private void UpdateRelicInHand(bool isCycleCalled)
+    {
+        // so this is called from an event
+        // the event OnCycleRelicInHand invokes when the action is pressed for it and when the inventory change...
+        // if isCycleCalled is true, then 
+
+        if (_inventory.Count() == 0)
+        {
+            _relicInHandIndex = -1;
+        }
+        else if (isCycleCalled) // 
+        {
+
+        }
+
+
     }
 
     /// <summary>
