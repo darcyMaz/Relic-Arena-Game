@@ -313,12 +313,14 @@ public class Player : IEffectable
         {
             _relicInHandIndex = -1;
         }
-        else if (isCycleCalled) // 
+        else if (isCycleCalled)
         {
 
         }
+        else if (!isCycleCalled)
+        {
 
-
+        }
     }
 
     /// <summary>

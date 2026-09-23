@@ -18,14 +18,6 @@ public class Relic
         return _relic.GetName();
     }
 
-    /*
-    public Effect GetEffect()
-    {
-        CheckRelic();
-        return _relic.GetEffect();
-    }
-    */
-
     public Effect GetActiveEffect()
     {
         CheckRelic();
@@ -52,6 +44,12 @@ public class Relic
         CheckRelic();
         return _relic.GetPrice();
     }
+
+    public Sprite GetSprite()
+    {
+        return _relic.GetSprite();
+    }
+
     public string GetActiveEffectDetails()
     {
         CheckRelic();
