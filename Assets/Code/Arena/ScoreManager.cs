@@ -11,11 +11,15 @@ public class ScoreManager : MonoBehaviour
     public void PlayerOneScore(float Score){
             Player1Score += Score; 
         Debug.Log("Player 1 has" + Player1Score);
+            UIManager.Instance.CallP1Score(Player1Score);
+
     }
     
 public void PlayerTwoScore(float Score){
         Player2Score += Score;
         Debug.Log("Player 2 has" + Player2Score);
+            UIManager.Instance.CallP2Score(Player2Score);
+
     }
 }
 
