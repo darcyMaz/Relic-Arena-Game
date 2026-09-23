@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -278,6 +279,7 @@ public class Player : IEffectable
     /// <param name="relic"> The relic to remove. </param>
     private void ConsumeRelic(Relic relic)
     {
+        Debug.Log("Relic consumed: " + relic.GetName());
         _inventory.RemoveItem(relic);
         BuildEffectRelicList();
     }
@@ -308,8 +310,16 @@ public class Player : IEffectable
             if (_extraLives == 0)
             {
                 // The relic at that variable should exist, if it does not then it is logged and consuming the relic is ignored.
-                if (_currentExtraLifeRelic != null) ConsumeRelic(_currentExtraLifeRelic);
-                else Debug.Log("There was an attempt by a player to destroy a relic which gave the player an extra hit. The Relic was not properly assigned to the _currentExtraLifeRelic variable: " + PlayerNumber);
+                if (_currentExtraLifeRelic != null)
+                {
+                    // ConsumeRelic(_currentExtraLifeRelic);
+
+                    CancelEffectsOnRelic(_currentExtraLifeRelic);
+                }
+                else
+                {
+                    Debug.Log("There was an attempt by a player to destroy a relic which gave the player an extra hit. The Relic was not properly assigned to the _currentExtraLifeRelic variable: " + PlayerNumber);
+                }
                 _currentExtraLifeRelic = null;
             }
         }
@@ -327,7 +337,7 @@ public class Player : IEffectable
     /// </summary>
     private void TankHit()
     {
-
+        Debug.Log("There was an attempt to tank a hit but it was not implemented.");
     }
 
     /// <summary>
@@ -335,7 +345,7 @@ public class Player : IEffectable
     /// </summary>
     private void ReceiveHit()
     {
-        Debug.Log("There was an attempt ");
+        Debug.Log("There was an attempt to receive a hit but it was not implemented.");
     }
 
     /// <summary>
@@ -366,7 +376,7 @@ public class Player : IEffectable
             ChangeSpeed(0);
 
             // Await the duration of the animation.
-            //// For now, 3 seconds.
+            //// For now, 1 second.
             await Task.Delay(1000);
 
             ChangeSpeed(1);

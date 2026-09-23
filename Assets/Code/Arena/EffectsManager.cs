@@ -20,6 +20,11 @@ public class EffectsManager : MonoBehaviour
     [SerializeField] private GameObject ScarabDisplay;
 
     /// <summary>
+    /// A GameObject that can be cloned and accessed for the Fog Effect.
+    /// </summary>
+    [SerializeField] private GameObject Fog;
+
+    /// <summary>
     /// The Awake function checks if the current object is the singleton.
     /// </summary>
     private void Awake()
@@ -57,6 +62,11 @@ public class EffectsManager : MonoBehaviour
     public GameObject GetDisplayScarab(Vector3 initialPosition)
     {
         return Instantiate(ScarabDisplay, initialPosition, Quaternion.identity);
+    }
+
+    public GameObject GetFog(Vector3 initialPosition)
+    {
+        return Instantiate(Fog, initialPosition, Quaternion.identity);
     }
     
 }
