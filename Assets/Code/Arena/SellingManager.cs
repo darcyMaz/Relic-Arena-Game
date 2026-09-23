@@ -160,11 +160,12 @@ public class SellingManager : MonoBehaviour
 
         //line of code that adds the total to the score goes here
 
+        //line of code that plays cash register sfx goes here
+
         //Remove all the relics from their inventory.
-        foreach (Relic relic in _P1inventory)
-        {
-            _P1inventory.RemoveItem(relic);
-        }
+
+        _P1inventory.Clear();
+        
  
     }
 
@@ -187,10 +188,11 @@ public class SellingManager : MonoBehaviour
 
         //line of code that adds the total to the score goes here
 
+        //line of code that plays cash register sfx goes here
+
         //Remove all the relics from their inventory.
-        foreach (Relic relic in _P2inventory)
-        {
-            _P2inventory.RemoveItem(relic);
-        }
+        
+            _P2inventory.Clear();
+        
     }
 }

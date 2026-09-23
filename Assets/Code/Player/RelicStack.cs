@@ -12,7 +12,10 @@ public class RelicStack : MonoBehaviour
     [SerializeField] private Inventory _inventory;
     //Relic Icon Prefab
     [SerializeField] private GameObject _relicPreFab;
-
+    /// <summary>
+    /// The list of relics that are displayed on the player.
+    /// </summary>
+    private List<GameObject> _relics;
 
     private void Awake()
     {
@@ -33,6 +36,20 @@ public class RelicStack : MonoBehaviour
     /// </summary>
     private void StackAdjust(IEnumerator<Relic> relicsInInventory)
     {
-        //First delete all 
+        //First, delete all the current GameObjects
+        foreach (GameObject relic in _relics)
+        {
+            GameObject.Destroy(relic);
+        }
+
+        //Next, spawn a GameObject for each relic in the inventory
+        _inventory.GetEnumerator();
+        foreach (Relic relic in _inventory)
+        {
+            //_relicPreFab = 
+            Instantiate(_relicPreFab, new Vector3(transform.position.x, (transform.position.y + 300f), transform.position.z), transform.rotation);
+        }
+        
+
     }
 }
