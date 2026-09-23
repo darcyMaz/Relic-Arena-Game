@@ -136,8 +136,7 @@ public class SellingManager : MonoBehaviour
             
         }
         
-        
-        
+ 
     }
     /// <summary>
     /// Takes P1's inventory and sells it, clearing their inventory and giving them score.
