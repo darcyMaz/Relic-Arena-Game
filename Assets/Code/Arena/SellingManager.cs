@@ -31,6 +31,12 @@ public class SellingManager : MonoBehaviour
     /// </summary>
     private List _P2Relics;
 
+    //public float Player1Score;
+
+    //public float Player2Score;
+
+    [SerializeField] private ScoreManager _ScoreManager;
+
     /// <summary>
     /// When timer is over a set time, P1 sells their items.
     /// </summary>
@@ -159,7 +165,8 @@ public class SellingManager : MonoBehaviour
         Debug.Log("Total with multiplier: " + relicTotal);
 
         //line of code that adds the total to the score goes here
-
+            //Player1Score = (Player1Score + relicTotal);
+            _ScoreManager.PlayerOneScore(relicTotal);
         //line of code that plays cash register sfx goes here
 
         //Remove all the relics from their inventory.
@@ -187,7 +194,8 @@ public class SellingManager : MonoBehaviour
         Debug.Log("Total with multiplier: " + relicTotal);
 
         //line of code that adds the total to the score goes here
-
+        //Player2Score = (Player2Score + relicTotal);
+        _ScoreManager.PlayerTwoScore(relicTotal);
         //line of code that plays cash register sfx goes here
 
         //Remove all the relics from their inventory.
