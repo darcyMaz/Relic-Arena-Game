@@ -53,6 +53,11 @@ public class MovementInput : MonoBehaviour
     [SerializeField] private int PlayerNumber = 0;
 
     /// <summary>
+    /// The current direction the player is moving as a Vector2.
+    /// </summary>
+    private Vector2 _currentDirection = new Vector2();
+
+    /// <summary>
     /// Initialization before the game starts.
     /// </summary>
     private void Awake()
@@ -150,6 +155,11 @@ public class MovementInput : MonoBehaviour
         return _speed;
     }
 
+    public Vector2 GetDirection()
+    {
+        return _currentDirection;
+    }
+
     /// <summary>
     /// Check for input.
     /// </summary>
@@ -157,6 +167,8 @@ public class MovementInput : MonoBehaviour
     {
         // Poll the movement from the Input Action.
         Vector2 pollMovement = _move.ReadValue<Vector2>();
+
+        _currentDirection = pollMovement;
 
         // Set the _input vector such that Speed and normalization are accounted for.
         _input = pollMovement.normalized * _speed;

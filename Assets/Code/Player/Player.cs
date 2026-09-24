@@ -96,6 +96,7 @@ public class Player : IEffectable
 
     /// <summary>
     /// Event called when there is a call to cycle the relic in the player's hand.
+    /// This is necessary on top of the InputAction because a reording of items and thus of what's in the player's hand happens without pressing the input.
     /// </summary>
     public event Action<bool> OnCycleRelicInHand;
 
@@ -104,10 +105,24 @@ public class Player : IEffectable
     /// </summary>
     public event Action<int> OnRelicInHandChanged;
 
+    /// <summary>
+    /// The InputAction related to cycling the relic in hand.
+    /// </summary>
     private InputAction _cycleRelicAction;
 
+    /// <summary>
+    /// Invincibility time.
+    /// </summary>
     [SerializeField] private float ITime = 0.5f;
+    /// <summary>
+    /// Invincibility timer.
+    /// </summary>
     private float ITimer = 0;
+
+    /// <summary>
+    /// The last direction the player was moving in.
+    /// </summary>
+    private float _lastDirection = 0;
 
     /// <summary>
     /// Method which runs on awake.
@@ -260,9 +275,18 @@ public class Player : IEffectable
     /// </summary>
     private void CycleInit()
     {
-        if (PlayerNumber == 1) _cycleRelicAction = _actions.Player1.Cycle_Relic;
-        else if (PlayerNumber == 2) _cycleRelicAction = _actions.Player2.Cycle_Relic;
-        else _cycleRelicAction = _actions.Player.Jump;
+        if (PlayerNumber == 1)
+        {
+            _cycleRelicAction = _actions.Player1.Cycle_Relic;
+        }
+        else if (PlayerNumber == 2)
+        {
+            _cycleRelicAction = _actions.Player2.Cycle_Relic;
+        }
+        else
+        {
+            _cycleRelicAction = _actions.Player.Jump;
+        }
     }
 
     /// <summary>
@@ -346,9 +370,7 @@ public class Player : IEffectable
             if (_isRelicFound && (_relicFound != null && _buriedRelicFound != null))
             {
                 // Add it to the inventory.
-                _inventory.AddItem(_relicFound);
-                BuildEffectRelicList();
-
+                AddRelicToInventory(_relicFound);
 
                 // Play found relic animation.
                 ////
@@ -399,15 +421,13 @@ public class Player : IEffectable
     /// <param name="isCycleCalled"></param>
     private void UpdateRelicInHand(bool isCycleCalled)
     {
-        // so this is called from an event
-        // the event OnCycleRelicInHand invokes when the action is pressed for it and when the inventory change...
-        // if isCycleCalled is true, then 
+        Debug.Log("Update relic in hand called.");
 
         // If the inventory is empty, set the index to -1.
         if (_inventory.Count() <= 0)
         {
             _relicInHandIndex = -1;
-            OnRelicInHandChanged(-1);
+            OnRelicInHandChanged?.Invoke(-1);
         }
         // Otherwise, check whether the current index is an effect relic.
         // If it is, then go directly to the cycle check.
@@ -458,26 +478,33 @@ public class Player : IEffectable
             if (nearestEffectRelic == -1)
             {
                 _relicInHandIndex = -1;
-                OnRelicInHandChanged(-1);
+                OnRelicInHandChanged?.Invoke(-1);
                 return;
             }
             // If there was an Effect Relic but ONLY ONE of them.
+            // Then there will be no cycling.
             if (nextEffectRelic == -1)
             {
                 return;
             }
-            // If there the index is on an Effect Relic AND the isCycleCalled is true, then cycle to that Effect relic.
+            // If the index is on an Effect Relic AND the isCycleCalled is true, then cycle to that Effect relic.
+            // This function may be called without a call to cycle to the next relic because there may simply be a reordering of the inventory.
             if (isCycleCalled)
             {
                 _relicInHandIndex = nextEffectRelic;
-                OnRelicInHandChanged(_relicInHandIndex);
+                OnRelicInHandChanged?.Invoke(_relicInHandIndex);
             }
         }
 
     }
 
+    /// <summary>
+    /// Method called when the effect relic cycle action is pressed.
+    /// </summary>
+    /// <param name="context"> CallbackContext context </param>
     private void CycleEffectRelic(InputAction.CallbackContext context)
     {
+        Debug.Log("Cycle effect relic pressed.");
         if (context.performed) OnCycleRelicInHand?.Invoke(true);
     }
 
@@ -548,19 +575,42 @@ public class Player : IEffectable
     /// <summary>
     /// Implemented method which launches active effects.
     /// </summary>
+    /// <param name="direction"> The direction this relic is being launched. </param>
     /// <exception cref="NotImplementedException"></exception>
-    protected override void LaunchActiveEffect()
+    protected override void LaunchActiveEffect(Vector2 direction)
     {
         throw new NotImplementedException();
     }
 
     /// <summary>
-    /// Get the direction of the player.
+    /// Get the angled direction of the player.
     /// </summary>
-    /// <returns></returns>
-    private int GetDirection()
+    /// <returns> A float value representing the direction as an angle. </returns>
+    public float GetDirection()
     {
-        return 0;
+        // Get the direction of the movement.
+        Vector2 direction = _movementInput.GetDirection();
+
+        // If the player is stationary, then return the previous position.
+        if (direction.x == 0 && direction.y == 0)
+        {
+            return _lastDirection;
+        }
+        
+        // Otherwise, calculate the angle.
+        if (direction.y >= 0)
+        {
+            // If y is positive, then calculate the angle between (1,0) and the direction.
+            _lastDirection = Vector2.Angle(new Vector2(1, 0), direction);
+            return _lastDirection;
+        }
+        // If y is negative, then calculate the angle between (-1,0) and the direction and add 180.
+        else
+        {
+            // Otherwise, set the current position and return it.
+            _lastDirection = Vector2.Angle(new Vector2(-1, 0), direction) + 180;
+            return _lastDirection;
+        }
     }
 
     /// <summary>
@@ -577,9 +627,7 @@ public class Player : IEffectable
     }
 
     /// <summary>
-    /// Accepts a Relic into the inventory.
-    /// Runs when _metalDetector invokes an event for proximity to relic and dig is pressed.
-    /// Will also play animations for picking up relics.
+    /// Runs when _metalDetector invokes an event for proximity to relic AND dig is pressed.
     /// </summary>
     private void AcceptRelic(Relic relic, BuriedRelic buriedRelic)
     {
@@ -589,6 +637,17 @@ public class Player : IEffectable
             _relicFound = relic;
             _buriedRelicFound = buriedRelic;
         }
+    }
+
+    private void AddRelicToInventory(Relic relic)
+    {
+        // Add it to the inventory.
+        _inventory.AddItem(relic);
+
+        // Adding a relic to the inventory may require a cycle to an Effect relic in the case where this relic is the only one that will be an Effect Relic in the inventory.
+        OnCycleRelicInHand?.Invoke(false);
+
+        BuildEffectRelicList();
     }
 
     /// <summary>

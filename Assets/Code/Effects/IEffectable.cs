@@ -195,8 +195,11 @@ public abstract class IEffectable: MonoBehaviour
                 return;
             }
 
-            RunEffectAction(relic.GetActiveEffect(), relic.GetActiveEffectDetails(), relic);
+            ReceiveActiveEffect(relic.GetActiveEffect(), relic.GetActiveEffectDetails());
+            Destroy(other.gameObject);
         }
+
+        
     }
 
     /// <summary>
@@ -219,7 +222,7 @@ public abstract class IEffectable: MonoBehaviour
             Debug.Log("An active Effect was receieved by an IEffectable but it was already active on the IEffectable so it was ignored.");
         }
     }
-    protected abstract void LaunchActiveEffect();
+    protected abstract void LaunchActiveEffect(Vector2 direction);
 
     /// <summary>
     /// Method which takes an Effect and runs its respective action. 
@@ -412,7 +415,7 @@ public abstract class IEffectable: MonoBehaviour
                 }
 
                 // Strike lightning!
-                EffectsManager.Instance.Lightning(transform.position);
+                if (this.gameObject != null) EffectsManager.Instance.Lightning(transform.position);
                 ApplyLightning();
             }
             catch (OperationCanceledException) 
