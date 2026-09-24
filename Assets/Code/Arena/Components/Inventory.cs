@@ -42,6 +42,18 @@ public class Inventory : MonoBehaviour, IEnumerable<Relic>
     }
 
     /// <summary>
+    /// Retrieve the Relic at the index.
+    /// </summary>
+    /// <param name="index"> Index of the Relic to retrieve. </param>
+    /// <returns> The Relic to retrieve. </returns>
+    public Relic GetRelicAt(int index)
+    {
+        // Debug.Log("Get Relic At: " + index);
+
+        return _inventory[index];
+    }
+
+    /// <summary>
     /// Returns the count of the inventory.
     /// </summary>
     /// <returns></returns>

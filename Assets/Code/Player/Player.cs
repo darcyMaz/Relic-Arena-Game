@@ -90,6 +90,18 @@ public class Player : IEffectable
     private InputAction _getHitTest;
 
     /// <summary>
+    /// Event called when there is a call to cycle the relic in the player's hand.
+    /// </summary>
+    public event Action<bool> OnCycleRelicInHand;
+
+    /// <summary>
+    /// Event called when the relic in hand has changed.
+    /// </summary>
+    public event Action<int> OnRelicInHandChanged;
+
+    private InputAction _cycleRelicAction;
+
+    /// <summary>
     /// Method which runs on awake.
     /// </summary>
     protected override void Awake()
@@ -130,7 +142,9 @@ public class Player : IEffectable
         _actions = new InputSystem_Actions();
 
         OnExtraLifeChanged += ExtraLifeTest;
+        OnCycleRelicInHand += UpdateRelicInHand;
 
+        OnRelicInHandChanged += CycleRelicTest;
     }
 
     /// <summary>
@@ -147,9 +161,14 @@ public class Player : IEffectable
         // Initialize the input system.
         DigInit();
 
+        // For testing purposes.
         _getHitTest = _actions.Player.Crouch;
         _getHitTest.Enable();
         _getHitTest.performed += HitPlayerTest;
+
+        // Cycling the relic in hand.
+        CycleInit();
+
     }
 
     /// <summary>
@@ -178,6 +197,19 @@ public class Player : IEffectable
     }
 
     /// <summary>
+    /// Initialization for the cycle input.
+    /// </summary>
+    private void CycleInit()
+    {
+        if (PlayerNumber == 1) _cycleRelicAction = _actions.Player1.Cycle_Relic;
+        else if (PlayerNumber == 2) _cycleRelicAction = _actions.Player2.Cycle_Relic;
+        else _cycleRelicAction = _actions.Player.Jump;
+
+        _cycleRelicAction.Enable();
+        _cycleRelicAction.performed += CycleEffectRelic;
+    }
+
+    /// <summary>
     /// Initializations for the OnDisable function.
     /// </summary>
     private void OnDisableInit()
@@ -186,6 +218,8 @@ public class Player : IEffectable
         _dig.Disable();
 
         _getHitTest.Disable();
+
+        OnRelicConsumed -= ConsumeRelic;
     }
 
     /// <summary>
@@ -247,27 +281,16 @@ public class Player : IEffectable
             // All the passive effects on this relic.
             Dictionary<Effect, string>.KeyCollection thisRelicsEffects = relic.GetPassiveEffects().Keys;
 
-            // If this list is greater than 0, then double check to see if they're not all the None Effect.
-            // Yes, I know this would be strange.
-            if (thisRelicsEffects.Count > 0)
+            // If this is an Effect relic.
+            if (IsEffectRelic(relic))
             {
-                // Use a counter. If it is greater than 0 at the end of the below foreach loop, then it has an actual passive effect.
-                int checkForNonNoneEffect = 0;
-                foreach (Effect passiveEffect in thisRelicsEffects)
-                {
-                    if (passiveEffect == Effect.None) continue;
-                    checkForNonNoneEffect++;
-                }
-                if (checkForNonNoneEffect > 0)
-                {
-                    effectRelics.Add(relic);
-                }
+                effectRelics.Add(relic);
             }
         }
 
         InvokePassiveEffectEvent(effectRelics);
-    }
-    
+    } 
+
     /// <summary>
     /// Accepts a Relic into the inventory.
     /// Runs when _metalDetector invokes an event for proximity to relic and dig is pressed.
@@ -289,8 +312,13 @@ public class Player : IEffectable
     /// <param name="relic"> The relic to remove. </param>
     private void ConsumeRelic(Relic relic)
     {
-        Debug.Log("Relic consumed: " + relic.GetName());
+        // Debug.Log("Relic consumed: " + relic.GetName());
+
+        // Remove the item from the inventory.
         _inventory.RemoveItem(relic);
+        // Check whether the relic in hand needs to change.
+        OnCycleRelicInHand?.Invoke(false);
+        // Recalculate the passive effects.
         BuildEffectRelicList();
     }
     /// <summary>
@@ -300,27 +328,96 @@ public class Player : IEffectable
     private void ConsumeRelicAt(int index)
     {
         _inventory.RemoveItemAt(index);
+        OnCycleRelicInHand?.Invoke(false);
         BuildEffectRelicList();
     }
 
+    /// <summary>
+    /// This method updates which Relic is currently in the player's hand.
+    /// </summary>
+    /// <param name="isCycleCalled"></param>
     private void UpdateRelicInHand(bool isCycleCalled)
     {
         // so this is called from an event
         // the event OnCycleRelicInHand invokes when the action is pressed for it and when the inventory change...
         // if isCycleCalled is true, then 
 
-        if (_inventory.Count() == 0)
+        // If the inventory is empty, set the index to -1.
+        if (_inventory.Count() <= 0)
         {
             _relicInHandIndex = -1;
+            OnRelicInHandChanged(-1);
         }
-        else if (isCycleCalled)
+        // Otherwise, check whether the current index is an effect relic.
+        // If it is, then go directly to the cycle check.
+        // If it is not, cycle until a new Effect relic is found. If none are found then set _relicInHandIndex to -1 and break.
+        else
         {
+            // Set the _relicInHand index to 0 so that there is no out of range error.
+            // This is only necessary if the index is previously -1.
+            if (_relicInHandIndex == -1) _relicInHandIndex = 0;
 
-        }
-        else if (!isCycleCalled)
-        {
+            // Variables that will help indicate whether an effect relic was found in the inventory.
+            int nearestEffectRelic = -1;
+            int nextEffectRelic = -1;
 
+            // If the current indexInHand is an effect relic then set that index to the nearestEffectRelic.
+            if (IsEffectRelic(_inventory.GetRelicAt(_relicInHandIndex)))
+            {
+                nearestEffectRelic = _relicInHandIndex;
+            }
+
+            // Search through the inventory to find the two nearest effect relics.
+            for (int cycleIndex = _relicInHandIndex; cycleIndex != _relicInHandIndex; cycleIndex++)
+            {
+                // Check to see if the loop needs to cycle to the beginning.
+                if (cycleIndex >= _inventory.Count())
+                {
+                    cycleIndex = 0;
+                }
+                // If an effect relic is found, note its index.
+                if (IsEffectRelic(_inventory.GetRelicAt(cycleIndex)))
+                {
+                    // If this loop has not yet found any Effect Relics in the inventory.
+                    if (nearestEffectRelic == -1)
+                    {
+                        nearestEffectRelic = cycleIndex;
+                    }
+                    else if (nextEffectRelic == -1)
+                    {
+                        // Note down the next Effect Relic.
+                        nextEffectRelic = cycleIndex;
+                        // Break, because we only need the nearest Effect Relic and the one after it.
+                        break;
+                    }
+                }
+            }
+
+            // If there were indeed no Effect relics, then note that and return.
+            if (nearestEffectRelic == -1)
+            {
+                _relicInHandIndex = -1;
+                OnRelicInHandChanged(-1);
+                return;
+            }
+            // If there was an Effect Relic but ONLY ONE of them.
+            if (nextEffectRelic == -1)
+            {
+                return;
+            }
+            // If there the index is on an Effect Relic AND the isCycleCalled is true, then cycle to that Effect relic.
+            if (isCycleCalled)
+            {
+                _relicInHandIndex = nextEffectRelic;
+                OnRelicInHandChanged(_relicInHandIndex);
+            }
         }
+        
+    }
+
+    private void CycleEffectRelic(InputAction.CallbackContext context)
+    {
+        if (context.performed) OnCycleRelicInHand?.Invoke(true);
     }
 
     /// <summary>
@@ -336,26 +433,22 @@ public class Player : IEffectable
             // Tank the hit.
             TankHit();
 
-            // If the extraLives var has gone from 1 to 0, meaning the Relic must now be consumed.
+            // If the extraLives var has gone from 1 to 0, the effect mustbe cancelled.
             if (_extraLives == 0)
             {
-                // The relic at that variable should exist, if it does not then it is logged and consuming the relic is ignored.
-                if (_currentExtraLifeRelic != null)
+                // Cancel the extra lives effect.
+                CancellationTokenSource token;
+                if (_effectsCancellationTokens.TryGetValue(Effect.ExtraLives, out token))
                 {
-                    // Cancel the Effects that are active on this relic.
-                    // I'm wondering if this is necessary or if this should be replaced by something that cancels the effect.
-                    // Either way this works right now.
-                    CancelEffectsOnRelic(_currentExtraLifeRelic);
+                    token.Cancel();
                 }
-                else
-                {
-                    Debug.Log("There was an attempt by a player to destroy a relic which gave the player an extra hit. The Relic was not properly assigned to the _currentExtraLifeRelic variable: " + PlayerNumber);
-                }
-                _currentExtraLifeRelic = null;
             }
+            
         }
         else
         {
+            
+
             // Ensure that the _extraLives var does not go below zero.
             _extraLives = 0;
             ReceiveHit();
@@ -415,6 +508,8 @@ public class Player : IEffectable
             // If the Player found a relic.
             if (_isRelicFound && (_relicFound != null && _buriedRelicFound != null))
             {
+
+                Debug.Log("Player.Dig() ~ adding item to dictionary and calling BuildEffectRelicList()");
 
                 // Add it to the inventory.
                 _inventory.AddItem(_relicFound);
@@ -503,5 +598,15 @@ public class Player : IEffectable
     private void HitPlayerTest(InputAction.CallbackContext context)
     {
         if (context.performed) PlayerHit();
+    }
+
+    private void CycleRelicTest(int index)
+    {
+        Debug.Log("cycle relic test: " + index);
+        Debug.Log("inventory");
+        foreach (Relic relic in _inventory)
+        {
+            Debug.Log("\t\t" + relic.GetName());
+        }
     }
 }

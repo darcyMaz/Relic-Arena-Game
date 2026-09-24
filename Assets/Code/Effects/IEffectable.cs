@@ -230,6 +230,12 @@ public abstract class IEffectable: MonoBehaviour
         {
             // Apply the effect.
             effectAction.Invoke(effectDetails, effect, relic, cancellationTokenSource.Token);
+
+            // I could check the token here and make a new one if it's cancelled, or just check it
+            if (cancellationTokenSource.IsCancellationRequested)
+            {
+                Debug.Log("In RunEffectAction an effectAction was run BUT the tokensource was cancelled already.");
+            }
         }
         else
         {
@@ -243,6 +249,13 @@ public abstract class IEffectable: MonoBehaviour
     /// </summary>
     protected void InvokePassiveEffectEvent(List<Relic> effectRelics)
     {
+        Debug.Log("I:InvokePassiveEffectEvent called: ");
+        foreach (Relic relic in effectRelics) 
+        {
+            Debug.Log("\t\t" + relic.GetName());
+        }
+        Debug.Log("---");
+
         OnUpdateEffectRelics?.Invoke(effectRelics);
     }
 
@@ -318,9 +331,10 @@ public abstract class IEffectable: MonoBehaviour
 
     /// <summary>
     /// Cancel the effects related to this relic.
+    /// It is set to private because the order of method operations must stay inside IEffectable.
     /// </summary>
     /// <param name="relic"> The relic whose effects must be cancelled. </param>
-    protected void CancelEffectsOnRelic(Relic relic)
+    private void CancelEffectsOnRelic(Relic relic)
     {
         //Debug.Log("Cancel effects on relics: ");
 
@@ -329,10 +343,14 @@ public abstract class IEffectable: MonoBehaviour
         // For each Effect held by this Relic.
         foreach (Effect effect in effectsToCancel)
         {
+            Debug.Log("Potentially cancelling the effect: " + effect);
+
             // If this Effect even is active (it should be logically).
             Relic associatedRelic;
             if (_passiveEffects.TryGetValue(effect, out associatedRelic))
             {
+                Debug.Log("The relic whose effect we're cancelling: " + relic.GetName() + " vs. the relic associted with the effect being cancelled: " + associatedRelic.GetName());
+
                 // If the incoming relic and the relic associated with this effect are the same then this Effect will be removed.
                 if (relic == associatedRelic)
                 {
@@ -346,6 +364,8 @@ public abstract class IEffectable: MonoBehaviour
                     // If the token existed.
                     if (tokenFound)
                     {
+                        Debug.Log("The effect " + effect + " on the relic " + relic.GetName() + " is about to be cancelled. Is it already cancelled: " + token.IsCancellationRequested);
+
                         token.Cancel();
                         //.Log("The following has been cancelled: " + effect);
 
@@ -362,7 +382,9 @@ public abstract class IEffectable: MonoBehaviour
                     }
                 }
             }
+            
         }
+        Debug.Log("OnRelicConsumed in CancelEffectsOnRelic: " + relic.GetName());
         OnRelicConsumed?.Invoke(relic);
     }
 
@@ -409,7 +431,12 @@ public abstract class IEffectable: MonoBehaviour
             {
                 // Wait for the delay or upon cancellation, skip the lightning strike. 
                 await Task.Delay(delayInt, token);
-                //Debug.Log("After lightning delay!");
+
+                // If the token was cancelled, then we still need to check and throw the exception, otherwise the rest of the operation will run.
+                if (token.IsCancellationRequested)
+                {
+                    throw new OperationCanceledException();
+                }
 
                 // Strike lightning!
                 EffectsManager.Instance.Lightning(transform.position);
@@ -453,6 +480,7 @@ public abstract class IEffectable: MonoBehaviour
             {
                 // Get the Fog GameObject clone from the EffectsManager.
                 GameObject FogClone = EffectsManager.Instance.GetFog(transform.position + new Vector3(0, 0, -0.5f));
+                int i = 0;
 
                 while (true)
                 {
@@ -462,9 +490,16 @@ public abstract class IEffectable: MonoBehaviour
 
                     if (token.IsCancellationRequested) 
                     {
-                        //Debug.Log("Fog cancelled");
+                        Debug.Log("Fog cancelled");
                         break;
                     }
+
+                    if (i == 0)
+                    {
+                        i = 1;
+                        Debug.Log("Fog effect started without being cancelled.");
+                    }
+
                     await Task.Delay(100);
                 }
                 
@@ -511,20 +546,26 @@ public abstract class IEffectable: MonoBehaviour
             {
                 ApplyExtraLives(extraLives, thisRelic);
 
+                // There is no time limit on this effect.
                 while (true)
                 {
-                    // Debug.Log("Yes, extra lives is still running.");
+                    // When cancelled, throw this error.
                     if (token.IsCancellationRequested)
                     {
-                        //Debug.Log("ExtraLives is cancelled");
-                        break;
+                        throw new OperationCanceledException();
                     }
+
+                    // Yield the processes to others.
                     await Task.Delay(100);
                 }
             }
             catch (OperationCanceledException)
             {
+                Debug.Log("Extra lives effect about to be cancelled.");
+
+                // Cancel the extra lives effect.
                 CancelExtraLives();
+                
             }
             
         }
@@ -559,6 +600,37 @@ public abstract class IEffectable: MonoBehaviour
     private async void NoEffect(string noEffect, Effect currentEffect, Relic thisRelic, CancellationToken token)
     {
         // Debug.Log("The no effect effect has been called. Here's the associated details string: " + noEffect);
+    }
+
+
+    /// <summary>
+    /// This method determines whether a Relic is an Effect relic.
+    /// </summary>
+    /// <param name="relic"></param>
+    /// <returns></returns>
+    protected bool IsEffectRelic(Relic relic)
+    {
+        // Get the passive effects.
+        Dictionary<Effect, string>.KeyCollection passiveEffects = relic.GetPassiveEffects().Keys;
+
+        // If this list is greater than 0, then double check to see if they're not all the None Effect.
+        // Yes, I know this would be strange.
+        if (passiveEffects.Count > 0)
+        {
+            // Use a counter. If it is greater than 0 at the end of the foreach loop, then it has an actual passive effect.
+            int checkForNonNoneEffect = 0;
+            foreach (Effect passiveEffect in passiveEffects)
+            {
+                if (passiveEffect == Effect.None) continue;
+                checkForNonNoneEffect++;
+            }
+            if (checkForNonNoneEffect > 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>

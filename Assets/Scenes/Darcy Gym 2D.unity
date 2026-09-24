@@ -1544,7 +1544,7 @@ MonoBehaviour:
   GridColumns: 10
   EffectRelicSOSpawnRate: 0.8
   MaxRelicsBuried: 8
-  BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
+  BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 345bc74676e4b42809123e503e7ec180, type: 3}
   _shop: {fileID: 0}
 --- !u!64 &1926875181
 MeshCollider:
