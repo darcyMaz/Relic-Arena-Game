@@ -36,18 +36,26 @@ public class RelicStack : MonoBehaviour
     /// </summary>
     private void StackAdjust(IEnumerator<Relic> relicsInInventory)
     {
+        Debug.Log("Stacking Relics");
         //First, delete all the current GameObjects
-        foreach (GameObject relic in _relics)
+        if (_relics != null)
         {
-            GameObject.Destroy(relic);
+            foreach (GameObject relic in _relics)
+            {
+                GameObject.Destroy(relic);
+            }
+            _relics.Clear();
         }
 
         //Next, spawn a GameObject for each relic in the inventory
-        _inventory.GetEnumerator();
+        
+        //Set what iteration is happening in the foreach
+        float i = 0f;
         foreach (Relic relic in _inventory)
         {
-            //_relicPreFab = 
-            Instantiate(_relicPreFab, new Vector3(transform.position.x, (transform.position.y + 300f), transform.position.z), transform.rotation);
+            i++;
+            Instantiate(_relicPreFab, new Vector3(transform.position.x, (transform.position.y + (2f * i)), transform.position.z), transform.rotation);
+
         }
         
 
