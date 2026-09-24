@@ -195,8 +195,11 @@ public abstract class IEffectable: MonoBehaviour
                 return;
             }
 
-            RunEffectAction(relic.GetActiveEffect(), relic.GetActiveEffectDetails(), relic);
+            ReceiveActiveEffect(relic.GetActiveEffect(), relic.GetActiveEffectDetails());
+            Destroy(other.gameObject);
         }
+
+        
     }
 
     /// <summary>
@@ -219,7 +222,7 @@ public abstract class IEffectable: MonoBehaviour
             Debug.Log("An active Effect was receieved by an IEffectable but it was already active on the IEffectable so it was ignored.");
         }
     }
-    protected abstract void LaunchActiveEffect();
+    protected abstract void LaunchActiveEffect(Vector2 direction);
 
     /// <summary>
     /// Method which takes an Effect and runs its respective action. 
@@ -412,17 +415,13 @@ public abstract class IEffectable: MonoBehaviour
                 }
 
                 // Strike lightning!
-                EffectsManager.Instance.Lightning(transform.position);
+                if (this.gameObject != null) EffectsManager.Instance.Lightning(transform.position);
                 ApplyLightning();
             }
             catch (OperationCanceledException) 
             {
                 //Debug.Log("Lightning cancelled");
             }
-
-            // Make sure this effect is removed from the list of current effects when finished.
-            // _passiveEffects.Remove(currentEffect);
-            // OnRelicConsumed?.Invoke(thisRelic);
         }
         catch (FormatException fe)
         {
@@ -442,46 +441,39 @@ public abstract class IEffectable: MonoBehaviour
     /// <param name="effect"> The Effect itself. </param>
     /// <param name="thisRelic"> The Relic this effect comes from. </param>
     /// <param name="token"> The cancellation token for this async function. </param>
-    /// <exception cref="NotImplementedException"></exception>
     private async void Fog(string details, Effect currentEffect, Relic thisRelic, CancellationToken token)
     {
         // Ensure the format of the effect details is correct for this effect.
         try
         {
+            // Get the Fog GameObject clone from the EffectsManager.
+            GameObject FogClone = EffectsManager.Instance.GetFog(this.transform);
+
             // Ensure that the operation is not cancelled.
             try
             {
-                // Get the Fog GameObject clone from the EffectsManager.
-                GameObject FogClone = EffectsManager.Instance.GetFog(transform.position + new Vector3(0, 0, -0.5f));
-                int i = 0;
+                // Set the position of the fog to be just in front of the IEffectable.
+                FogClone.transform.localPosition = new Vector3(0, 0, -0.5f);
 
                 while (true)
                 {
+                    // If the FogClone does not exist, break.
                     if (FogClone == null) break;
 
-                    FogClone.transform.position = transform.position + new Vector3(0, 0, -0.5f);
-
+                    // When token is cancelled.
                     if (token.IsCancellationRequested) 
                     {
-                        Debug.Log("Fog cancelled");
-                        break;
-                    }
-
-                    if (i == 0)
-                    {
-                        i = 1;
-                        Debug.Log("Fog effect started without being cancelled.");
+                        throw new OperationCanceledException();
                     }
 
                     await Task.Delay(100);
                 }
                 
-                // This does cause an error without the if statement when the game shuts down mid-game and this clone exists.
-                if (FogClone != null) Destroy(FogClone.gameObject);
             }
             catch (OperationCanceledException)
             {
-
+                // This does cause an error without the if statement when the game shuts down mid-game and this clone exists.
+                if (FogClone != null) Destroy(FogClone.gameObject);
             }
         }
         catch (FormatException fe)
@@ -534,8 +526,6 @@ public abstract class IEffectable: MonoBehaviour
             }
             catch (OperationCanceledException)
             {
-                Debug.Log("Extra lives effect about to be cancelled.");
-
                 // Cancel the extra lives effect.
                 CancelExtraLives();
                 
