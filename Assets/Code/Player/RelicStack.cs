@@ -42,21 +42,28 @@ public class RelicStack : MonoBehaviour
         {
             foreach (GameObject relic in _relics)
             {
-                GameObject.Destroy(relic);
+                Destroy(relic);
             }
             _relics.Clear();
         }
 
         //Next, spawn a GameObject for each relic in the inventory
-        
+        _relics = new List<GameObject>();
         //Set what iteration is happening in the foreach
         float i = 0f;
         foreach (Relic relic in _inventory)
         {
+            //Increment the index of what relic we're on
             i++;
-            Instantiate(_relicPreFab, new Vector3(transform.position.x, (transform.position.y + (2f * i)), transform.position.z), transform.rotation);
+            Sprite relicSprite = relic.GetSprite();
+            Transform transform = GetComponent<Transform>();
+            GameObject go = Instantiate(_relicPreFab, transform);
+            //Offset the stacking relic
+            go.transform.position = new Vector3(transform.position.x, transform.position.y + (2 * i), transform.position.z);
+            SpriteRenderer _spriteRenderer = go.GetComponent<SpriteRenderer>();
+            _spriteRenderer.sprite = relicSprite;
 
-        }
+        } 
         
 
     }

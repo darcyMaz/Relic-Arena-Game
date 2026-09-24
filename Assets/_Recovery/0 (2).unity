@@ -648,6 +648,10 @@ PrefabInstance:
       propertyPath: BaseSpeed
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 4744797384855256097, guid: 6f025364fae39a3458d1f587a911bddf, type: 3}
+      propertyPath: PlayerNumber
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7649312942991597728, guid: 6f025364fae39a3458d1f587a911bddf, type: 3}
       propertyPath: m_Name
       value: Player RB
