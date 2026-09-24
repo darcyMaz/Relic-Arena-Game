@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RelicSO
   Name: Lightning Test
   Sprite: {fileID: 0}
-  Price: 10
+  Price: 200
   ActiveEffect: 1
   ActiveEffectDetails: 4000
   PassiveEffects: 01000000

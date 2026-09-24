@@ -1209,7 +1209,7 @@ PrefabInstance:
     - target: {fileID: 124224802732901904, guid: 6f025364fae39a3458d1f587a911bddf, type: 3}
       propertyPath: _closeSound
       value: 
-      objectReference: {fileID: 8300000, guid: cbe28048c541242e78544f174b72c32d, type: 3}
+      objectReference: {fileID: 8300000, guid: 7646eebeeeef8478ba498f9eae9b6e5d, type: 3}
     - target: {fileID: 3157534535904684024, guid: 6f025364fae39a3458d1f587a911bddf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.94
@@ -1470,6 +1470,7 @@ MonoBehaviour:
   LightningSource: {fileID: 1968340102}
   ScarabDisplay: {fileID: 0}
   Fog: {fileID: 4300232982932758446, guid: afce798ec81a44f4491a3f2db4ca075b, type: 3}
+  LightningCounter: {fileID: 0}
 --- !u!4 &1539130024
 Transform:
   m_ObjectHideFlags: 0
