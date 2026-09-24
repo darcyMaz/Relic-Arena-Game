@@ -24,6 +24,8 @@ public class EffectsManager : MonoBehaviour
     /// </summary>
     [SerializeField] private GameObject Fog;
 
+    [SerializeField] private GameObject LightningCounter;
+
     /// <summary>
     /// The Awake function checks if the current object is the singleton.
     /// </summary>
@@ -67,6 +69,11 @@ public class EffectsManager : MonoBehaviour
     public GameObject GetFog(Vector3 initialPosition)
     {
         return Instantiate(Fog, initialPosition, Quaternion.identity);
+    }
+
+    public GameObject GetLightningCounter(Vector3 initialPosition)
+    {
+        return Instantiate(LightningCounter, initialPosition, Quaternion.identity);
     }
     
 }

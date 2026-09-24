@@ -85,6 +85,11 @@ public class Player : IEffectable
     public event Action<int> OnExtraLifeChanged;
 
     /// <summary>
+    /// Event that runs when a player is damaged.
+    /// </summary>
+    public event Action OnPlayerDamaged;
+
+    /// <summary>
     /// Variable which allows a Player to get hit as a test.
     /// </summary>
     private InputAction _getHitTest;
@@ -100,6 +105,9 @@ public class Player : IEffectable
     public event Action<int> OnRelicInHandChanged;
 
     private InputAction _cycleRelicAction;
+
+    [SerializeField] private float ITime = 0.5f;
+    private float ITimer = 0;
 
     /// <summary>
     /// Method which runs on awake.
@@ -134,17 +142,22 @@ public class Player : IEffectable
     }
 
     /// <summary>
+    /// Method which runs every frame.
+    /// </summary>
+    protected override void Update()
+    {
+        base.Update();
+
+        UpdateHelper();
+    }
+
+    /// <summary>
     /// Method holding initializations for the Awake function.
     /// </summary>
     private void AwakeInit()
     {
         base.Awake();
         _actions = new InputSystem_Actions();
-
-        OnExtraLifeChanged += ExtraLifeTest;
-        OnCycleRelicInHand += UpdateRelicInHand;
-
-        OnRelicInHandChanged += CycleRelicTest;
     }
 
     /// <summary>
@@ -152,23 +165,73 @@ public class Player : IEffectable
     /// </summary>
     private void OnEnableInit()
     {
-        // Subscribe to the OnRelicConsumed event.
-        OnRelicConsumed += ConsumeRelic;
-
         // Run the IEffectable OnEnable().
         base.OnEnable();
 
         // Initialize the input system.
         DigInit();
+        CycleInit();
+
+        // Subscribe to events.
+        OnEnableEventSubscribers();
+    }
+
+    /// <summary>
+    /// Initializations for the OnDisable function.
+    /// </summary>
+    private void OnDisableInit()
+    {
+        base.OnDisable();
+        OnDisableEventSubscribers();
+    }
+
+    private void OnEnableEventSubscribers()
+    {
+        // Initialize the dig mechanic.
+        _dig.performed += Dig;
+        _dig.Enable();
+
+        // Instantiate the action for cycling a relic.
+        _cycleRelicAction.Enable();
+        _cycleRelicAction.performed += CycleEffectRelic;
+
+        // When the player is damaged, receive the hit.
+        OnPlayerDamaged += ReceiveHit;
+
+        // Subscribe to the OnRelicConsumed event.
+        OnRelicConsumed += ConsumeRelic;
+
+        // Subscribe the UpdateRelicInHand function to the related event.
+        OnCycleRelicInHand += UpdateRelicInHand;
 
         // For testing purposes.
         _getHitTest = _actions.Player.Crouch;
         _getHitTest.Enable();
         _getHitTest.performed += HitPlayerTest;
 
-        // Cycling the relic in hand.
-        CycleInit();
+        // Test event calls.
+        OnExtraLifeChanged += ExtraLifeTest;
+        OnRelicInHandChanged += CycleRelicTest;
+    }
 
+    private void OnDisableEventSubscribers()
+    {
+        // Disable event actions
+        _dig.Disable();
+        _getHitTest.Disable();
+        _cycleRelicAction.Disable();
+
+        // Unsubscribe from events.
+        OnRelicConsumed -= ConsumeRelic;
+        OnPlayerDamaged -= ReceiveHit;
+        OnCycleRelicInHand -= UpdateRelicInHand;
+        _cycleRelicAction.performed -= CycleEffectRelic;
+        _dig.performed -= Dig;
+        _getHitTest.performed -= HitPlayerTest;
+
+        // Test event calls.
+        OnExtraLifeChanged -= ExtraLifeTest;
+        OnRelicInHandChanged -= CycleRelicTest;
     }
 
     /// <summary>
@@ -190,10 +253,6 @@ public class Player : IEffectable
         {
             _dig = _actions.Player.Interact;
         }
-
-        // Initialize the dig mechanic.
-        _dig.performed += Dig;
-        _dig.Enable();
     }
 
     /// <summary>
@@ -204,22 +263,6 @@ public class Player : IEffectable
         if (PlayerNumber == 1) _cycleRelicAction = _actions.Player1.Cycle_Relic;
         else if (PlayerNumber == 2) _cycleRelicAction = _actions.Player2.Cycle_Relic;
         else _cycleRelicAction = _actions.Player.Jump;
-
-        _cycleRelicAction.Enable();
-        _cycleRelicAction.performed += CycleEffectRelic;
-    }
-
-    /// <summary>
-    /// Initializations for the OnDisable function.
-    /// </summary>
-    private void OnDisableInit()
-    {
-        base.OnDisable();
-        _dig.Disable();
-
-        _getHitTest.Disable();
-
-        OnRelicConsumed -= ConsumeRelic;
     }
 
     /// <summary>
@@ -258,12 +301,71 @@ public class Player : IEffectable
     }
 
     /// <summary>
+    /// Method which helps the Update function.
+    /// </summary>
+    private void UpdateHelper()
+    {
+        // If the ITimer is above 0, then the invisibility frames have begun and they must be counted down.
+        ITimer = (ITimer <= 0) ? ITimer -= Time.deltaTime : 0;
+    }
+
+    /// <summary>
     /// Get this Player's number.
     /// </summary>
     /// <returns> The Player's number as an integer. </returns>
     public int GetPlayerNumber()
     {
         return PlayerNumber;
+    }
+
+    /// <summary>
+    /// Async method which actviates when the player digs.
+    /// </summary>
+    /// <param name="context"> The CallbackContext for this action.   </param>
+    private async void Dig(InputAction.CallbackContext context)
+    {
+        if (context.performed && !_isDigging)
+        {
+
+            // The Player is digging.
+            _isDigging = true;
+
+            // Play the digging animation.
+            ////
+
+            // Stop the player's movement.
+            ChangeSpeed(0);
+
+            // Await the duration of the animation.
+            //// For now, 1 second.
+            await Task.Delay(1000);
+
+            ChangeSpeed(1);
+
+            // If the Player found a relic.
+            if (_isRelicFound && (_relicFound != null && _buriedRelicFound != null))
+            {
+                // Add it to the inventory.
+                _inventory.AddItem(_relicFound);
+                BuildEffectRelicList();
+
+
+                // Play found relic animation.
+                ////
+
+                // Destroy the buried relic.
+                Destroy(_buriedRelicFound.gameObject);
+
+                // Reset relic found vars.
+                _isRelicFound = false;
+                _relicFound = null;
+                _buriedRelicFound = null;
+
+            }
+
+            // When no longer digging, set this to false.
+            _isDigging = false;
+        }
     }
 
     /// <summary>
@@ -289,47 +391,6 @@ public class Player : IEffectable
         }
 
         InvokePassiveEffectEvent(effectRelics);
-    } 
-
-    /// <summary>
-    /// Accepts a Relic into the inventory.
-    /// Runs when _metalDetector invokes an event for proximity to relic and dig is pressed.
-    /// Will also play animations for picking up relics.
-    /// </summary>
-    private void AcceptRelic(Relic relic, BuriedRelic buriedRelic)
-    {
-        if (_hasInventory && _isDigging && !_isRelicFound)
-        { 
-            _isRelicFound = true;
-            _relicFound = relic;
-            _buriedRelicFound = buriedRelic;
-        }
-    }
-
-    /// <summary>
-    /// Consume a relic. In other words delete it.
-    /// </summary>
-    /// <param name="relic"> The relic to remove. </param>
-    private void ConsumeRelic(Relic relic)
-    {
-        // Debug.Log("Relic consumed: " + relic.GetName());
-
-        // Remove the item from the inventory.
-        _inventory.RemoveItem(relic);
-        // Check whether the relic in hand needs to change.
-        OnCycleRelicInHand?.Invoke(false);
-        // Recalculate the passive effects.
-        BuildEffectRelicList();
-    }
-    /// <summary>
-    /// Consume a relic at an index. In other words delete it.
-    /// </summary>
-    /// <param name="index"> The inventory index to remove a relic. </param>
-    private void ConsumeRelicAt(int index)
-    {
-        _inventory.RemoveItemAt(index);
-        OnCycleRelicInHand?.Invoke(false);
-        BuildEffectRelicList();
     }
 
     /// <summary>
@@ -412,7 +473,7 @@ public class Player : IEffectable
                 OnRelicInHandChanged(_relicInHandIndex);
             }
         }
-        
+
     }
 
     private void CycleEffectRelic(InputAction.CallbackContext context)
@@ -428,6 +489,9 @@ public class Player : IEffectable
         // If there are more than 0 extra lives.
         if (_extraLives >= 1)
         {
+            // check if iframe timer is going
+
+
             // Reduce and announce the loss of a life.
             OnExtraLifeChanged?.Invoke(--_extraLives);
             // Tank the hit.
@@ -443,19 +507,22 @@ public class Player : IEffectable
                     token.Cancel();
                 }
             }
-            
+
         }
         else
         {
-            
-
+            // If the invincibility timer is not running.
+            if (ITimer <= 0)
+            {
+                // Damage the player.
+                OnPlayerDamaged?.Invoke();
+            }
             // Ensure that the _extraLives var does not go below zero.
             _extraLives = 0;
-            ReceiveHit();
         }
-        
+
     }
-    
+
     /// <summary>
     /// This method is run when a Player "tanks a hit." I.e. they are hit but it has no effect.
     /// </summary>
@@ -469,7 +536,13 @@ public class Player : IEffectable
     /// </summary>
     private void ReceiveHit()
     {
-        Debug.Log("There was an attempt to receive a hit but it was not implemented.");
+        // LOSE ALL RELICS
+        _inventory.Clear();
+        BuildEffectRelicList();
+
+        ITimer = ITime;
+
+        // ANIMATION HERE
     }
 
     /// <summary>
@@ -482,56 +555,12 @@ public class Player : IEffectable
     }
 
     /// <summary>
-    /// Async method which actviates when the player digs.
+    /// Get the direction of the player.
     /// </summary>
-    /// <param name="context"> The CallbackContext for this action.   </param>
-    private async void Dig(InputAction.CallbackContext context)
+    /// <returns></returns>
+    private int GetDirection()
     {
-        if (context.performed && !_isDigging)
-        {
-
-            // The Player is digging.
-            _isDigging = true;
-
-            // Play the digging animation.
-            ////
-
-            // Stop the player's movement.
-            ChangeSpeed(0);
-
-            // Await the duration of the animation.
-            //// For now, 1 second.
-            await Task.Delay(1000);
-
-            ChangeSpeed(1);
-
-            // If the Player found a relic.
-            if (_isRelicFound && (_relicFound != null && _buriedRelicFound != null))
-            {
-
-                Debug.Log("Player.Dig() ~ adding item to dictionary and calling BuildEffectRelicList()");
-
-                // Add it to the inventory.
-                _inventory.AddItem(_relicFound);
-                BuildEffectRelicList();
-
-
-                // Play found relic animation.
-                ////
-
-                // Destroy the buried relic.
-                Destroy(_buriedRelicFound.gameObject);
-
-                // Reset relic found vars.
-                _isRelicFound = false;
-                _relicFound = null;
-                _buriedRelicFound = null;
-
-            }
-
-            // When no longer digging, set this to false.
-            _isDigging = false;
-        }
+        return 0;
     }
 
     /// <summary>
@@ -548,6 +577,47 @@ public class Player : IEffectable
     }
 
     /// <summary>
+    /// Accepts a Relic into the inventory.
+    /// Runs when _metalDetector invokes an event for proximity to relic and dig is pressed.
+    /// Will also play animations for picking up relics.
+    /// </summary>
+    private void AcceptRelic(Relic relic, BuriedRelic buriedRelic)
+    {
+        if (_hasInventory && _isDigging && !_isRelicFound)
+        { 
+            _isRelicFound = true;
+            _relicFound = relic;
+            _buriedRelicFound = buriedRelic;
+        }
+    }
+
+    /// <summary>
+    /// Consume a relic. In other words delete it.
+    /// </summary>
+    /// <param name="relic"> The relic to remove. </param>
+    private void ConsumeRelic(Relic relic)
+    {
+        // Debug.Log("Relic consumed: " + relic.GetName());
+
+        // Remove the item from the inventory.
+        _inventory.RemoveItem(relic);
+        // Check whether the relic in hand needs to change.
+        OnCycleRelicInHand?.Invoke(false);
+        // Recalculate the passive effects.
+        BuildEffectRelicList();
+    }
+    /// <summary>
+    /// Consume a relic at an index. In other words delete it.
+    /// </summary>
+    /// <param name="index"> The inventory index to remove a relic. </param>
+    private void ConsumeRelicAt(int index)
+    {
+        _inventory.RemoveItemAt(index);
+        OnCycleRelicInHand?.Invoke(false);
+        BuildEffectRelicList();
+    }
+
+    /// <summary>
     /// Apply the Lightning Effect.
     /// </summary>
     protected override void ApplyLightning()
@@ -557,7 +627,7 @@ public class Player : IEffectable
 
     protected override void ApplyFog()
     {
-        throw new NotImplementedException();
+        
     }
 
     protected override void ApplyExtraLives(int extraLives, Relic extraLivesRelic)
@@ -570,10 +640,6 @@ public class Player : IEffectable
             _currentExtraLifeRelic = extraLivesRelic;
             // Announce the extra life info to event listeners.
             OnExtraLifeChanged?.Invoke(_extraLives);
-        }
-        else
-        {
-            Debug.Log("The Player #" + PlayerNumber + " tried to apply the ExtraLives effect to itself but found that there was already a relic applying that effect.");
         }
     }
 
