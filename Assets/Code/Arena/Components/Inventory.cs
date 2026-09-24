@@ -68,5 +68,6 @@ public class Inventory : MonoBehaviour, IEnumerable<Relic>
     public void Clear()
     {
         _inventory.Clear();
+        OnInventoryChange?.Invoke(GetEnumerator());
     }
 }

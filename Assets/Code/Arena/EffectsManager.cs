@@ -66,9 +66,9 @@ public class EffectsManager : MonoBehaviour
         return Instantiate(ScarabDisplay, initialPosition, Quaternion.identity);
     }
 
-    public GameObject GetFog(Vector3 initialPosition)
+    public GameObject GetFog(Transform parent)
     {
-        return Instantiate(Fog, initialPosition, Quaternion.identity);
+        return Instantiate(Fog, parent);
     }
 
     public GameObject GetLightningCounter(Vector3 initialPosition)

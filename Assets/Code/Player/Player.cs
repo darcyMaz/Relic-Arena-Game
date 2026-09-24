@@ -426,6 +426,7 @@ public class Player : IEffectable
         // If the inventory is empty, set the index to -1.
         if (_inventory.Count() <= 0)
         {
+            Debug.Log("\t\tThe inventory is empty.");
             _relicInHandIndex = -1;
             OnRelicInHandChanged?.Invoke(-1);
         }
@@ -451,6 +452,8 @@ public class Player : IEffectable
             // Search through the inventory to find the two nearest effect relics.
             for (int cycleIndex = _relicInHandIndex; cycleIndex != _relicInHandIndex; cycleIndex++)
             {
+                Debug.Log("\t\tCycling through inventory.");
+
                 // Check to see if the loop needs to cycle to the beginning.
                 if (cycleIndex >= _inventory.Count())
                 {
@@ -495,7 +498,7 @@ public class Player : IEffectable
                 OnRelicInHandChanged?.Invoke(_relicInHandIndex);
             }
         }
-
+        Debug.Log("---");
     }
 
     /// <summary>
