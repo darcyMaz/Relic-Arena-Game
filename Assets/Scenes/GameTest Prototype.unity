@@ -1369,6 +1369,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 77994055355112372, guid: 980706de454fb7c408a1b0ab31fc755a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 957241099767853783, guid: 980706de454fb7c408a1b0ab31fc755a, type: 3}
+      propertyPath: m_Positions.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6470522212513148969, guid: 980706de454fb7c408a1b0ab31fc755a, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
@@ -1383,7 +1391,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7173498282945330809, guid: 980706de454fb7c408a1b0ab31fc755a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -8.45
       objectReference: {fileID: 0}
     - target: {fileID: 7173498282945330809, guid: 980706de454fb7c408a1b0ab31fc755a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1825,7 +1833,7 @@ PrefabInstance:
       objectReference: {fileID: -1111364872610782331, guid: 8b45d7f77fa6c844c99cb57ed1a12996, type: 3}
     - target: {fileID: 603657448067035120, guid: 89f7cd951031acf4895178f11adefb32, type: 3}
       propertyPath: m_SortingOrder
-      value: 2
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 2132810330046871834, guid: 89f7cd951031acf4895178f11adefb32, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1870,6 +1878,10 @@ PrefabInstance:
     - target: {fileID: 2686501268374624790, guid: 89f7cd951031acf4895178f11adefb32, type: 3}
       propertyPath: m_Name
       value: Shop
+      objectReference: {fileID: 0}
+    - target: {fileID: 4218923562297881088, guid: 89f7cd951031acf4895178f11adefb32, type: 3}
+      propertyPath: m_SortingOrder
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 8249329119484884282, guid: 89f7cd951031acf4895178f11adefb32, type: 3}
       propertyPath: _ScoreManager
@@ -2039,6 +2051,10 @@ PrefabInstance:
       propertyPath: anim
       value: 
       objectReference: {fileID: 1878963818}
+    - target: {fileID: 241768571983204239, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
+      propertyPath: BaseSpeed
+      value: 400
+      objectReference: {fileID: 0}
     - target: {fileID: 350592518795322963, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
       propertyPath: m_SortingOrder
       value: 5
@@ -2104,6 +2120,10 @@ PrefabInstance:
       propertyPath: anim
       value: 
       objectReference: {fileID: 1241979881}
+    - target: {fileID: 968217173271365927, guid: b2389981ec2ebd740bd36b4d6defa673, type: 3}
+      propertyPath: BaseSpeed
+      value: 400
+      objectReference: {fileID: 0}
     - target: {fileID: 2123146792292669178, guid: b2389981ec2ebd740bd36b4d6defa673, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.38
