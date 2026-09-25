@@ -36,7 +36,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: MoveDirection
+    m_ConditionEvent: moveDirection
     m_EventTreshold: 2
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 2060365972210429072}
@@ -392,7 +392,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: MoveDirection
+    m_ConditionEvent: moveDirection
     m_EventTreshold: 3
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6908205257233671312}
@@ -409,7 +409,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: MoveDirection
+    m_ConditionEvent: moveDirection
     m_EventTreshold: 1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6101934678043914770}
@@ -426,7 +426,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: MoveDirection
+    m_ConditionEvent: moveDirection
     m_EventTreshold: 3
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -9092089074961191144}
@@ -496,7 +496,7 @@ AnimatorController:
   m_Name: Player Kash
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: MoveDirection
+  - m_Name: moveDirection
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -548,7 +548,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: MoveDirection
+    m_ConditionEvent: moveDirection
     m_EventTreshold: 1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6446807200559913803}
@@ -789,7 +789,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: MoveDirection
+    m_ConditionEvent: moveDirection
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 8713582993507497878}
@@ -887,7 +887,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: MoveDirection
+    m_ConditionEvent: moveDirection
     m_EventTreshold: 2
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1520897883452889498}
@@ -926,7 +926,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: MoveDirection
+    m_ConditionEvent: moveDirection
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 5567223580567333305}
