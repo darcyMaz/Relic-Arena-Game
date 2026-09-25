@@ -9,19 +9,19 @@ public class RelicStack : MonoBehaviour
 
     //Calling player's scripts.
     [SerializeField] private Player _player;
-    [SerializeField] private Inventory _inventory;
+    // [SerializeField] private Inventory _inventory;
     //Relic Icon Prefab
     [SerializeField] private GameObject _relicPreFab;
+
     /// <summary>
     /// The list of relics that are displayed on the player.
     /// </summary>
-    private List<GameObject> _relics;
+    private List<GameObject> _relics = new List<GameObject>();
 
     private void Awake()
     {
         _player = GetComponent<Player>();
-        _inventory = GetComponent<Inventory>();
-
+        // _inventory = GetComponent<Inventory>();
     }
 
     private void Start()
@@ -38,26 +38,31 @@ public class RelicStack : MonoBehaviour
     private void StackAdjust(List<Relic> relicsInInventory)
     {
         Debug.Log("Stacking Relics");
-        //First, delete all the current GameObjects
 
+        //First, delete all the current GameObjects
         ClearStackChildren();  
 
         //Next, spawn a GameObject for each relic in the inventory
         
         //Set what iteration is happening in the foreach
         float i = 0f;
-        foreach (Relic relic in _inventory)
+        foreach (Relic relic in relicsInInventory)
         {
             //Increment the index of what relic we're on
             i++;
             Sprite relicSprite = relic.GetSprite();
-            Transform transform = GetComponent<Transform>();
+            // Transform transform = GetComponent<Transform>();
             GameObject go = Instantiate(_relicPreFab, transform);
+            
             //Offset the stacking relic
             go.transform.position = new Vector3(transform.position.x, transform.position.y + (2 * i), transform.position.z);
+            
+            // Change the sprite to reflect the relic's sprite.
             SpriteRenderer _spriteRenderer = go.GetComponent<SpriteRenderer>();
             _spriteRenderer.sprite = relicSprite;
-
+            
+            // Add the GameObject to the list.
+            _relics.Add(go);
         } 
         
 
@@ -69,7 +74,7 @@ public class RelicStack : MonoBehaviour
     {
         if (_relics != null)
         {
-            foreach (Transform child in transform)
+            foreach (GameObject child in _relics)
             { 
                 Destroy(child);
             }

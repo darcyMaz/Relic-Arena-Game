@@ -163,6 +163,7 @@ public abstract class IEffectable: MonoBehaviour
     private void InitOnDisable()
     {
         OnUpdateEffectRelics -= CheckPassiveEffects;
+        CancelAllEffects();
     }
 
     /// <summary>
@@ -176,6 +177,22 @@ public abstract class IEffectable: MonoBehaviour
     private void UpdateHelper()
     {
 
+    }
+
+    /// <summary>
+    /// This method cancels all effects.
+    /// </summary>
+    private void CancelAllEffects()
+    {
+        // For each Effect, there must be a source for cancellation tokens.
+        foreach (Effect effect in Enum.GetValues(typeof(Effect)))
+        {
+            CancellationTokenSource cts;
+            if (_effectsCancellationTokens.TryGetValue(effect, out cts))
+            {
+                cts.Cancel();
+            }
+        }
     }
 
     /// <summary>
@@ -257,7 +274,7 @@ public abstract class IEffectable: MonoBehaviour
     /// </summary>
     protected void InvokePassiveEffectEvent(List<Relic> effectRelics)
     {
-        Debug.Log("Invoke passive effecrt event() start");
+        // Debug.Log("Invoke passive effecrt event() start");
         OnUpdateEffectRelics?.Invoke(effectRelics);
     }
 
@@ -274,7 +291,7 @@ public abstract class IEffectable: MonoBehaviour
     /// <param name="effectRelics"> The updated list of EffectRelics. </param>
     private void CheckPassiveEffects(List<Relic> effectRelics)
     {
-        Debug.Log("Start of check passive effects");
+        // Debug.Log("Start of check passive effects");
         
         // Go through each relic and add new effects to the _passiveEffects list.
         foreach (Relic relic in effectRelics)
@@ -308,7 +325,7 @@ public abstract class IEffectable: MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("CheckPassiveEffects could have add the following effect but it was already in the currentPassiveEffects dict: " + effectKey + " its relic: " + relic.GetName() );
+                    // Debug.Log("CheckPassiveEffects could have add the following effect but it was already in the currentPassiveEffects dict: " + effectKey + " its relic: " + relic.GetName() );
                 }
             }
             
@@ -585,7 +602,7 @@ public abstract class IEffectable: MonoBehaviour
 
             try
             {
-                Debug.Log("Before lightning forray loop, 3 seconds");
+                // Debug.Log("Before lightning forray loop, 3 seconds");
                 // await Task.Delay(3000);
 
 

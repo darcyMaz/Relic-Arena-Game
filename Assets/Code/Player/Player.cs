@@ -444,6 +444,7 @@ public class Player : IEffectable
             _relicInHandIndex = -1;
             //OnRelicInHandChanged?.Invoke(-1); 
             OnRelicInHandChanged?.Invoke( new List<Relic>() );
+            return;
         }
         // If the inventory is exactly of size 1.
         else if (_inventory.Count() == 1)
@@ -531,6 +532,7 @@ public class Player : IEffectable
             // Then there will be no cycling.
             if (nextEffectRelic == -1)
             {
+                OnRelicInHandChanged?.Invoke(BuildDisplayList(_relicInHandIndex));
                 return;
             }
             // If the index is on an Effect Relic AND the isCycleCalled is true, then cycle to that Effect relic.
@@ -850,7 +852,7 @@ public class Player : IEffectable
 
     private void ExtraLifeTest(int currentLives)
     {
-        Debug.Log("extra life called: " + currentLives + " and the class variable: " + _extraLives);
+        // Debug.Log("extra life called: " + currentLives + " and the class variable: " + _extraLives);
     }
     private void HitPlayerTest(InputAction.CallbackContext context)
     {

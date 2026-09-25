@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9cf91e1dc6d724c48ab4e32c67668940, type: 3}
-  m_Name: Dummy Relic
+  m_Name: Coin
   m_EditorClassIdentifier: Assembly-CSharp::RelicSO
-  Name: Inert Relic
-  Sprite: {fileID: 0}
-  Price: 1
+  Name: Coin
+  Sprite: {fileID: 8934923459016888124, guid: da34357d294e0f04ebc6ec37b649613e, type: 3}
+  Price: 100
   ActiveEffect: 0
   ActiveEffectDetails: 
   PassiveEffects: 00000000
