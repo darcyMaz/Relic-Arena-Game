@@ -50,6 +50,9 @@ public class Player : IEffectable
     /// </summary>
     private InputAction _dig;
 
+    private Rigidbody _rigidBody;
+    private bool _hasRigidBody = false;
+
     /// <summary>
     /// Bool variable that is true when the player is digging.
     /// </summary>
@@ -71,7 +74,7 @@ public class Player : IEffectable
     /// Reference to Player Animator
     /// </summary>
     [SerializeField] private Animator anim;
-    
+
     /// <summary>
     /// Int variable which indicates the number of extra lives the player has.
     /// </summary>
@@ -324,6 +327,14 @@ public class Player : IEffectable
         else
         {
             Debug.Log("Player #" + PlayerNumber + " does not have a Movement Input component. The game will still work but the player will not be able to move.");
+        }
+        if (TryGetComponent(out _rigidBody))
+        {
+            _hasRigidBody = true;
+        }
+        else
+        {
+            Debug.Log("Player #" + PlayerNumber + " does not have a RigidBody component. The game will still work but the player will not collide properly.");
         }
     }
 
