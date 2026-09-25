@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cf91e1dc6d724c48ab4e32c67668940, type: 3}
   m_Name: Zeus Pottery
   m_EditorClassIdentifier: Assembly-CSharp::RelicSO
-  Name: 
+  Name: Zeus Pottery
   Sprite: {fileID: 0}
-  Price: 0
+  Price: 100
   ActiveEffect: 0
   ActiveEffectDetails: 
-  PassiveEffects: 
-  PassiveEffectsDetails: []
+  PassiveEffects: 04000000
+  PassiveEffectsDetails:
+  - 
