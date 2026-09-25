@@ -661,18 +661,18 @@ public class Player : IEffectable
         {
             anim.SetInteger("moveDirection", 0);
         }
-        //Player facing up
-        else if (dir >= 45 && dir <= 135)
-        {
-            anim.SetInteger("moveDirection", 1);
-        }
         //Player facing left
         else if (dir > 135 && dir < 225)
         {
-            anim.SetInteger("moveDirection", 2);
+            anim.SetInteger("moveDirection", 1);
         }
         //Player facing right
         else if (dir > 315 || dir < 45)
+        {
+            anim.SetInteger("moveDirection", 2);
+        }
+        //Player facing up
+        else if (dir >= 45 && dir <= 135)
         {
             anim.SetInteger("moveDirection", 3);
         }
