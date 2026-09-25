@@ -780,7 +780,15 @@ public class Player : IEffectable
         _extraLives = 0;
         _currentExtraLifeRelic = null;
     }
-    
+
+    /// <summary>
+    /// Implementation of the LightningForray Effect.
+    /// </summary>
+    protected override void ApplyLightningForray()
+    {
+        PlayerHit();
+    }
+
     private void ExtraLifeTest(int currentLives)
     {
         Debug.Log("extra life called: " + currentLives + " and the class variable: " + _extraLives);
@@ -799,5 +807,6 @@ public class Player : IEffectable
             Debug.Log("\t\t" + relic.GetName());
         }
     }
+
     
 }
