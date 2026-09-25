@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Bangle
   m_EditorClassIdentifier: Assembly-CSharp::RelicSO
   Name: Coin
-  Sprite: {fileID: 8934923459016888124, guid: da34357d294e0f04ebc6ec37b649613e, type: 3}
+  Sprite: {fileID: 8934923459016888124, guid: 7aa7f1ee0697bcd42870d784768c615d, type: 3}
   Price: 100
   ActiveEffect: 0
   ActiveEffectDetails: 

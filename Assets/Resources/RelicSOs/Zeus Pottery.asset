@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Zeus Pottery
   m_EditorClassIdentifier: Assembly-CSharp::RelicSO
   Name: Zeus Pottery
-  Sprite: {fileID: -1392634146273112628, guid: 0bf4c4a4bdcf76745bd21f95065bb6aa, type: 3}
+  Sprite: {fileID: -1392634146273112628, guid: 846061e93515a2e47889ba1940d04016, type: 3}
   Price: 100
   ActiveEffect: 0
   ActiveEffectDetails: 
