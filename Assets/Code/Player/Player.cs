@@ -232,7 +232,7 @@ public class Player : IEffectable
 
         // Test event calls.
         OnExtraLifeChanged += ExtraLifeTest;
-        OnRelicInHandChanged += CycleRelicTest;
+        //OnRelicInHandChanged += CycleRelicTest;
     }
 
     private void OnDisableEventSubscribers()
@@ -252,7 +252,7 @@ public class Player : IEffectable
 
         // Test event calls.
         OnExtraLifeChanged -= ExtraLifeTest;
-        OnRelicInHandChanged -= CycleRelicTest;
+        //OnRelicInHandChanged -= CycleRelicTest;
     }
 
     /// <summary>
@@ -446,17 +446,6 @@ public class Player : IEffectable
     /// <param name="isCycleCalled"></param>
     private void UpdateRelicInHand(bool isCycleCalled)
     {
-        Debug.Log("Update RelicIn Hand()");
-        foreach (Relic relic in _inventory)
-        {
-            Debug.Log("\t\t" + relic.GetName() + " iseffectrelic: " + IsEffectRelic(relic));
-        }
-
-
-        // so instead of returning an index
-        // return the inventory listed with this item first
-
-        
 
         // If the inventory is empty, set the index to -1 and return an empty list.
         if (_inventory.Count() <= 0)
@@ -586,9 +575,6 @@ public class Player : IEffectable
             }
             // Add the item at the index.
             displayList.Add( _inventory.GetRelicAt(index) );
-
-            Debug.Log("In BuildDisplay List: index: " + index + " firstIndex: " + firstIndex);
-            
         }
 
         return displayList;
@@ -863,6 +849,7 @@ public class Player : IEffectable
     }
 
     
+    /*
     private void CycleRelicTest(List<Relic> displayList)
     {
         Debug.Log("Display List");
@@ -871,6 +858,6 @@ public class Player : IEffectable
             Debug.Log("\t\t" + relic.GetName());
         }
     }
-
+    */
     
 }
