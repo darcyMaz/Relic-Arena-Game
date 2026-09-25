@@ -2003,6 +2003,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: -0.0000000074506
       objectReference: {fileID: 0}
+    - target: {fileID: 603657448067035120, guid: 89f7cd951031acf4895178f11adefb32, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1111364872610782331, guid: 8b45d7f77fa6c844c99cb57ed1a12996, type: 3}
     - target: {fileID: 2132810330046871834, guid: 89f7cd951031acf4895178f11adefb32, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.2
