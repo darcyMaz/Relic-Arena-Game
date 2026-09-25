@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2953285023961512080}
   - component: {fileID: 8559971328156750750}
   - component: {fileID: 4004506865810588637}
+  - component: {fileID: -8215021186701654658}
   m_Layer: 0
   m_Name: Player 2
   m_TagString: Player2
@@ -224,3 +225,17 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-8215021186701654658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8205348096973775290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b24e4138588a14a40925c86bfbcae18d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RelicStack
+  _player: {fileID: 0}
+  _relicPreFab: {fileID: 5003603145928466112, guid: a0410d1aaa989c743b292c152eeaeac6, type: 3}
