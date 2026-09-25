@@ -591,7 +591,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""id"": ""fab64b36-d471-4237-9818-2d3c915645cd"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": ""Hold(duration=0.1)"",
+                    ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
                 },
@@ -769,7 +769,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""id"": ""3a7a330f-7ca8-45a0-ab23-7d6c73ea1217"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": ""Hold(duration=0.1)"",
+                    ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
                 },

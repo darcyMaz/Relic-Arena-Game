@@ -1057,7 +1057,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: a6697661c28ae664c9506c64f608402c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1350,7 +1350,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RelicStack
   _player: {fileID: 0}
-  _inventory: {fileID: 0}
   _relicPreFab: {fileID: 5003603145928466112, guid: a0410d1aaa989c743b292c152eeaeac6, type: 3}
 --- !u!1 &1808776585
 GameObject:
