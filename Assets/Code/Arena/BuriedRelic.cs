@@ -12,7 +12,7 @@ public class BuriedRelic : MonoBehaviour
     /// Distance at which those with Metal Detectors can pick up BuriedRelics.
     /// I'd like to find a way to set static variable in the inspector.
     /// </summary>
-    private static float _closeDistance = 0.25f;
+    [SerializeField] private float _closeDistance = 0.5f;
 
     /// <summary>
     /// Relic data associated with this BuriedRelic.

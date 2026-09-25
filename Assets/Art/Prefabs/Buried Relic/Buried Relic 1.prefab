@@ -125,4 +125,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3681492a5015fa4cbb724d4a2e5fadb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuriedRelic
+  _closeDistance: 0.5
   _relicSO: {fileID: 11400000, guid: 582f54ff2b61b794bb73d46121c839bd, type: 2}
