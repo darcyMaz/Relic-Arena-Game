@@ -572,6 +572,7 @@ public class Player : IEffectable
             if (i>100)
             {
                 Debug.Log("Infinite loop sad face ~ BuildDisplayList");
+                break;
             }
 
             // If the index reaches the end of the list, loop back to zero.
