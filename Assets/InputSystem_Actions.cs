@@ -873,7 +873,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""8193c473-83d4-4855-a2e8-f06a38c9e56b"",
-                    ""path"": ""<Keyboard>/numpadEnter"",
+                    ""path"": ""<Keyboard>/numpad1"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
