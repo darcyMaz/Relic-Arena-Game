@@ -28,27 +28,22 @@ public class RelicStack : MonoBehaviour
     {
 
         //Subscribe to the inventory change event
-        _inventory.OnInventoryChange += StackAdjust;
+        //dsssss0-ews_inventory.OnInventoryChange += StackAdjust;
+        _player.OnRelicInHandChanged += StackAdjust;
     }
 
     /// <summary>
     /// Adjust the stack of relics according to the Inventory.
     /// </summary>
-    private void StackAdjust(IEnumerator<Relic> relicsInInventory)
+    private void StackAdjust(List<Relic> relicsInInventory)
     {
         Debug.Log("Stacking Relics");
         //First, delete all the current GameObjects
-        if (_relics != null)
-        {
-            foreach (GameObject relic in _relics)
-            {
-                Destroy(relic);
-            }
-            _relics.Clear();
-        }
+
+        ClearStackChildren();  
 
         //Next, spawn a GameObject for each relic in the inventory
-        _relics = new List<GameObject>();
+        
         //Set what iteration is happening in the foreach
         float i = 0f;
         foreach (Relic relic in _inventory)
@@ -66,5 +61,19 @@ public class RelicStack : MonoBehaviour
         } 
         
 
+    }
+    /// <summary>
+    /// Function to delete all the GamoeObjects that are children of the player.
+    /// </summary>
+    private void ClearStackChildren()
+    {
+        if (_relics != null)
+        {
+            foreach (Transform child in transform)
+            { 
+                Destroy(child);
+            }
+            _relics.Clear();
+        }
     }
 }

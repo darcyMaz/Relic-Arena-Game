@@ -646,7 +646,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4744797384855256097, guid: 6f025364fae39a3458d1f587a911bddf, type: 3}
       propertyPath: BaseSpeed
-      value: 100
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 4744797384855256097, guid: 6f025364fae39a3458d1f587a911bddf, type: 3}
+      propertyPath: PlayerNumber
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7649312942991597728, guid: 6f025364fae39a3458d1f587a911bddf, type: 3}
       propertyPath: m_Name
@@ -1027,7 +1031,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1992722888711921320, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2006925467336095980, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1076,7 +1080,7 @@ PrefabInstance:
     - target: {fileID: 7177873281060764925, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
       propertyPath: _relicSO
       value: 
-      objectReference: {fileID: 11400000, guid: 913d5f7ab794a0a4e97bc2c7714e2905, type: 2}
+      objectReference: {fileID: 11400000, guid: e657162a3111f8f43b644aea16c8b996, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1485,7 +1489,7 @@ PrefabInstance:
     - target: {fileID: 7177873281060764925, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
       propertyPath: _relicSO
       value: 
-      objectReference: {fileID: 11400000, guid: 913d5f7ab794a0a4e97bc2c7714e2905, type: 2}
+      objectReference: {fileID: 11400000, guid: e657162a3111f8f43b644aea16c8b996, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
