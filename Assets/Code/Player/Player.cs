@@ -666,6 +666,7 @@ public class Player : IEffectable
         }
     }
 
+    //Animates the Player in the direction they are moving in
     private void AnimationDirection(float dir)
     {
         //Player facing down
@@ -690,10 +691,14 @@ public class Player : IEffectable
         }
     }
 
+    //Animates the Player either running or idle depending on current velocity
     private void AnimationRunState()
     {
         anim.SetFloat("mSpeed", _rigidBody.linearVelocity.magnitude);
     }
+    
+    // Play the digging animation.
+    // anim.SetTrigger("UseRelic");
 
     /// <summary>
     /// Change the speed of the player if they have a Movement Input component.
