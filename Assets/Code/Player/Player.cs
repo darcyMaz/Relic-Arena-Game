@@ -365,6 +365,8 @@ public class Player : IEffectable
     /// <param name="context"> The CallbackContext for this action.   </param>
     private async void Dig(InputAction.CallbackContext context)
     {
+        Debug.Log("Dig pressed");
+
         if (context.performed && !_isDigging)
         {
 
@@ -386,6 +388,8 @@ public class Player : IEffectable
             // If the Player found a relic.
             if (_isRelicFound && (_relicFound != null && _buriedRelicFound != null))
             {
+                Debug.Log("In Dig(): found relic");
+
                 // Add it to the inventory.
                 AddRelicToInventory(_relicFound);
 
@@ -412,6 +416,8 @@ public class Player : IEffectable
     /// </summary>
     protected override void BuildEffectRelicList()
     {
+        Debug.Log("BuildEffectRelicList start of it");
+
         List<Relic> effectRelics = new List<Relic>();
 
         // This foreach loop will check each relic.
@@ -429,7 +435,9 @@ public class Player : IEffectable
             }
         }
 
+        
         InvokePassiveEffectEvent(effectRelics);
+        Debug.Log("In BuildEffectRelicList() just after invokepassiveeffectevent call");
     }
 
     /// <summary>
@@ -438,8 +446,17 @@ public class Player : IEffectable
     /// <param name="isCycleCalled"></param>
     private void UpdateRelicInHand(bool isCycleCalled)
     {
+        Debug.Log("Update RelicIn Hand()");
+        foreach (Relic relic in _inventory)
+        {
+            Debug.Log("\t\t" + relic.GetName() + " iseffectrelic: " + IsEffectRelic(relic));
+        }
+
+
         // so instead of returning an index
         // return the inventory listed with this item first
+
+        
 
         // If the inventory is empty, set the index to -1 and return an empty list.
         if (_inventory.Count() <= 0)
@@ -447,6 +464,22 @@ public class Player : IEffectable
             _relicInHandIndex = -1;
             //OnRelicInHandChanged?.Invoke(-1); 
             OnRelicInHandChanged?.Invoke( new List<Relic>() );
+        }
+        // If the inventory is exactly of size 1.
+        else if (_inventory.Count() == 1)
+        {
+            // If the sole relic is an Effect relic then set the index to 0, otherwise -1.
+            _relicInHandIndex = ( IsEffectRelic(_inventory.GetRelicAt(0))) ? 0: -1;
+
+            List<Relic> invokedList = new List<Relic>();
+
+            // If that relic was indeed an effect relic, invoke the event with a list including it.
+            if (_relicInHandIndex == 0)
+            {
+                invokedList.Add(_inventory.GetRelicAt(0));
+            }
+            OnRelicInHandChanged?.Invoke(invokedList);
+            return;
         }
         // Otherwise, check whether the current index is an effect relic.
         // If it is, then go directly to the cycle check.
@@ -527,14 +560,24 @@ public class Player : IEffectable
         // Initialize the displayList
         List<Relic> displayList = new List<Relic>();
 
+        if (_inventory.Count() == 0)
+        {
+            return displayList;
+        }
+
         // Add the relic at the firstIndex before the loop.
         displayList.Add( _inventory.GetRelicAt(firstIndex) );
 
-        Debug.Log("THIS GOES ON FOREVER!!!");
+        // If the _inventory is of size 1, then this loop is unneccesary and it won't even work.
+        if (_inventory.Count() == 1)
+        {
+            return displayList;
+        }
+
         int i = 0;
 
         // Loop across the whole list and stop before adding the firstIndex.
-        for (int index = firstIndex+1; index != firstIndex ; index++)
+        for (int index = firstIndex + 1; index != firstIndex ; index++)
         {
             // If the index reaches the end of the list, loop back to zero.
             if (index >= _inventory.Count())
@@ -544,9 +587,8 @@ public class Player : IEffectable
             // Add the item at the index.
             displayList.Add( _inventory.GetRelicAt(index) );
 
-            Debug.Log("index: " + index + " firstIndex: " + firstIndex);
-            i++;
-            if (i == 100) break;
+            Debug.Log("In BuildDisplay List: index: " + index + " firstIndex: " + firstIndex);
+            
         }
 
         return displayList;

@@ -257,6 +257,7 @@ public abstract class IEffectable: MonoBehaviour
     /// </summary>
     protected void InvokePassiveEffectEvent(List<Relic> effectRelics)
     {
+        Debug.Log("Invoke passive effecrt event() start");
         OnUpdateEffectRelics?.Invoke(effectRelics);
     }
 
@@ -273,6 +274,7 @@ public abstract class IEffectable: MonoBehaviour
     /// <param name="effectRelics"> The updated list of EffectRelics. </param>
     private void CheckPassiveEffects(List<Relic> effectRelics)
     {
+        Debug.Log("Start of check passive effects");
         
         // Go through each relic and add new effects to the _passiveEffects list.
         foreach (Relic relic in effectRelics)
@@ -586,7 +588,7 @@ public abstract class IEffectable: MonoBehaviour
                 int i = 0;
 
                 Debug.Log("Before lightning forray loop, 3 seconds");
-                await Task.Delay(3000);
+                // await Task.Delay(3000);
 
 
                 while (true)
