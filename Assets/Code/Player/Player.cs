@@ -7,17 +7,14 @@ using UnityEngine.InputSystem;
 
 public class Player : IEffectable
 {
-
     /// <summary>
     /// The Player's number, set in the inspector.
     /// </summary>
     [SerializeField] private int PlayerNumber = 0;
 
     /// <summary>
-    /// The Relic currently in the player's hand.
+    /// The index of the Relic currently in the player's hand.
     /// </summary>
-    // private Relic _relicInHand;
-
     private int _relicInHandIndex = -1;
 
     /// <summary>
@@ -101,9 +98,9 @@ public class Player : IEffectable
     public event Action<bool> OnCycleRelicInHand;
 
     /// <summary>
-    /// Event called when the relic in hand has changed.
+    /// Event called when the relic in hand has changed. Returns a list of the inventory where the first item is the item in hand.
     /// </summary>
-    public event Action<int> OnRelicInHandChanged;
+    public event Action<List<Relic>> OnRelicInHandChanged;
 
     /// <summary>
     /// The InputAction related to cycling the relic in hand.
@@ -114,6 +111,7 @@ public class Player : IEffectable
     /// Invincibility time.
     /// </summary>
     [SerializeField] private float ITime = 0.5f;
+
     /// <summary>
     /// Invincibility timer.
     /// </summary>
@@ -421,39 +419,42 @@ public class Player : IEffectable
     /// <param name="isCycleCalled"></param>
     private void UpdateRelicInHand(bool isCycleCalled)
     {
-        Debug.Log("Update relic in hand called.");
+        // so instead of returning an index
+        // return the inventory listed with this item first
 
-        // If the inventory is empty, set the index to -1.
+        // If the inventory is empty, set the index to -1 and return an empty list.
         if (_inventory.Count() <= 0)
         {
-            Debug.Log("\t\tThe inventory is empty.");
             _relicInHandIndex = -1;
-            OnRelicInHandChanged?.Invoke(-1);
+            //OnRelicInHandChanged?.Invoke(-1); 
+            OnRelicInHandChanged?.Invoke( new List<Relic>() );
         }
         // Otherwise, check whether the current index is an effect relic.
         // If it is, then go directly to the cycle check.
         // If it is not, cycle until a new Effect relic is found. If none are found then set _relicInHandIndex to -1 and break.
         else
         {
-            // Set the _relicInHand index to 0 so that there is no out of range error.
-            // This is only necessary if the index is previously -1.
-            if (_relicInHandIndex == -1) _relicInHandIndex = 0;
+            _relicInHandIndex = 
+                // If the relicInHandIndex > the size of the inventory. set it to be the last index.
+                (_relicInHandIndex >= _inventory.Count()) ? _relicInHandIndex = _inventory.Count() - 1: 
+                // If the relicInHandIndex is -1, representing nothing in the hand, set it to zero.
+                (_relicInHandIndex == -1) ? 0:
+                // Otherwise, keep it the same.
+                _relicInHandIndex;
 
             // Variables that will help indicate whether an effect relic was found in the inventory.
             int nearestEffectRelic = -1;
             int nextEffectRelic = -1;
 
             // If the current indexInHand is an effect relic then set that index to the nearestEffectRelic.
-            if (IsEffectRelic(_inventory.GetRelicAt(_relicInHandIndex)))
+            if (IsEffectRelic(_inventory.GetRelicAt(_relicInHandIndex))) // this causes an error? WAIT did this relic get deleted WHILE this func was running??? sick... oh wait no lol uhh maybe actually
             {
                 nearestEffectRelic = _relicInHandIndex;
             }
 
             // Search through the inventory to find the two nearest effect relics.
-            for (int cycleIndex = _relicInHandIndex; cycleIndex != _relicInHandIndex; cycleIndex++)
+            for (int cycleIndex = _relicInHandIndex + 1; cycleIndex != _relicInHandIndex; cycleIndex++)
             {
-                Debug.Log("\t\tCycling through inventory.");
-
                 // Check to see if the loop needs to cycle to the beginning.
                 if (cycleIndex >= _inventory.Count())
                 {
@@ -481,7 +482,8 @@ public class Player : IEffectable
             if (nearestEffectRelic == -1)
             {
                 _relicInHandIndex = -1;
-                OnRelicInHandChanged?.Invoke(-1);
+                //OnRelicInHandChanged?.Invoke(-1);
+                OnRelicInHandChanged?.Invoke( BuildDisplayList(0) );
                 return;
             }
             // If there was an Effect Relic but ONLY ONE of them.
@@ -495,10 +497,40 @@ public class Player : IEffectable
             if (isCycleCalled)
             {
                 _relicInHandIndex = nextEffectRelic;
-                OnRelicInHandChanged?.Invoke(_relicInHandIndex);
+                //OnRelicInHandChanged?.Invoke(_relicInHandIndex);
+                OnRelicInHandChanged?.Invoke( BuildDisplayList( _relicInHandIndex ) );
             }
         }
-        Debug.Log("---");
+    }
+
+    private List<Relic> BuildDisplayList(int firstIndex)
+    {
+        // Initialize the displayList
+        List<Relic> displayList = new List<Relic>();
+
+        // Add the relic at the firstIndex before the loop.
+        displayList.Add( _inventory.GetRelicAt(firstIndex) );
+
+        Debug.Log("THIS GOES ON FOREVER!!!");
+        int i = 0;
+
+        // Loop across the whole list and stop before adding the firstIndex.
+        for (int index = firstIndex+1; index != firstIndex ; index++)
+        {
+            // If the index reaches the end of the list, loop back to zero.
+            if (index >= _inventory.Count())
+            {
+                index = 0;
+            }
+            // Add the item at the index.
+            displayList.Add( _inventory.GetRelicAt(index) );
+
+            Debug.Log("index: " + index + " firstIndex: " + firstIndex);
+            i++;
+            if (i == 100) break;
+        }
+
+        return displayList;
     }
 
     /// <summary>
@@ -507,7 +539,6 @@ public class Player : IEffectable
     /// <param name="context"> CallbackContext context </param>
     private void CycleEffectRelic(InputAction.CallbackContext context)
     {
-        Debug.Log("Cycle effect relic pressed.");
         if (context.performed) OnCycleRelicInHand?.Invoke(true);
     }
 
@@ -728,13 +759,14 @@ public class Player : IEffectable
         if (context.performed) PlayerHit();
     }
 
-    private void CycleRelicTest(int index)
+    
+    private void CycleRelicTest(List<Relic> displayList)
     {
-        Debug.Log("cycle relic test: " + index);
-        Debug.Log("inventory");
-        foreach (Relic relic in _inventory)
+        Debug.Log("Display List");
+        foreach (Relic relic in displayList)
         {
             Debug.Log("\t\t" + relic.GetName());
         }
     }
+    
 }
