@@ -334,6 +334,8 @@ public class Player : IEffectable
     {
         // If the ITimer is above 0, then the invisibility frames have begun and they must be counted down.
         ITimer = (ITimer <= 0) ? ITimer -= Time.deltaTime : 0;
+
+        AnimationDirection(GetDirection());
     }
 
     /// <summary>
@@ -608,7 +610,7 @@ public class Player : IEffectable
 
         ITimer = ITime;
 
-        // ANIMATION HERE
+        anim.SetTrigger("GetHit");
     }
 
     /// <summary>
@@ -649,6 +651,30 @@ public class Player : IEffectable
             // Otherwise, set the current position and return it.
             _lastDirection = Vector2.Angle(new Vector2(-1, 0), direction) + 180;
             return _lastDirection;
+        }
+    }
+
+    public void AnimationDirection(float dir)
+    {
+        //Player facing down
+        if (dir >= 225 && dir <= 315)
+        {
+            anim.SetInteger("moveDirection", 0);
+        }
+        //Player facing up
+        else if (dir >= 45 && dir <= 135)
+        {
+            anim.SetInteger("moveDirection", 1);
+        }
+        //Player facing left
+        else if (dir > 135 && dir < 225)
+        {
+            anim.SetInteger("moveDirection", 2);
+        }
+        //Player facing right
+        else if (dir > 315 || dir < 45)
+        {
+            anim.SetInteger("moveDirection", 3);
         }
     }
 
