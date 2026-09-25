@@ -68,6 +68,11 @@ public class Player : IEffectable
     private Relic _relicFound;
 
     /// <summary>
+    /// Reference to Player Animator
+    /// </summary>
+    [SerializeField] private Animator anim;
+    
+    /// <summary>
     /// Int variable which indicates the number of extra lives the player has.
     /// </summary>
     private int _extraLives = 0;
@@ -353,7 +358,7 @@ public class Player : IEffectable
             _isDigging = true;
 
             // Play the digging animation.
-            ////
+            anim.SetTrigger("IsDigging");
 
             // Stop the player's movement.
             ChangeSpeed(0);
