@@ -627,7 +627,7 @@ public class Player : IEffectable
     /// Get the angled direction of the player.
     /// </summary>
     /// <returns> A float value representing the direction as an angle. </returns>
-    public float GetDirection()
+    private float GetDirection()
     {
         // Get the direction of the movement.
         Vector2 direction = _movementInput.GetDirection();
@@ -654,7 +654,7 @@ public class Player : IEffectable
         }
     }
 
-    public void AnimationDirection(float dir)
+    private void AnimationDirection(float dir)
     {
         //Player facing down
         if (dir >= 225 && dir <= 315)

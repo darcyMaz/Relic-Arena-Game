@@ -1232,6 +1232,12 @@ MonoBehaviour:
   LightningSource: {fileID: 1968340102}
   ScarabDisplay: {fileID: 0}
   Fog: {fileID: 4300232982932758446, guid: afce798ec81a44f4491a3f2db4ca075b, type: 3}
+  LightningCounter: {fileID: 0}
+  LightningMarker: {fileID: 2114457256920631663, guid: 2e0b9b7f4657ea045a680bfbd61ada84, type: 3}
+  LightningMarkerMaxVariation: 0.6
+  LightningMarkerDelay: 2000
+  LightningMarkerRadius: 2
+  NextLightningMarkerDelay: 1000
 --- !u!4 &1539130024
 Transform:
   m_ObjectHideFlags: 0
