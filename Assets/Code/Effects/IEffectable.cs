@@ -109,6 +109,7 @@ public abstract class IEffectable: MonoBehaviour
         _effectsDict.TryAdd(Effect.DelayedLightning, this.DelayedLightning);
         _effectsDict.TryAdd(Effect.Fog, this.Fog);
         _effectsDict.TryAdd(Effect.ExtraLives, this.ExtraLives);
+        _effectsDict.TryAdd(Effect.LightningForray, this.LightningForray);
 
         // Then do a check at the end to see if the size of the dictionary matches up with the number of Effects.
         int EffectCount = Enum.GetNames(typeof(Effect)).Length;
@@ -133,6 +134,7 @@ public abstract class IEffectable: MonoBehaviour
         _formatDict.TryAdd(Effect.DelayedLightning, "Integer representing milliseconds: 3000");
         _formatDict.TryAdd(Effect.Fog, "Integer representing milliseconds: 3000");
         _formatDict.TryAdd(Effect.ExtraLives, "Integer representing the number of extra lives: 3");
+        _formatDict.TryAdd(Effect.LightningForray, "Details for this not implemented, see EffectsManager to change values.");
     }
 
     /// <summary>
@@ -564,6 +566,91 @@ public abstract class IEffectable: MonoBehaviour
         // Debug.Log("The no effect effect has been called. Here's the associated details string: " + noEffect);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="details"></param>
+    /// <param name="currentEffect"></param>
+    /// <param name="thisRelic"></param>
+    /// <param name="token"></param>
+    private async void LightningForray(string details, Effect currentEffect, Relic thisRelic, CancellationToken token)
+    {
+        // Ensure the format is correct for this effect.
+        try
+        {
+            // This effect gets all of its info from the EffectsManager.
+            // This should probably be changed so that different relics can have variations for this.
+
+            try
+            {
+
+                while (true)
+                {
+                    // Create the lighting marker.
+                    Vector3 markposition = RandomPositionVariation(EffectsManager.Instance.GetLightningMarkerMaxVariation());
+                    GameObject mark = EffectsManager.Instance.GetLightningMarker(markposition + new Vector3(0, 0, 0.5f));
+
+                    // Wait the assigned amount of time.
+                    await Task.Delay(EffectsManager.Instance.GetLightningMarkerDelay(), token);
+
+                    if (token.IsCancellationRequested)
+                    {
+                        Destroy(mark.gameObject);
+                        throw new OperationCanceledException();
+                    }
+
+                    // Strike lightning at the mark.
+                    EffectsManager.Instance.Lightning(mark.transform.position);
+
+                    // If the player is within the mark's zone, then get hit and also cancel this effect.
+                    if (Vector2.Distance(transform.position, mark.transform.position) < EffectsManager.Instance.GetLightningMarkerRadius())
+                    {
+                        // Hit!
+                        ApplyLightningForray();
+                        // Destroy the mark.
+                        Destroy(mark.gameObject);
+                        // Cancel the effect.
+                        throw new OperationCanceledException();
+                    }
+
+                    // Destroy the lightning mark.
+                    Destroy(mark.gameObject);
+
+                    // Delay between the spawning in of marks.
+                    await Task.Delay(EffectsManager.Instance.GetNextLightningMarkerDelay(), token);
+                    if (token.IsCancellationRequested)
+                    {
+                        throw new OperationCanceledException();
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                
+            }
+        }
+        catch (FormatException fe)
+        {
+            // Should the relic be consumed at this stage?
+            LogFormatException(fe, currentEffect);
+        }
+
+        // Cancel all effects related to this relic when this one is complete.
+        // Effects associated with a different relic will not be cancelled.
+        CancelEffectsOnRelic(thisRelic);
+    }
+
+    protected abstract void ApplyLightningForray();
+
+
+    private Vector3 RandomPositionVariation(float variationRange)
+    {
+        Vector3 newPosition = new Vector3(0,0,transform.position.z);
+        newPosition.x = UnityEngine.Random.Range(transform.position.x - variationRange, transform.position.x + variationRange);
+        newPosition.y = UnityEngine.Random.Range(transform.position.y - variationRange, transform.position.y + variationRange);
+
+        return newPosition;
+    }
 
     /// <summary>
     /// This method determines whether a Relic is an Effect relic.

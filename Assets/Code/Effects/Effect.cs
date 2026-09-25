@@ -1,10 +1,9 @@
-using UnityEngine;
-
 public enum Effect
 {
     None,
     DelayedLightning,
     Fog,
-    ExtraLives
-
+    ExtraLives,
+    LightningForray
+    
 }
