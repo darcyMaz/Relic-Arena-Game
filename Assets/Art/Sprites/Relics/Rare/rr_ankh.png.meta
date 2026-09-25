@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d892ab47ffcfb704298787d90b3e2901
+guid: 9deeeadab28b40d4492dac8b2d1fd7dd
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6577241217956567291
-    second: play_evilkash_hit_1_0
+      213: 6007770082676513107
+    second: rr_ankh_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: play_evilkash_hit_1_0
+      name: rr_ankh_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 512
-        height: 512
+        width: 2024
+        height: 2024
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bf8db5e3a0e074b50800000000000000
-      internalID: 6577241217956567291
+      spriteID: 35917264f03ef5350800000000000000
+      internalID: 6007770082676513107
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: e549a4120a5269841b5e60691f41163b
+    spriteID: 8ffefea700ddd2c4f85ff37d198b43f8
     internalID: 0
     vertices: []
     indices: 
@@ -135,9 +135,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":512.0,"y":512.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":2024.0,"y":2024.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      play_evilkash_hit_1_0: 6577241217956567291
+      rr_ankh_0: 6007770082676513107
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
