@@ -489,6 +489,7 @@ public class Player : IEffectable
             // Search through the inventory to find the two nearest effect relics.
             for (int cycleIndex = _relicInHandIndex + 1; cycleIndex != _relicInHandIndex; cycleIndex++)
             {
+                e++;
                 if (e == 100)
                 { 
                     Debug.Log("infinite loop!! arghs!! UpdateRelicInHand");
@@ -567,7 +568,6 @@ public class Player : IEffectable
         // Loop across the whole list and stop before adding the firstIndex.
         for (int index = firstIndex + 1; index != firstIndex ; index++)
         {
-
             i++;
             if (i>100)
             {
