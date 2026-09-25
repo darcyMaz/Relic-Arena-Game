@@ -347,6 +347,7 @@ public class Player : IEffectable
         ITimer = (ITimer <= 0) ? ITimer -= Time.deltaTime : 0;
 
         AnimationDirection(GetDirection());
+        AnimationRunState();
     }
 
     /// <summary>
@@ -687,6 +688,11 @@ public class Player : IEffectable
         {
             anim.SetInteger("moveDirection", 3);
         }
+    }
+
+    private void AnimationRunState()
+    {
+        anim.SetFloat("mSpeed", _rigidBody.linearVelocity.magnitude);
     }
 
     /// <summary>
