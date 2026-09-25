@@ -365,8 +365,6 @@ public class Player : IEffectable
     /// <param name="context"> The CallbackContext for this action.   </param>
     private async void Dig(InputAction.CallbackContext context)
     {
-        Debug.Log("Dig pressed");
-
         if (context.performed && !_isDigging)
         {
 
@@ -388,8 +386,6 @@ public class Player : IEffectable
             // If the Player found a relic.
             if (_isRelicFound && (_relicFound != null && _buriedRelicFound != null))
             {
-                Debug.Log("In Dig(): found relic");
-
                 // Add it to the inventory.
                 AddRelicToInventory(_relicFound);
 
@@ -403,7 +399,6 @@ public class Player : IEffectable
                 _isRelicFound = false;
                 _relicFound = null;
                 _buriedRelicFound = null;
-
             }
 
             // When no longer digging, set this to false.
@@ -416,8 +411,6 @@ public class Player : IEffectable
     /// </summary>
     protected override void BuildEffectRelicList()
     {
-        Debug.Log("BuildEffectRelicList start of it");
-
         List<Relic> effectRelics = new List<Relic>();
 
         // This foreach loop will check each relic.
@@ -434,10 +427,8 @@ public class Player : IEffectable
                 effectRelics.Add(relic);
             }
         }
-
         
         InvokePassiveEffectEvent(effectRelics);
-        Debug.Log("In BuildEffectRelicList() just after invokepassiveeffectevent call");
     }
 
     /// <summary>
@@ -493,9 +484,17 @@ public class Player : IEffectable
                 nearestEffectRelic = _relicInHandIndex;
             }
 
+            int e = 0;
+
             // Search through the inventory to find the two nearest effect relics.
             for (int cycleIndex = _relicInHandIndex + 1; cycleIndex != _relicInHandIndex; cycleIndex++)
             {
+                if (e == 100)
+                { 
+                    Debug.Log("infinite loop!! arghs!! UpdateRelicInHand");
+                    break;
+                }
+
                 // Check to see if the loop needs to cycle to the beginning.
                 if (cycleIndex >= _inventory.Count())
                 {
@@ -568,6 +567,13 @@ public class Player : IEffectable
         // Loop across the whole list and stop before adding the firstIndex.
         for (int index = firstIndex + 1; index != firstIndex ; index++)
         {
+
+            i++;
+            if (i>100)
+            {
+                Debug.Log("Infinite loop sad face ~ BuildDisplayList");
+            }
+
             // If the index reaches the end of the list, loop back to zero.
             if (index >= _inventory.Count())
             {
@@ -575,6 +581,8 @@ public class Player : IEffectable
             }
             // Add the item at the index.
             displayList.Add( _inventory.GetRelicAt(index) );
+
+            
         }
 
         return displayList;

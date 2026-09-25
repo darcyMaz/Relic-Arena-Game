@@ -585,28 +585,18 @@ public abstract class IEffectable: MonoBehaviour
 
             try
             {
-                int i = 0;
-
                 Debug.Log("Before lightning forray loop, 3 seconds");
                 // await Task.Delay(3000);
 
 
                 while (true)
                 {
-                    Debug.Log("Inside lightning forray loop");
-
-                    i++;
-
-
                     // Create the lighting marker.
                     Vector3 markposition = RandomPositionVariation(EffectsManager.Instance.GetLightningMarkerMaxVariation());
                     GameObject mark = EffectsManager.Instance.GetLightningMarker(markposition + new Vector3(0, 0, 0.5f));
 
-                    Debug.Log("Before strike delay.");
                     // Wait the assigned amount of time.
                     await Task.Delay(EffectsManager.Instance.GetLightningMarkerDelay(), token);
-                    Debug.Log("After strike delay");
-
                     if (token.IsCancellationRequested)
                     {
                         Destroy(mark.gameObject);
@@ -630,27 +620,19 @@ public abstract class IEffectable: MonoBehaviour
                     // Destroy the lightning mark.
                     Destroy(mark.gameObject);
 
-                    Debug.Log("Before new marker delay.");
                     // Delay between the spawning in of marks.
                     await Task.Delay(EffectsManager.Instance.GetNextLightningMarkerDelay(), token);
-                    Debug.Log("After new marker delay");
 
                     if (token.IsCancellationRequested)
                     {
                         throw new OperationCanceledException();
                     }
 
-
-                    if (i==5000)
-                    {
-                        Debug.Log("Infinite loop ended.");
-                        throw new OperationCanceledException();
-                    }
                 }
             }
             catch (OperationCanceledException)
             {
-                Debug.Log("lightning forray cancelled");
+
             }
         }
         catch (FormatException fe)
