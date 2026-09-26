@@ -179,6 +179,47 @@ public class Player : IEffectable
     {
         base.Awake();
         _actions = new InputSystem_Actions();
+        GetComponentsAwake();
+    }
+
+    /// <summary>
+    /// Method which tries to get the components attached to the player.
+    /// </summary>
+    private void GetComponentsAwake()
+    {
+        // The Player has many components, try to find them and get them.
+        if (TryGetComponent(out _inventory))
+        {
+            _hasInventory = true;
+        }
+        else
+        {
+            Debug.Log("Player #" + PlayerNumber + " does not have an Inventory component. The game will still work but the player will not be able to acquire items.");
+        }
+        if (TryGetComponent(out _metalDetector))
+        {
+            _metalDetector.OnRelicVeryClose += AcceptRelic;
+        }
+        else
+        {
+            Debug.Log("Player #" + PlayerNumber + " does not have a Metal Detector component. The game will still work but the player will not be able to find items.");
+        }
+        if (TryGetComponent(out _movementInput))
+        {
+            _hasMovementInput = true;
+        }
+        else
+        {
+            Debug.Log("Player #" + PlayerNumber + " does not have a Movement Input component. The game will still work but the player will not be able to move.");
+        }
+        if (TryGetComponent(out _rigidBody))
+        {
+            _hasRigidBody = true;
+        }
+        else
+        {
+            Debug.Log("Player #" + PlayerNumber + " does not have a RigidBody component. The game will still work but the player will not collide properly.");
+        }
     }
 
     /// <summary>
@@ -224,6 +265,13 @@ public class Player : IEffectable
 
         // Subscribe the UpdateRelicInHand function to the related event.
         OnCycleRelicInHand += UpdateRelicInHand;
+        
+        // Subscribe to inventory events.
+        if (_hasInventory)
+        {
+            _inventory.OnInventoryCleared += ConsumeAllAfterClear;
+            _inventory.OnInventoryChange += InventoryChangeCycleRelic;
+        }
 
         // For testing purposes.
         _getHitTest = _actions.Player.Crouch;
@@ -247,6 +295,11 @@ public class Player : IEffectable
         OnPlayerDamaged -= ReceiveHit;
         OnCycleRelicInHand -= UpdateRelicInHand;
         _cycleRelicAction.performed -= CycleEffectRelic;
+        if (_hasInventory)
+        {
+            _inventory.OnInventoryCleared -= ConsumeAllAfterClear;
+            _inventory.OnInventoryChange -= InventoryChangeCycleRelic;
+        }
         _dig.performed -= Dig;
         _getHitTest.performed -= HitPlayerTest;
 
@@ -302,40 +355,6 @@ public class Player : IEffectable
     {
         // Call the IEffectable Start function.
         base.Start();
-
-        // The Player has many components, try to find them and get them.
-        if (TryGetComponent(out _inventory))
-        {
-            _hasInventory = true;
-        }
-        else
-        {
-            Debug.Log("Player #" + PlayerNumber + " does not have an Inventory component. The game will still work but the player will not be able to acquire items.");
-        }
-        if (TryGetComponent(out _metalDetector))
-        {
-            _metalDetector.OnRelicVeryClose += AcceptRelic;
-        }
-        else
-        {
-            Debug.Log("Player #" + PlayerNumber + " does not have a Metal Detector component. The game will still work but the player will not be able to find items.");
-        }
-        if (TryGetComponent(out _movementInput))
-        {
-            _hasMovementInput = true;
-        }
-        else
-        {
-            Debug.Log("Player #" + PlayerNumber + " does not have a Movement Input component. The game will still work but the player will not be able to move.");
-        }
-        if (TryGetComponent(out _rigidBody))
-        {
-            _hasRigidBody = true;
-        }
-        else
-        {
-            Debug.Log("Player #" + PlayerNumber + " does not have a RigidBody component. The game will still work but the player will not collide properly.");
-        }
     }
 
     /// <summary>
@@ -404,6 +423,57 @@ public class Player : IEffectable
             // When no longer digging, set this to false.
             _isDigging = false;
         }
+    }
+
+    /// <summary>
+    /// This method runs when a Player is hit. Whether they tank the hit or receive it is determined by this method.
+    /// </summary>
+    private void PlayerHit()
+    {
+        // If there are more than 0 extra lives.
+        if (_extraLives >= 1)
+        {
+            // check if iframe timer is going
+
+
+            // Reduce and announce the loss of a life.
+            OnExtraLifeChanged?.Invoke(--_extraLives);
+            // Tank the hit.
+            TankHit();
+
+            // If the extraLives var has gone from 1 to 0, the effect mustbe cancelled.
+            if (_extraLives == 0)
+            {
+                // Cancel the extra lives effect.
+                CancellationTokenSource token;
+                if (_effectsCancellationTokens.TryGetValue(Effect.ExtraLives, out token))
+                {
+                    token.Cancel();
+                }
+            }
+
+        }
+        else
+        {
+            // If the invincibility timer is not running.
+            if (ITimer <= 0)
+            {
+                // Damage the player.
+                OnPlayerDamaged?.Invoke();
+            }
+            // Ensure that the _extraLives var does not go below zero.
+            _extraLives = 0;
+        }
+
+    }
+
+    /// <summary>
+    /// Method called when the effect relic cycle action is pressed.
+    /// </summary>
+    /// <param name="context"> CallbackContext context </param>
+    private void CycleEffectRelic(InputAction.CallbackContext context)
+    {
+        if (context.performed) OnCycleRelicInHand?.Invoke(true);
     }
 
     /// <summary>
@@ -619,54 +689,12 @@ public class Player : IEffectable
     }
 
     /// <summary>
-    /// Method called when the effect relic cycle action is pressed.
+    /// Method which subscribes to the inventory change and then calls the OnCycleRelicInHand event so that the display is updated.
     /// </summary>
-    /// <param name="context"> CallbackContext context </param>
-    private void CycleEffectRelic(InputAction.CallbackContext context)
+    /// <param name="unused"> Unused relic list. </param>
+    private void InventoryChangeCycleRelic(IEnumerator<Relic> unused)
     {
-        if (context.performed) OnCycleRelicInHand?.Invoke(true);
-    }
-
-    /// <summary>
-    /// This method runs when a Player is hit. Whether they tank the hit or receive it is determined by this method.
-    /// </summary>
-    private void PlayerHit()
-    {
-        // If there are more than 0 extra lives.
-        if (_extraLives >= 1)
-        {
-            // check if iframe timer is going
-
-
-            // Reduce and announce the loss of a life.
-            OnExtraLifeChanged?.Invoke(--_extraLives);
-            // Tank the hit.
-            TankHit();
-
-            // If the extraLives var has gone from 1 to 0, the effect mustbe cancelled.
-            if (_extraLives == 0)
-            {
-                // Cancel the extra lives effect.
-                CancellationTokenSource token;
-                if (_effectsCancellationTokens.TryGetValue(Effect.ExtraLives, out token))
-                {
-                    token.Cancel();
-                }
-            }
-
-        }
-        else
-        {
-            // If the invincibility timer is not running.
-            if (ITimer <= 0)
-            {
-                // Damage the player.
-                OnPlayerDamaged?.Invoke();
-            }
-            // Ensure that the _extraLives var does not go below zero.
-            _extraLives = 0;
-        }
-
+        OnCycleRelicInHand?.Invoke(false);
     }
 
     /// <summary>
@@ -827,6 +855,15 @@ public class Player : IEffectable
         _inventory.RemoveItemAt(index);
         OnCycleRelicInHand?.Invoke(false);
         BuildEffectRelicList();
+    }
+
+    /// <summary>
+    /// Method run on the invocation of Inventory.OnInventoryCleared()
+    /// Cancels all effects.
+    /// </summary>
+    private void ConsumeAllAfterClear()
+    {
+        CancelAllEffects();
     }
 
     /// <summary>

@@ -179,22 +179,7 @@ public abstract class IEffectable: MonoBehaviour
 
     }
 
-    /// <summary>
-    /// This method cancels all effects.
-    /// </summary>
-    private void CancelAllEffects()
-    {
-        // For each Effect, there must be a source for cancellation tokens.
-        foreach (Effect effect in Enum.GetValues(typeof(Effect)))
-        {
-            CancellationTokenSource cts;
-            if (_effectsCancellationTokens.TryGetValue(effect, out cts))
-            {
-                cts.Cancel();
-            }
-        }
-    }
-
+    
     /// <summary>
     /// The OnCollisionEnter method is where Effects start being applied to IEffectables.
     /// This may be changed away from an OnTriggerEnter to better suit the needs of the project.
@@ -219,6 +204,23 @@ public abstract class IEffectable: MonoBehaviour
 
         
     }
+
+    /// <summary>
+    /// This method cancels all effects.
+    /// </summary>
+    protected void CancelAllEffects()
+    {
+        // For each Effect, there must be a source for cancellation tokens.
+        foreach (Effect effect in Enum.GetValues(typeof(Effect)))
+        {
+            CancellationTokenSource cts;
+            if (_effectsCancellationTokens.TryGetValue(effect, out cts))
+            {
+                cts.Cancel();
+            }
+        }
+    }
+
 
     /// <summary>
     /// This method is called by those seeking to apply active Effects to this IEffectable. 

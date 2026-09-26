@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.1136, y: 3.1136, z: 3.1136}
+  m_LocalScale: {x: 8, y: 8, z: 8}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -111,7 +111,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.75
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7177873281060764925
 MonoBehaviour:
@@ -125,5 +125,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3681492a5015fa4cbb724d4a2e5fadb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuriedRelic
-  _closeDistance: 0.5
+  _closeDistance: 3
   _relicSO: {fileID: 11400000, guid: 582f54ff2b61b794bb73d46121c839bd, type: 2}

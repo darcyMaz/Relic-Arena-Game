@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(SphereCollider))]
 public class BuriedRelic : MonoBehaviour
 {
     /// <summary>
@@ -9,10 +10,14 @@ public class BuriedRelic : MonoBehaviour
     public event Action<Vector2> OnBuriedRelicDugUp;
 
     /// <summary>
-    /// Distance at which those with Metal Detectors can pick up BuriedRelics.
-    /// I'd like to find a way to set static variable in the inspector.
+    /// Distance at which those with Metal Detectors can pick up BuriedRelics as a percentage of the radius.
     /// </summary>
-    [SerializeField] private float _closeDistance = 0.5f;
+    [SerializeField] private float _closeDistancePercentage = 0.5f;
+
+    /// <summary>
+    /// The calculated close distance.
+    /// </summary>
+    private float _actualCloseDistance = 1;
 
     /// <summary>
     /// Relic data associated with this BuriedRelic.
@@ -24,6 +29,27 @@ public class BuriedRelic : MonoBehaviour
     /// </summary>
     private Vector2 BuriedRelicCoordinates = new Vector2();
 
+    /// <summary>
+    /// The sphere collider component.
+    /// </summary>
+    private SphereCollider _sphereCollider;
+
+    /// <summary>
+    /// Method which plays on awake.
+    /// </summary>
+    private void Awake()
+    {
+        // Get the sphere collider.
+        _sphereCollider = GetComponent<SphereCollider>();
+
+        // Calculate the close distance.
+        _actualCloseDistance = _sphereCollider.radius * _closeDistancePercentage;
+    }
+
+    /// <summary>
+    /// Set the relicSO data.
+    /// </summary>
+    /// <param name="relicSO"> The RelicSO to set. </param>
     public void SetRelicData(RelicSO relicSO)
     {
         _relicSO = relicSO;
@@ -41,7 +67,7 @@ public class BuriedRelic : MonoBehaviour
         if (other.TryGetComponent(out metalDetector))
         {
             // If the gameObject is within the "very close range"
-            if (Vector3.Distance(other.transform.position, transform.position) <= _closeDistance)
+            if (Vector3.Distance(other.transform.position, transform.position) <= _actualCloseDistance)
             {
                 // Tell the SoundManager to play the Very Close Sound.
                 SoundManager.Instance.PlayMetalDetector(metalDetector.GetVeryCloseSound());

@@ -1,6 +1,4 @@
-using NUnit.Framework;
-using System.Linq;
-using System.Runtime.CompilerServices;
+using System;
 using UnityEngine;
 
 public class SellingManager : MonoBehaviour
@@ -25,11 +23,11 @@ public class SellingManager : MonoBehaviour
     /// <summary>
     /// List of relics in P1's inventory
     /// </summary>
-    private List _P1Relics;
+    //private List _P1Relics;
     /// <summary>
     /// List of relics in P2's inventory
     /// </summary>
-    private List _P2Relics;
+    //private List _P2Relics;
 
     //public float Player1Score;
 
@@ -149,7 +147,7 @@ public class SellingManager : MonoBehaviour
     /// </summary>
     private void P1SellRelics()
     {
-        Debug.Log("Player 1 sells their relics.");
+        //Debug.Log("Player 1 sells their relics.");
         float relicSubtotal = 0f;
         float relicTotal = 0;
 
@@ -158,15 +156,16 @@ public class SellingManager : MonoBehaviour
             relicSubtotal += relic.GetPrice();
         }
 
-        Debug.Log("Total Price: " + relicSubtotal);
-        Debug.Log("Total amount of relics: " + _P1inventory.Count());
+        //Debug.Log("Total Price: " + relicSubtotal);
+        //Debug.Log("Total amount of relics: " + _P1inventory.Count());
 
         relicTotal = (relicSubtotal * (1f + (_P1inventory.Count() * 0.1f)));
-        Debug.Log("Total with multiplier: " + relicTotal);
+        
+        //Debug.Log("Total with multiplier: " + relicTotal);
 
         //line of code that adds the total to the score goes here
             //Player1Score = (Player1Score + relicTotal);
-            _ScoreManager.PlayerOneScore(relicTotal);
+        _ScoreManager.PlayerOneScore(relicTotal);
         //line of code that plays cash register sfx goes here
 
         //Remove all the relics from their inventory.
@@ -178,7 +177,7 @@ public class SellingManager : MonoBehaviour
 
     private void P2SellRelics()
     {
-        Debug.Log("Player 2 sells their relics.");
+        //Debug.Log("Player 2 sells their relics.");
         float relicSubtotal = 0f;
         float relicTotal = 0;
 
@@ -187,11 +186,11 @@ public class SellingManager : MonoBehaviour
             relicSubtotal += relic.GetPrice();
         }
 
-        Debug.Log("Total Price: " + relicSubtotal);
-        Debug.Log("Total amount of relics: " + _P2inventory.Count());
+        //Debug.Log("Total Price: " + relicSubtotal);
+        //Debug.Log("Total amount of relics: " + _P2inventory.Count());
 
         relicTotal = (relicSubtotal * (1f + (_P2inventory.Count() * 0.1f)));
-        Debug.Log("Total with multiplier: " + relicTotal);
+        //Debug.Log("Total with multiplier: " + relicTotal);
 
         //line of code that adds the total to the score goes here
         //Player2Score = (Player2Score + relicTotal);
@@ -200,7 +199,7 @@ public class SellingManager : MonoBehaviour
 
         //Remove all the relics from their inventory.
         
-            _P2inventory.Clear();
+        _P2inventory.Clear();
         
     }
 }

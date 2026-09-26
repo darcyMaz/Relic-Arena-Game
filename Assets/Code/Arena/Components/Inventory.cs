@@ -11,6 +11,11 @@ public class Inventory : MonoBehaviour, IEnumerable<Relic>
     // An event that informs whoever is listening that the inventory has changed.
     public event Action<IEnumerator<Relic>> OnInventoryChange;
 
+    /// <summary>
+    /// Event invoked when the inventory is cleared.
+    /// </summary>
+    public event Action OnInventoryCleared;
+
     // Implement the IEnumerable class with these two functions.
     public IEnumerator<Relic> GetEnumerator()
     {
@@ -67,6 +72,7 @@ public class Inventory : MonoBehaviour, IEnumerable<Relic>
     /// </summary>
     public void Clear()
     {
+        OnInventoryCleared?.Invoke();
         _inventory.Clear();
         OnInventoryChange?.Invoke(GetEnumerator());
     }

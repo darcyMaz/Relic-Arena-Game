@@ -6,14 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Main Menu.unity
-    guid: c235b7d5848d041deb00f117ca467a3a
-  - enabled: 0
-    path: Assets/Scenes/ArenaTemplate.unity
-    guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
-    path: Assets/Scenes/greybox prototype/greyboxprototype.unity
-    guid: 72c72abc4ac114ba4b6523e523c43d19
+    path: Assets/Scenes/GameTest Prototype.unity
+    guid: 8e90f967fc09f460295ec039c58c03d2
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
