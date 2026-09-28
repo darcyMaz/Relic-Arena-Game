@@ -131,6 +131,11 @@ public class Player : IEffectable
     private float _lastDirection = 0;
 
     /// <summary>
+    /// Bool which states whether this Player has a Metal Detector.
+    /// </summary>
+    private bool _hasMetalDetector = false;
+
+    /// <summary>
     /// Method which runs on awake.
     /// </summary>
     protected override void Awake()
@@ -198,7 +203,8 @@ public class Player : IEffectable
         }
         if (TryGetComponent(out _metalDetector))
         {
-            _metalDetector.OnRelicVeryClose += AcceptRelic;
+            _hasMetalDetector = true;
+            // _metalDetector.OnRelicVeryClose += AcceptRelic;
         }
         else
         {
@@ -266,6 +272,12 @@ public class Player : IEffectable
         // Subscribe the UpdateRelicInHand function to the related event.
         OnCycleRelicInHand += UpdateRelicInHand;
         
+        // Subscribe to Metal Detector Event.
+        if (_hasMetalDetector)
+        {
+            _metalDetector.OnRelicVeryClose += AcceptRelic;
+        }
+
         // Subscribe to inventory events.
         if (_hasInventory)
         {
@@ -295,6 +307,10 @@ public class Player : IEffectable
         OnPlayerDamaged -= ReceiveHit;
         OnCycleRelicInHand -= UpdateRelicInHand;
         _cycleRelicAction.performed -= CycleEffectRelic;
+        if (_hasMetalDetector)
+        {
+            _metalDetector.OnRelicVeryClose -= AcceptRelic;
+        }
         if (_hasInventory)
         {
             _inventory.OnInventoryCleared -= ConsumeAllAfterClear;

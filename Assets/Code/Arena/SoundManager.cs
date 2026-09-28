@@ -22,6 +22,9 @@ public class SoundManager : MonoBehaviour
         InitSingleton();
     }
 
+    /// <summary>
+    /// Initialize the singleton, checking if it needs to be removed.
+    /// </summary>
     private void InitSingleton()
     {
         if (Instance != null && Instance != this)
@@ -32,42 +35,17 @@ public class SoundManager : MonoBehaviour
         Instance = this;
     }
 
-    private List<AudioClip> _ongoingMetalDetectors = new List<AudioClip>();
-
+    
     /// <summary>
     /// Plays metal detector noises.
     /// </summary>
     /// <param name="audioClip"> The audio clip to play. </param>
-    public async void PlayMetalDetector(AudioClip audioClip)
+    public void PlayMetalDetector(AudioClip audioClip)
     {
-        // If this audio clip is not in the ongoingMetalDetector list, then it is not already playing.
-        if (!_ongoingMetalDetectors.Contains(audioClip))
-        {
-            // Add it to the list so the audio clip will not overlap with itself.
-            _ongoingMetalDetectors.Add(audioClip);
+        // Get the duration of the audio clip.
+        // int audioClipDuration = (int) audioClip.length * 1000;
 
-            // Get the duration of the audio clip.
-            int audioClipDuration = (int) audioClip.length * 1000;
-
-            // PLAY the audio clip.
-            _audioSource.PlayOneShot(audioClip);
-
-            await Task.Delay(audioClipDuration);
-
-            _ongoingMetalDetectors.Remove(audioClip);
-        }
+        // PLAY the audio clip.
+        _audioSource.PlayOneShot(audioClip);
     }
-
-    /**
-     * Todo:
-     * Make the metal detector noises a queue.
-     * So, PlayMetalDetector changes to QueueMetalDetector
-     * If that clip is in the queue, do nothing
-     * Else, Add it to the queue
-     * Every frame:
-     *      Check if something is currently playing
-     *      Check if something is in the queue
-     *      Play or don't play
-     * 
-     */
 }
