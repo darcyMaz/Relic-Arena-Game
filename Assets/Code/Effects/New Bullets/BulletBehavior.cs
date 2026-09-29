@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BulletBehavior : MonoBehaviour
 {
-    #region Bullet Properties
+    #region Bullet Variables
 
     //References
     [SerializeField] Rigidbody rb;
