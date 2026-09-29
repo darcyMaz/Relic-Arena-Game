@@ -1,205 +1,183 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class which manages the selling of Relics.
+/// </summary>
 public class SellingManager : MonoBehaviour
 {
-    //This script is for when the player enters the area to sell all their relics.
-
     /// <summary>
     /// The collider of the selling area.
     /// </summary>
     [SerializeField] private SphereCollider _collider;
 
-    //Separate inventory values for P1 and P2
-
     /// <summary>
-    /// Player 1's inventory script
+    /// Score manager.
     /// </summary>
-    private Inventory _P1inventory;
-    /// <summary>
-    /// Player 2's inventory script
-    /// </summary>
-    private Inventory _P2inventory;
-    /// <summary>
-    /// List of relics in P1's inventory
-    /// </summary>
-    //private List _P1Relics;
-    /// <summary>
-    /// List of relics in P2's inventory
-    /// </summary>
-    //private List _P2Relics;
-
-    //public float Player1Score;
-
-    //public float Player2Score;
-
     [SerializeField] private ScoreManager _ScoreManager;
 
     /// <summary>
-    /// When timer is over a set time, P1 sells their items.
+    /// The list of durations each player can spend in the shop before selling.
     /// </summary>
-    [SerializeField] private float _P1SellTimer;
-    /// <summary>
-    /// When timer is over a set time, P2 sells their items.
-    /// </summary>
-    [SerializeField] private float _P2SellTimer;
+    [SerializeField] private List<float> _playerSellTimes;
 
-    //Countdown timers for relics.
-    private float P1timer = 0f;
-    private float P2timer = 0f;
-    private bool P1timerActive = false;
-    private bool P2timerActive = false;
+    /// <summary>
+    /// The list of 
+    /// </summary>
+    private List<float> _playerSellTimers = new List<float>();
+
+    /// <summary>
+    /// Boolean lock which ensures players only sell once per entry into the sell zone.
+    /// </summary>
+    private List<bool> _playerSellLocks = new List<bool>();
+
+    /// <summary>
+    /// Method played on awake.
+    /// Initializes the _playerSellTimes and _playerSellLocks lists.
+    /// </summary>
+    private void Awake()
+    {
+        // For each time duration representing a player, add a timer and set it to infinity.
+        // Set all of the locks to true.
+        _playerSellTimes.ForEach((time) => { _playerSellTimers.Add(Mathf.Infinity); _playerSellLocks.Add(true); });
+    }
 
     private void Update()
     {
-        if (P1timerActive)
+        // Decrement all timers by delta time if they are greater than 0.
+        for (int index = 0; index < _playerSellTimers.Count; index++)
         {
-            P1timer += Time.deltaTime;
-            if (P1timer >= 2f)
+            _playerSellTimers[index] = _playerSellTimers[index] - Time.deltaTime;
+            if (_playerSellTimers[index] < 0)
             {
-                P1timerActive = false;
-                P1timer = 0f;
-                P1SellRelics();
-
-            }
-        }
-        if (P2timerActive)
-        {
-            P2timer += Time.deltaTime;
-            if (P2timer >= 2f)
-            {
-                P2timerActive = false;
-                P2timer = 0f;
-                P2SellRelics();
-
+                _playerSellTimers[index] = 0;
             }
         }
     }
 
     private void OnTriggerEnter(Collider collision)
     {
-        
-        //Gather the inventory of the object entering.
-        Inventory inventory;
-        if (collision.TryGetComponent(out inventory))
-        {
-            
-            Player player;
-            if (collision.TryGetComponent(out player))
-            {
-                int playerID;
-                playerID = player.GetPlayerNumber();
-                if (playerID == 1)
-                {
-                    Debug.Log("P1 entered the shop");
-                    _P1inventory = inventory;
-                    P1timerActive = true;
-                }
-                else if(playerID == 2)
-                {
-                    Debug.Log("P2 entered the shop");
-                    _P2inventory = inventory;
-                    P2timerActive = true;
-                }
-            }
-            else
-            {
-                Debug.Log("Inventory holder does not have a Player script");
-            }
-            
-        }
-        else
-        {
-            Debug.Log("Something that doesn't have an inventory entered the shop.");
-        }
-
-
-    }
-
-    //When a player leaves, the sell timer resets. Doesn't work. Will need to investigate further.
-    private void OnTriggerLeave(Collider collision)
-    {
+        //Debug.Log("Entered trigger zone.");
         Player player;
         if (collision.TryGetComponent(out player))
         {
-            int playerID;
-            playerID = player.GetPlayerNumber();
-            if (playerID == 1)
-            {
-                P1timer = 0f;
-                P1timerActive= false;
-                Debug.Log("Player1 Left");
-            }
-            else if (playerID == 2)
-            {
-                P2timer = 0f;
-                P2timerActive= false;
-                Debug.Log("Player2 Left");
+            //Debug.Log("\t found player");
+            int playerNum = player.GetPlayerNumber();
+            int indexCorrectPlayerNum = playerNum - 1;
 
+            // If this is a valid player.
+            if (IsValidPlayer(playerNum))
+            {
+                //Debug.Log("Valid player");
+                
+                // Set the timer to its time duration.
+                // The update function will decrement the timer, and OnTriggerStay will watch for access to selling.
+                _playerSellTimers[indexCorrectPlayerNum] = _playerSellTimes[indexCorrectPlayerNum];
+
+                // Unlock the selling mechanic.
+                _playerSellLocks[indexCorrectPlayerNum] = false;
+
+                
             }
-            
         }
-        
- 
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        // Get the Player if this is one.
+        Player player;
+        if (other.TryGetComponent(out player))
+        {
+            // Get the player's number to check if it is valid.
+            int playerNum = player.GetPlayerNumber();
+            int indexCorrectPlayerNum = playerNum - 1;
+
+            // Get the player's number and check whether it is a valid number.
+            if (IsValidPlayer(playerNum))
+            {
+                //Debug.Log("play 1 timer: " + _playerSellTimers[indexCorrectPlayerNum]);
+
+                // If the player selling mechanic has not been locked and the timer is zero.
+                if (!_playerSellLocks[indexCorrectPlayerNum] && _playerSellTimers[indexCorrectPlayerNum] <= 0)
+                {
+                    // Lock the selling until they leave the zone.
+                    _playerSellLocks[indexCorrectPlayerNum] = true;
+
+                    // Income from all of the relics.
+                    float income = SellRelics(player);
+
+                    // Inform the ScoreManager of this change.
+                    _ScoreManager.PlayerScore(income, playerNum);
+
+                    // Clear the player's inventory.
+                    player.ConsumeAllRelics();
+                }
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Player player;
+        if (other.TryGetComponent(out player))
+        {
+            // Get the player's number to check if it is valid.
+            int playerNum = player.GetPlayerNumber();
+            int indexCorrectPlayerNum = playerNum - 1;
+
+            // Get the player's number and check whether it is a valid number.
+            if (IsValidPlayer(playerNum))
+            {
+                // Set the timer to zero.
+                _playerSellTimers[indexCorrectPlayerNum] = Mathf.Infinity;
+                // Lock the selling mechanic.
+                _playerSellLocks[indexCorrectPlayerNum] = true;
+            }
+        }
+    }
+
     /// <summary>
-    /// Takes P1's inventory and sells it, clearing their inventory and giving them score.
+    /// Method which validates whether a Player's number is valid for use in the SellingManager.
+    /// Checks whether the number is greater than 0 and is not equal or greater than the size of the time duration list.
     /// </summary>
-    private void P1SellRelics()
+    /// <param name="playerNum"> The Player Number as an int. </param>
+    /// <returns> Whether it is valid as a bool. </returns>
+    private bool IsValidPlayer(int playerNum)
     {
-        //Debug.Log("Player 1 sells their relics.");
-        float relicSubtotal = 0f;
-        float relicTotal = 0;
-
-        foreach (Relic relic in _P1inventory)
+        if (playerNum >= _playerSellTimes.Count || playerNum < 1)
         {
-            relicSubtotal += relic.GetPrice();
+            Debug.LogError("A Player entered the SellingManager's zone but its Player Number was invalid (less then 1 or greater than the size of the _playerSellTimes list).");
+            return false;
         }
-
-        //Debug.Log("Total Price: " + relicSubtotal);
-        //Debug.Log("Total amount of relics: " + _P1inventory.Count());
-
-        relicTotal = (relicSubtotal * (1f + (_P1inventory.Count() * 0.1f)));
-        
-        //Debug.Log("Total with multiplier: " + relicTotal);
-
-        //line of code that adds the total to the score goes here
-            //Player1Score = (Player1Score + relicTotal);
-        _ScoreManager.PlayerOneScore(relicTotal);
-        //line of code that plays cash register sfx goes here
-
-        //Remove all the relics from their inventory.
-
-        _P1inventory.Clear();
-        
- 
+        return true;
     }
 
-    private void P2SellRelics()
+    /// <summary>
+    /// Method which sells relics and returns their value after passing through an exponential formula.
+    /// </summary>
+    /// <param name="player"> The Player whose relics will be sold. </param>
+    /// <returns> The value of the Relics as a float. </returns>
+    private float SellRelics(Player player)
     {
-        //Debug.Log("Player 2 sells their relics.");
-        float relicSubtotal = 0f;
-        float relicTotal = 0;
-
-        foreach (Relic relic in _P2inventory)
+        // Check if the player has an inventory.
+        Inventory inventory;
+        if (player.gameObject.TryGetComponent(out inventory))
         {
-            relicSubtotal += relic.GetPrice();
+            // Values to help calculate the income for selling these relics.
+            float relicSubtotal = 0f;
+            float relicTotal = 0;
+
+            foreach (Relic relic in inventory)
+            {
+                relicSubtotal += relic.GetPrice();
+            }
+
+            // Calculate the real value, according to an exponential formula.
+            relicTotal = (relicSubtotal * (1f + (inventory.Count() * 0.1f)));
+
+            // Return the value.
+            return relicTotal;
         }
-
-        //Debug.Log("Total Price: " + relicSubtotal);
-        //Debug.Log("Total amount of relics: " + _P2inventory.Count());
-
-        relicTotal = (relicSubtotal * (1f + (_P2inventory.Count() * 0.1f)));
-        //Debug.Log("Total with multiplier: " + relicTotal);
-
-        //line of code that adds the total to the score goes here
-        //Player2Score = (Player2Score + relicTotal);
-        _ScoreManager.PlayerTwoScore(relicTotal);
-        //line of code that plays cash register sfx goes here
-
-        //Remove all the relics from their inventory.
-        
-        _P2inventory.Clear();
-        
+        return 0;
     }
 }

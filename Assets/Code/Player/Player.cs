@@ -50,7 +50,13 @@ public class Player : IEffectable
     /// </summary>
     private InputAction _dig;
 
+    /// <summary>
+    /// The RigidBody component attached to this Player.
+    /// </summary>
     private Rigidbody _rigidBody;
+    /// <summary>
+    /// A boolean which denotes whether a RigidBody was found.
+    /// </summary>
     private bool _hasRigidBody = false;
 
     /// <summary>
@@ -269,7 +275,7 @@ public class Player : IEffectable
         // Subscribe to inventory events.
         if (_hasInventory)
         {
-            _inventory.OnInventoryCleared += ConsumeAllAfterClear;
+            // _inventory.OnInventoryCleared += ConsumeAllAfterClear;
             _inventory.OnInventoryChange += InventoryChangeCycleRelic;
         }
 
@@ -278,9 +284,6 @@ public class Player : IEffectable
         _getHitTest.Enable();
         _getHitTest.performed += HitPlayerTest;
 
-        // Test event calls.
-        OnExtraLifeChanged += ExtraLifeTest;
-        //OnRelicInHandChanged += CycleRelicTest;
     }
 
     private void OnDisableEventSubscribers()
@@ -297,15 +300,12 @@ public class Player : IEffectable
         _cycleRelicAction.performed -= CycleEffectRelic;
         if (_hasInventory)
         {
-            _inventory.OnInventoryCleared -= ConsumeAllAfterClear;
+            // _inventory.OnInventoryCleared -= ConsumeAllAfterClear;
             _inventory.OnInventoryChange -= InventoryChangeCycleRelic;
         }
         _dig.performed -= Dig;
         _getHitTest.performed -= HitPlayerTest;
 
-        // Test event calls.
-        OnExtraLifeChanged -= ExtraLifeTest;
-        //OnRelicInHandChanged -= CycleRelicTest;
     }
 
     /// <summary>
@@ -507,12 +507,12 @@ public class Player : IEffectable
     /// <param name="isCycleCalled"></param>
     private void UpdateRelicInHand(bool isCycleCalled)
     {
-        Debug.Log("UpdateRelicInHand called");
+        // Debug.Log("UpdateRelicInHand called");
 
         // If the inventory is empty, set the index to -1 and return an empty list.
         if (_inventory.Count() <= 0)
         {
-            Debug.Log("- Inventory is empty");
+            // Debug.Log("- Inventory is empty");
             _relicInHandIndex = -1;
             //OnRelicInHandChanged?.Invoke(-1); 
             OnRelicInHandChanged?.Invoke( new List<Relic>() );
@@ -521,7 +521,7 @@ public class Player : IEffectable
         // If the inventory is exactly of size 1.
         else if (_inventory.Count() == 1)
         {
-            Debug.Log("- Inventory has one relic");
+            // Debug.Log("- Inventory has one relic");
 
             // If the sole relic is an Effect relic then set the index to 0, otherwise -1.
             _relicInHandIndex = ( IsEffectRelic(_inventory.GetRelicAt(0))) ? 0: -1;
@@ -541,7 +541,7 @@ public class Player : IEffectable
         // If it is not, cycle until a new Effect relic is found. If none are found then set _relicInHandIndex to -1 and break.
         else
         {
-            Debug.Log("- Inventory has more than one relic");
+            // Debug.Log("- Inventory has more than one relic");
 
             _relicInHandIndex = 
                 // If the relicInHandIndex > the size of the inventory. set it to be the last index.
@@ -601,12 +601,12 @@ public class Player : IEffectable
                 }
             }
 
-            Debug.Log("- UpdateHand after for loop ~ nearestEffectRelicIndex: " + nearestEffectRelic + " nextEffectRelic " + nextEffectRelic);
+            // Debug.Log("- UpdateHand after for loop ~ nearestEffectRelicIndex: " + nearestEffectRelic + " nextEffectRelic " + nextEffectRelic);
 
             // If there were indeed no Effect relics, then note that and return.
             if (nearestEffectRelic == -1)
             {
-                Debug.Log("-- nearest effect relic is -1");
+                // Debug.Log("-- nearest effect relic is -1");
 
                 _relicInHandIndex = -1;
                 OnRelicInHandChanged?.Invoke( BuildDisplayList(0) );
@@ -616,7 +616,7 @@ public class Player : IEffectable
             // Then there will be no cycling.
             if (nextEffectRelic == -1)
             {
-                Debug.Log("-- next effect relic is -1");
+                // Debug.Log("-- next effect relic is -1");
 
                 OnRelicInHandChanged?.Invoke(BuildDisplayList(_relicInHandIndex));
                 return;
@@ -625,14 +625,14 @@ public class Player : IEffectable
             // This function may be called without a call to cycle to the next relic because there may simply be a reordering of the inventory.
             if (isCycleCalled)
             {
-                Debug.Log("-- cycle was called, and thus there was more than one effect relic and Q was pressed");
+                // Debug.Log("-- cycle was called, and thus there was more than one effect relic and Q was pressed");
 
                 _relicInHandIndex = nextEffectRelic;
                 OnRelicInHandChanged?.Invoke( BuildDisplayList( _relicInHandIndex ) );
             }
             else
             {
-                Debug.Log("-- cycle was not called, two effect relics and q was nor pressed");
+                // Debug.Log("-- cycle was not called, two effect relics and q was nor pressed");
                 _relicInHandIndex = nearestEffectRelic;
                 OnRelicInHandChanged?.Invoke(BuildDisplayList(_relicInHandIndex));
             }
@@ -785,15 +785,22 @@ public class Player : IEffectable
         }
     }
 
-    //Animates the Player either running or idle depending on current velocity
+    /// <summary>
+    /// Animates the Player either running or idle depending on current velocity
+    /// </summary>
     private void AnimationRunState()
     {
-        anim.SetFloat("mSpeed", _rigidBody.linearVelocity.magnitude);
+        // If the Player has a RigidBody, set the animation's speed value to the magnitude of the linear velocity.
+        if (_hasRigidBody)
+        {
+            anim.SetFloat("mSpeed", _rigidBody.linearVelocity.magnitude);
+        }
+        else
+        {
+            anim.SetFloat("mSpeed", 0);
+        }
     }
     
-    // Play the digging animation.
-    // anim.SetTrigger("UseRelic");
-
     /// <summary>
     /// Change the speed of the player if they have a Movement Input component.
     /// This function is not additive. That is, every call to this function sets the speed to be a percentage of the base speed.
@@ -808,7 +815,8 @@ public class Player : IEffectable
     }
 
     /// <summary>
-    /// Runs when _metalDetector invokes an event for proximity to relic AND dig is pressed.
+    /// Runs when _metalDetector invokes an event for proximity to relic.
+    /// Accepts a relic if dig is pressed and a relic is found.
     /// </summary>
     private void AcceptRelic(Relic relic, BuriedRelic buriedRelic)
     {
@@ -820,6 +828,10 @@ public class Player : IEffectable
         }
     }
 
+    /// <summary>
+    /// Add a relic to the inventory.
+    /// </summary>
+    /// <param name="relic"> Relic to add to inventory. </param>
     private void AddRelicToInventory(Relic relic)
     {
         // Add it to the inventory.
@@ -846,6 +858,7 @@ public class Player : IEffectable
         // Recalculate the passive effects.
         BuildEffectRelicList();
     }
+
     /// <summary>
     /// Consume a relic at an index. In other words delete it.
     /// </summary>
@@ -854,6 +867,21 @@ public class Player : IEffectable
     {
         _inventory.RemoveItemAt(index);
         OnCycleRelicInHand?.Invoke(false);
+        BuildEffectRelicList();
+    }
+
+    /// <summary>
+    /// Method which consumes all relics and cancels their effects.
+    /// </summary>
+    public void ConsumeAllRelics()
+    {
+        // Clear the inventory. For reference: this line will not rebuild the effect list on its own.
+        _inventory.Clear();
+
+        // Cancel all effects.
+        CancelAllEffects();
+
+        // Rebuild the effect relic list.
         BuildEffectRelicList();
     }
 
@@ -874,11 +902,20 @@ public class Player : IEffectable
         PlayerHit();
     }
 
+    /// <summary>
+    /// Applications to the Fog Effect for Players.
+    /// The Fog Effect has no extra effects at the moment.
+    /// </summary>
     protected override void ApplyFog()
     {
         
     }
 
+    /// <summary>
+    /// Application of the Extra Lives Effect for Players.
+    /// </summary>
+    /// <param name="extraLives"> The number of extra lives as an int. </param>
+    /// <param name="extraLivesRelic"> The Relic associated to the active Extra Lives Effect. </param>
     protected override void ApplyExtraLives(int extraLives, Relic extraLivesRelic)
     {
         // If there is not already a relic applying this effect.
@@ -914,25 +951,13 @@ public class Player : IEffectable
         PlayerHit();
     }
 
-    private void ExtraLifeTest(int currentLives)
-    {
-        // Debug.Log("extra life called: " + currentLives + " and the class variable: " + _extraLives);
-    }
+    /// <summary>
+    /// A test function activated by pressing the Hit button according to the input map.
+    /// </summary>
+    /// <param name="context"> Context of the button press. </param>
     private void HitPlayerTest(InputAction.CallbackContext context)
     {
         if (context.performed) PlayerHit();
     }
-
-    
-    /*
-    private void CycleRelicTest(List<Relic> displayList)
-    {
-        Debug.Log("Display List");
-        foreach (Relic relic in displayList)
-        {
-            Debug.Log("\t\t" + relic.GetName());
-        }
-    }
-    */
     
 }

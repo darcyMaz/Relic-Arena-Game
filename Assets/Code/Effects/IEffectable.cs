@@ -662,7 +662,7 @@ public abstract class IEffectable: MonoBehaviour
 
         // Cancel all effects related to this relic when this one is complete.
         // Effects associated with a different relic will not be cancelled.
-        CancelEffectsOnRelic(thisRelic);
+        if (thisRelic != null) CancelEffectsOnRelic(thisRelic);
     }
 
     protected abstract void ApplyLightningForray();

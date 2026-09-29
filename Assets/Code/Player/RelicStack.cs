@@ -9,7 +9,8 @@ public class RelicStack : MonoBehaviour
 
     //Calling player's scripts.
     [SerializeField] private Player _player;
-    // [SerializeField] private Inventory _inventory;
+    private bool _hasPlayer = false;
+
     //Relic Icon Prefab
     [SerializeField] private GameObject _relicPreFab;
 
@@ -20,16 +21,19 @@ public class RelicStack : MonoBehaviour
 
     private void Awake()
     {
-        _player = GetComponent<Player>();
-        // _inventory = GetComponent<Inventory>();
+        if (TryGetComponent(out _player))
+        {
+            _hasPlayer = true;
+        }
     }
 
-    private void Start()
+    private void OnEnable()
     {
-
-        //Subscribe to the inventory change event
-        //dsssss0-ews_inventory.OnInventoryChange += StackAdjust;
-        _player.OnRelicInHandChanged += StackAdjust;
+        if (_hasPlayer) _player.OnRelicInHandChanged += StackAdjust;
+    }
+    private void OnDisable()
+    {
+        if (_hasPlayer) _player.OnRelicInHandChanged -= StackAdjust;
     }
 
     /// <summary>
@@ -37,7 +41,7 @@ public class RelicStack : MonoBehaviour
     /// </summary>
     private void StackAdjust(List<Relic> relicsInInventory)
     {
-        Debug.Log("Stacking Relics");
+        // Debug.Log("Stacking Relics");
 
         //First, delete all the current GameObjects
         ClearStackChildren();  

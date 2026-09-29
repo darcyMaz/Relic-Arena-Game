@@ -14,7 +14,7 @@ public class Inventory : MonoBehaviour, IEnumerable<Relic>
     /// <summary>
     /// Event invoked when the inventory is cleared.
     /// </summary>
-    public event Action OnInventoryCleared;
+    // public event Action OnInventoryCleared;
 
     // Implement the IEnumerable class with these two functions.
     public IEnumerator<Relic> GetEnumerator()
@@ -72,8 +72,8 @@ public class Inventory : MonoBehaviour, IEnumerable<Relic>
     /// </summary>
     public void Clear()
     {
-        OnInventoryCleared?.Invoke();
         _inventory.Clear();
+        // OnInventoryCleared?.Invoke(); // Is this not necessary? If the inventory is cleared and then the notice that there is a change in inventory is sent (with an empty inventory) then shouldn't that auto cancel all effects eventually?
         OnInventoryChange?.Invoke(GetEnumerator());
     }
 }
