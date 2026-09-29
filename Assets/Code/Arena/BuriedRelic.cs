@@ -43,7 +43,8 @@ public class BuriedRelic : MonoBehaviour
         _sphereCollider = GetComponent<SphereCollider>();
 
         // Calculate the close distance.
-        _actualCloseDistance = _sphereCollider.radius * _closeDistancePercentage;
+        // Multiply the radius of the sphere by the scale of the gameObject, by the percentage of the close distance.
+        _actualCloseDistance = _sphereCollider.radius * transform.localScale.x * _closeDistancePercentage;
     }
 
     /// <summary>
