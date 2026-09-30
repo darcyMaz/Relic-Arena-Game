@@ -13,23 +13,24 @@ public class Destructibleobject : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-   
-     void OnTriggerEnter(Collider other)
-       {
-    if (other.CompareTag("Player1"))
-      return;
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player1"))
+        {
+            return;
+        }
     
-      DestroySelf();
-       
-       }
-
-       public void DestroySelf(){
-    AudioClip clip = Random.value < 0.5f ? _DestructionSound1 : _DestructionSound2;
-    if (clip != null){
-        AudioSource.PlayClipAtPoint(clip, transform.position);
+        DestroySelf();
     }
-    Destroy(gameObject);
-}
+
+    public void DestroySelf()
+    {
+        AudioClip clip = Random.value < 0.5f ? _DestructionSound1 : _DestructionSound2;
+        if (clip != null)
+        {
+            AudioSource.PlayClipAtPoint(clip, transform.position);
+        }
+        Destroy(gameObject);
+    }
 }
 

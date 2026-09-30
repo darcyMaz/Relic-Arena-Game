@@ -76,7 +76,6 @@ public class SellingManager : MonoBehaviour
 
                 // Unlock the selling mechanic.
                 _playerSellLocks[indexCorrectPlayerNum] = false;
-
                 
             }
         }
