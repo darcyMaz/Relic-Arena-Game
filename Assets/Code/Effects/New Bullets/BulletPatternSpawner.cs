@@ -11,8 +11,8 @@ public class BulletPatternSpawner : MonoBehaviour
 
     //Spawn Locations or AOE
     private List<Vector3> spawnLocationList;
-    private float spawnAOEX;
-    private float spawnAOEY;
+    private float spawnHalfX;
+    private float spawnHalfY;
 
     private int spawnType;
     #region Spawn Type Legend

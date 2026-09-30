@@ -63,4 +63,19 @@ public class BulletBehavior : MonoBehaviour
         //Apply transformation
         rb.transform.position = rotatedVector;
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Player player;
+        if (other.TryGetComponent(out player))
+        {
+            // the other collider has a player component on it
+            Debug.Log("Hit Player");
+        }
+        else
+        {
+            // the other collider does NOT have a player component on it
+            Debug.Log("Hit not a Player");
+        }
+    }
 }
