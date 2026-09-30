@@ -19,6 +19,11 @@ public class MetalDetector : MonoBehaviour
     [SerializeField] private AudioClip _veryCloseSound;
 
     /// <summary>
+    /// Transform representing the spot where the player digs.
+    /// </summary>
+    [SerializeField] private Transform DigSpot;
+
+    /// <summary>
     /// Get the sound for when the metal detector is close to a buried relic.
     /// </summary>
     /// <returns> The audio clip for the close sound. </returns>
@@ -44,5 +49,14 @@ public class MetalDetector : MonoBehaviour
     public void InvokeRelicVeryClose(Relic relic, BuriedRelic buriedRelic)
     {
         OnRelicVeryClose?.Invoke(relic, buriedRelic);
+    }
+
+    /// <summary>
+    /// Method which retrieves the intended precise location of the Metal Detector, i.e. the dig spot.
+    /// </summary>
+    /// <returns> The Dig Spot as a Vector3. </returns>
+    public Vector3 GetDigSpot()
+    {
+        return DigSpot.position;
     }
 }

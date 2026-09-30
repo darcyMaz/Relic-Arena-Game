@@ -2067,6 +2067,10 @@ PrefabInstance:
       propertyPath: BaseSpeed
       value: 400
       objectReference: {fileID: 0}
+    - target: {fileID: 241768571983204239, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
+      propertyPath: GravityFloat
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 350592518795322963, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
       propertyPath: m_SortingOrder
       value: 5
@@ -2118,6 +2122,10 @@ PrefabInstance:
     - target: {fileID: 3434011169272234523, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
       propertyPath: m_Name
       value: Player 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4666927630188493696, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
+      propertyPath: ITime
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

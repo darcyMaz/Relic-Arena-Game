@@ -124,7 +124,7 @@ public class Player : IEffectable
     /// <summary>
     /// Invincibility time.
     /// </summary>
-    [SerializeField] private float ITime = 0.5f;
+    [SerializeField] private float ITime = 2f;
 
     /// <summary>
     /// Invincibility timer.
@@ -363,19 +363,10 @@ public class Player : IEffectable
     private void UpdateHelper()
     {
         // If the ITimer is above 0, then the invisibility frames have begun and they must be counted down.
-        ITimer = (ITimer <= 0) ? ITimer -= Time.deltaTime : 0;
+        ITimer = (ITimer > 0) ? ITimer -= Time.deltaTime : 0;
 
         AnimationDirection(GetDirection());
         AnimationRunState();
-    }
-
-    /// <summary>
-    /// Get this Player's number.
-    /// </summary>
-    /// <returns> The Player's number as an integer. </returns>
-    public int GetPlayerNumber()
-    {
-        return PlayerNumber;
     }
 
     /// <summary>
@@ -809,21 +800,6 @@ public class Player : IEffectable
     }
 
     /// <summary>
-    /// Method which consumes all relics and cancels their effects.
-    /// </summary>
-    public void ConsumeAllRelics()
-    {
-        // Clear the inventory. For reference: this line will not rebuild the effect list on its own.
-        _inventory.Clear();
-
-        // Cancel all effects.
-        CancelAllEffects();
-
-        // Rebuild the effect relic list.
-        BuildEffectRelicList();
-    }
-
-    /// <summary>
     /// Apply the Lightning Effect.
     /// </summary>
     protected override void ApplyLightning()
@@ -888,5 +864,28 @@ public class Player : IEffectable
     {
         if (context.performed) PlayerHit();
     }
-    
+
+    /// <summary>
+    /// Get this Player's number.
+    /// </summary>
+    /// <returns> The Player's number as an integer. </returns>
+    public int GetPlayerNumber()
+    {
+        return PlayerNumber;
+    }
+
+    /// <summary>
+    /// Method which consumes all relics and cancels their effects.
+    /// </summary>
+    public void ConsumeAllRelics()
+    {
+        // Clear the inventory. For reference: this line will not rebuild the effect list on its own.
+        _inventory.Clear();
+
+        // Cancel all effects.
+        CancelAllEffects();
+
+        // Rebuild the effect relic list.
+        BuildEffectRelicList();
+    }
 }
