@@ -62,8 +62,11 @@ public class Destructibleobject : MonoBehaviour
 
     private void LightningStrikeCheck(Vector3 lightningPosition)
     {
+        Debug.Log("Lightning Strike Position: " + lightningPosition);
+        Debug.Log("Results of the contains function: " + _boxCollider.bounds.Contains(lightningPosition));
+
         // Is the position where lightning was struck within the collider?
-        if (_boxCollider.bounds.Contains(lightningPosition))
+        if ( _boxCollider.bounds.Contains(lightningPosition) )
         {
             // If so, break this object.
             DestroySelf();
