@@ -27,6 +27,10 @@ public class Destructibleobject : MonoBehaviour
         {
             EffectsManager.Instance.OnLightningStrike += LightningStrikeCheck;
         }
+        else
+        {
+            Debug.Log("Could not find effects manager.");
+        }
     }
     /// <summary>
     /// Method called when this gameObject is disabled.
