@@ -1,21 +1,24 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// This class handles displaying the relics above the player.
+/// </summary>
 public class RelicStack : MonoBehaviour
 {
-    //This script handles displaying the relics above the player.
-
-    //Calling player's scripts.
-    [SerializeField] private Player _player;
+    /// <summary>
+    /// The player attached to this gameObject.
+    /// </summary>
+    private Player _player;
     private bool _hasPlayer = false;
 
-    //Relic Icon Prefab
+    /// <summary>
+    /// Relic Icon Prefab
+    /// </summary>
     [SerializeField] private GameObject _relicPreFab;
 
     /// <summary>
-    /// The list of relics that are displayed on the player.
+    /// The list of relics that are displayed on the player's head.
     /// </summary>
     private List<GameObject> _relics = new List<GameObject>();
 
@@ -41,8 +44,6 @@ public class RelicStack : MonoBehaviour
     /// </summary>
     private void StackAdjust(List<Relic> relicsInInventory)
     {
-        // Debug.Log("Stacking Relics");
-
         //First, delete all the current GameObjects
         ClearStackChildren();  
 
