@@ -89,17 +89,6 @@ public class EffectsManager : MonoBehaviour
     {
         LightningSource.LightningStrike(endPos);
         OnLightningStrike?.Invoke(endPos);
-
-        /*
-        // for each time a collider is found in the end position where the lightning was marked, the destructible object will be found and the destroyself function called.
-        foreach (Collider hit in Physics.OverlapSphere(endPos, LightningMarkerRadius))
-        {
-            if (hit.TryGetComponent(out Destructibleobject wall))
-            {
-                wall.DestroySelf();
-            }
-        }
-        */
     }
     
     /// <summary>

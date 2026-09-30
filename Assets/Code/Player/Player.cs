@@ -55,7 +55,7 @@ public class Player : IEffectable
     /// </summary>
     private Rigidbody _rigidBody;
     /// <summary>
-    /// A boolean which denotes whether a RigidBody was found.
+    /// A boolean which denotes whether a RigidBody was found. 
     /// </summary>
     private bool _hasRigidBody = false;
 
@@ -502,7 +502,7 @@ public class Player : IEffectable
     }
 
     /// <summary>
-    /// This method updates which Relic is currently in the player's hand.
+    /// This method updates which Relic is currently in the player's hand and invokes an event showing the list of relics in the right order.
     /// </summary>
     /// <param name="isCycleCalled"></param>
     private void UpdateRelicInHand(bool isCycleCalled)
@@ -518,24 +518,6 @@ public class Player : IEffectable
             OnRelicInHandChanged?.Invoke( new List<Relic>() );
             return;
         }
-        // If the inventory is exactly of size 1.
-        else if (_inventory.Count() == 1)
-        {
-            // Debug.Log("- Inventory has one relic");
-
-            // If the sole relic is an Effect relic then set the index to 0, otherwise -1.
-            _relicInHandIndex = ( IsEffectRelic(_inventory.GetRelicAt(0))) ? 0: -1;
-
-            List<Relic> invokedList = new List<Relic>();
-
-            // If that relic was indeed an effect relic, invoke the event with a list including it.
-            if (_relicInHandIndex == 0)
-            {
-                invokedList.Add(_inventory.GetRelicAt(0));
-            }
-            OnRelicInHandChanged?.Invoke(invokedList);
-            return;
-        }
         // Otherwise, check whether the current index is an effect relic.
         // If it is, then go directly to the cycle check.
         // If it is not, cycle until a new Effect relic is found. If none are found then set _relicInHandIndex to -1 and break.
@@ -543,6 +525,7 @@ public class Player : IEffectable
         {
             // Debug.Log("- Inventory has more than one relic");
 
+            // Ensure the relicInHandIndex is not out of bounds.
             _relicInHandIndex = 
                 // If the relicInHandIndex > the size of the inventory. set it to be the last index.
                 (_relicInHandIndex >= _inventory.Count()) ? _relicInHandIndex = _inventory.Count() - 1: 
@@ -555,52 +538,30 @@ public class Player : IEffectable
             int nearestEffectRelic = -1;
             int nextEffectRelic = -1;
 
-            // If the current indexInHand is an effect relic then set that index to the nearestEffectRelic.
-            if (IsEffectRelic(_inventory.GetRelicAt(_relicInHandIndex))) // this causes an error? WAIT did this relic get deleted WHILE this func was running??? sick... oh wait no lol uhh maybe actually
+            // For each relic in the inventory.
+            for (int cycleIndex = 0; cycleIndex < _inventory.Count(); cycleIndex++)
             {
-                nearestEffectRelic = _relicInHandIndex;
-            }
+                // Do not go through the relics in order from start to finish, instead start at the _relicInHandIndex.
+                int adjustedIndex = (cycleIndex + _relicInHandIndex) % _inventory.Count();
 
-            int e = 0;
-
-            // Search through the inventory to find the two nearest effect relics.
-            for (int cycleIndex = _relicInHandIndex + 1; cycleIndex != _relicInHandIndex; cycleIndex++)
-            {
-                e++;
-                if (e == 100)
-                { 
-                    Debug.Log("infinite loop!! arghs!! UpdateRelicInHand");
-                    break;
-                }
-
-                // Check to see if the loop needs to cycle to the beginning.
-                if (cycleIndex >= _inventory.Count())
+                // If the relic at the adjusted index is an effect relic.
+                if (IsEffectRelic( _inventory.GetRelicAt(adjustedIndex) ))
                 {
-                    cycleIndex = 0;
-                }
-                if (cycleIndex == _relicInHandIndex)
-                {
-                    break;
-                }
-
-                // If an effect relic is found, note its index.
-                if (IsEffectRelic(_inventory.GetRelicAt(cycleIndex)))
-                {
-                    // If this loop has not yet found any Effect Relics in the inventory.
+                    // If this loop has not yet found an effect relic before this, then set this index to be the nearest effect relic.
                     if (nearestEffectRelic == -1)
                     {
-                        nearestEffectRelic = cycleIndex;
+                        nearestEffectRelic = adjustedIndex;
+                        continue;
                     }
+                    // If this loop has found exactly one effect relic before this, note the index of the second effect relic in the list.
                     else if (nextEffectRelic == -1)
                     {
-                        // Note down the next Effect Relic.
-                        nextEffectRelic = cycleIndex;
-                        // Break, because we only need the nearest Effect Relic and the one after it.
+                        nextEffectRelic = adjustedIndex;
                         break;
                     }
                 }
             }
-
+            
             // Debug.Log("- UpdateHand after for loop ~ nearestEffectRelicIndex: " + nearestEffectRelic + " nextEffectRelic " + nextEffectRelic);
 
             // If there were indeed no Effect relics, then note that and return.
@@ -618,15 +579,16 @@ public class Player : IEffectable
             {
                 // Debug.Log("-- next effect relic is -1");
 
-                OnRelicInHandChanged?.Invoke(BuildDisplayList(_relicInHandIndex));
+                OnRelicInHandChanged?.Invoke(BuildDisplayList( _relicInHandIndex ));
                 return;
             }
+            // At this point in the method, there are two effect relics found.
+
             // If the index is on an Effect Relic AND the isCycleCalled is true, then cycle to that Effect relic.
             // This function may be called without a call to cycle to the next relic because there may simply be a reordering of the inventory.
             if (isCycleCalled)
             {
                 // Debug.Log("-- cycle was called, and thus there was more than one effect relic and Q was pressed");
-
                 _relicInHandIndex = nextEffectRelic;
                 OnRelicInHandChanged?.Invoke( BuildDisplayList( _relicInHandIndex ) );
             }
@@ -639,50 +601,25 @@ public class Player : IEffectable
         }
     }
 
+    /// <summary>
+    /// Build and return a list of relics where a specified index is at the beginning of the list.
+    /// </summary>
+    /// <param name="firstIndex"> The index that will start the list. </param>
+    /// <returns> An adjusted list of relics. </returns>
     private List<Relic> BuildDisplayList(int firstIndex)
     {
         // Initialize the displayList
         List<Relic> displayList = new List<Relic>();
 
-        if (_inventory.Count() == 0)
+        if (firstIndex < 0 || firstIndex >= _inventory.Count())
         {
             return displayList;
         }
 
-        // Add the relic at the firstIndex before the loop.
-        displayList.Add( _inventory.GetRelicAt(firstIndex) );
-
-        // If the _inventory is of size 1, then this loop is unneccesary and it won't even work.
-        if (_inventory.Count() == 1)
+        for (int buildIndex = 0; buildIndex < _inventory.Count(); buildIndex++)
         {
-            return displayList;
-        }
-
-        int i = 0;
-
-        // Loop across the whole list and stop before adding the firstIndex.
-        for (int index = firstIndex + 1; index != firstIndex ; index++)
-        {
-            i++;
-            if (i>10)
-            {
-                Debug.Log("Infinite loop sad face ~ BuildDisplayList");
-                break;
-            }
-
-            // If the index reaches the end of the list, loop back to zero.
-            if (index >= _inventory.Count())
-            {
-                index = 0;
-            }
-            if (index == firstIndex)
-            {
-                break; // THIS WHOLE LOOP NEEDS TO CHANGE LOL
-            }
-            // Add the item at the index.
-            displayList.Add( _inventory.GetRelicAt(index) );
-
-            
+            int adjustedIndex = (firstIndex + buildIndex) % _inventory.Count();
+            displayList.Add(_inventory.GetRelicAt(adjustedIndex));
         }
 
         return displayList;
@@ -838,7 +775,7 @@ public class Player : IEffectable
         _inventory.AddItem(relic);
 
         // Adding a relic to the inventory may require a cycle to an Effect relic in the case where this relic is the only one that will be an Effect Relic in the inventory.
-        OnCycleRelicInHand?.Invoke(false);
+        // OnCycleRelicInHand?.Invoke(false);
 
         BuildEffectRelicList();
     }
@@ -854,7 +791,8 @@ public class Player : IEffectable
         // Remove the item from the inventory.
         _inventory.RemoveItem(relic);
         // Check whether the relic in hand needs to change.
-        OnCycleRelicInHand?.Invoke(false);
+        // OnCycleRelicInHand?.Invoke(false);
+
         // Recalculate the passive effects.
         BuildEffectRelicList();
     }
@@ -866,7 +804,7 @@ public class Player : IEffectable
     private void ConsumeRelicAt(int index)
     {
         _inventory.RemoveItemAt(index);
-        OnCycleRelicInHand?.Invoke(false);
+        // OnCycleRelicInHand?.Invoke(false);
         BuildEffectRelicList();
     }
 
@@ -883,15 +821,6 @@ public class Player : IEffectable
 
         // Rebuild the effect relic list.
         BuildEffectRelicList();
-    }
-
-    /// <summary>
-    /// Method run on the invocation of Inventory.OnInventoryCleared()
-    /// Cancels all effects.
-    /// </summary>
-    private void ConsumeAllAfterClear()
-    {
-        CancelAllEffects();
     }
 
     /// <summary>

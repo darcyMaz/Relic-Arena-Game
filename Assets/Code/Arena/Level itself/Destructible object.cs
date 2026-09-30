@@ -27,10 +27,6 @@ public class Destructibleobject : MonoBehaviour
         {
             EffectsManager.Instance.OnLightningStrike += LightningStrikeCheck;
         }
-        else
-        {
-            Debug.Log("Could not find effects manager.");
-        }
     }
     /// <summary>
     /// Method called when this gameObject is disabled.
@@ -66,9 +62,6 @@ public class Destructibleobject : MonoBehaviour
 
     private void LightningStrikeCheck(Vector3 lightningPosition)
     {
-        Debug.Log("Lightning Strike Position: " + lightningPosition);
-        Debug.Log("Results of the contains function: " + _boxCollider.bounds.Contains(lightningPosition));
-
         // Is the position where lightning was struck within the collider?
         if ( _boxCollider.bounds.Contains(lightningPosition) )
         {
