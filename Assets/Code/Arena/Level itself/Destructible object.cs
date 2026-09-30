@@ -6,11 +6,38 @@ public class Destructibleobject : MonoBehaviour
     [SerializeField] private AudioClip _DestructionSound2; 
     [SerializeField] private string _DestructionAnimation;
 
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private BoxCollider _boxCollider;
+
+
+    /// <summary>
+    /// Method called on awake.
+    /// </summary>
+    private void Awake()
     {
-        
+        _boxCollider = GetComponent<BoxCollider>();
+    }
+
+    /// <summary>
+    /// Method called when this gameObject is enabled.
+    /// </summary>
+    private void OnEnable()
+    {
+        // Subscribe to the Lightning strike event.
+        if (EffectsManager.Instance != null)
+        {
+            EffectsManager.Instance.OnLightningStrike += LightningStrikeCheck;
+        }
+    }
+    /// <summary>
+    /// Method called when this gameObject is disabled.
+    /// </summary>
+    private void OnDisable()
+    {
+        // Unsubscribe from the lightning strike event.
+        if (EffectsManager.Instance != null)
+        {
+            EffectsManager.Instance.OnLightningStrike -= LightningStrikeCheck;
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -31,6 +58,16 @@ public class Destructibleobject : MonoBehaviour
             AudioSource.PlayClipAtPoint(clip, transform.position);
         }
         Destroy(gameObject);
+    }
+
+    private void LightningStrikeCheck(Vector3 lightningPosition)
+    {
+        // Is the position where lightning was struck within the collider?
+        if (_boxCollider.bounds.Contains(lightningPosition))
+        {
+            // If so, break this object.
+            DestroySelf();
+        }
     }
 }
 

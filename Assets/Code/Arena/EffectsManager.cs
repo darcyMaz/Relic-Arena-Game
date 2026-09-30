@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class EffectsManager : MonoBehaviour
 {
@@ -55,6 +56,11 @@ public class EffectsManager : MonoBehaviour
     [SerializeField] private int NextLightningMarkerDelay = 1000;
 
     /// <summary>
+    /// Event invoked whenever a lightning strikes the scene.
+    /// </summary>
+    public event Action<Vector3> OnLightningStrike;
+
+    /// <summary>
     /// The Awake function checks if the current object is the singleton.
     /// </summary>
     private void Awake()
@@ -82,7 +88,9 @@ public class EffectsManager : MonoBehaviour
     public void Lightning(Vector3 endPos)
     {
         LightningSource.LightningStrike(endPos);
+        OnLightningStrike?.Invoke(endPos);
 
+        /*
         // for each time a collider is found in the end position where the lightning was marked, the destructible object will be found and the destroyself function called.
         foreach (Collider hit in Physics.OverlapSphere(endPos, LightningMarkerRadius))
         {
@@ -91,6 +99,7 @@ public class EffectsManager : MonoBehaviour
                 wall.DestroySelf();
             }
         }
+        */
     }
     
     /// <summary>
