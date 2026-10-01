@@ -63,6 +63,7 @@ public class BulletWarning : MonoBehaviour
 
     private void SpawnBullet()
     {
+        //1. Spawns Bullet, 2. Executes Bullet Setup, 3. Explodes
         GameObject spawnedBullet = Instantiate(bullet, warnPos, Quaternion.Euler(0f, 0f, bRotation));
         bulletBehavior = spawnedBullet.GetComponent<BulletBehavior>();
         bulletBehavior.BulletSetup(relicEffectSO);

@@ -24,6 +24,10 @@ public class BulletPatternSpawner : MonoBehaviour
 
     private float spawnHalfX;
     private float spawnHalfY;
+    private float minX;
+    private float maxX;
+    private float minY;
+    private float maxY;
     private float spawnOffsetX;
     private float spawnOffsetY;
 
@@ -56,7 +60,7 @@ public class BulletPatternSpawner : MonoBehaviour
         
     }
 
-    //Step 1, Set up spawner with SO values
+    //Set up spawner with SO values
     private void PatternSetup()
     {
         bAmount = relicEffectSO.numberOfBullets;
@@ -68,28 +72,36 @@ public class BulletPatternSpawner : MonoBehaviour
         spawnOffsetY = relicEffectSO.spawnAOEOffsetY;
         b2bCooldown = relicEffectSO.b2bCooldown;
         p2pCooldown = relicEffectSO.p2pCooldown;
+        
         SpawningSpot();
     }
 
-    //Step 2, Picking spawn location
     private void SpawningSpot()
     {
+        //Get Player position
         playerPos = this.gameObject.transform.position;
-        //Spawn Locations
+
+        //If: Spawn Locations
         if (spawnType == 0)
         {
 
         }
-        //Spawn Spot in AOE
+
+        //If: Spawn Spot in AOE
         else if(spawnType == 1)
         {
-
+            SpawningAOESetup();
+            spawnPoint = new Vector3(Random.Range(minX,maxX), Random.Range(minY, maxY), playerPos.z);
         }
     }
 
-    private void BulletPattern()
+    private void SpawningAOESetup()
     {
-
+        //Setting up Range for possible spawns
+        minX = playerPos.x - spawnHalfX;
+        maxX = playerPos.x + spawnHalfX;
+        minY = playerPos.y - spawnHalfY;
+        maxY = playerPos.y + spawnHalfY;
     }
 
     private void Timer()
