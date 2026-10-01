@@ -596,29 +596,29 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""priority"": 0
                 },
                 {
-                    ""name"": ""Look_Left"",
-                    ""type"": ""Button"",
-                    ""id"": ""ab160a04-9d28-47d6-a01b-3ed372336c19"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false,
-                    ""priority"": 0
-                },
-                {
-                    ""name"": ""Look_Right"",
-                    ""type"": ""Button"",
-                    ""id"": ""fb82584f-a47f-4320-b2ef-ae53bddb073c"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false,
-                    ""priority"": 0
-                },
-                {
-                    ""name"": ""Cycle_Relic"",
+                    ""name"": ""Cycle"",
                     ""type"": ""Button"",
                     ""id"": ""d9b004b0-5563-4285-8cae-401a72db9e57"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""Use"",
+                    ""type"": ""Button"",
+                    ""id"": ""526319e2-271e-465c-93ee-0b68732efb12"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Button"",
+                    ""id"": ""ab160a04-9d28-47d6-a01b-3ed372336c19"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -695,7 +695,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""a17852f9-15d1-4aa4-abe2-d76e9d50d09b"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Keyboard>/y"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -710,29 +710,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Look_Left"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""340570e2-d753-4382-a041-7cc27037e316"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look_Right"",
+                    ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""9376ffeb-1570-42c5-8dc2-def42246cc31"",
-                    ""path"": ""<Keyboard>/q"",
+                    ""path"": ""<Keyboard>/i"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Cycle_Relic"",
+                    ""action"": ""Cycle"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -744,6 +733,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""HitTest"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8ca72fd7-75c5-47e4-9ff9-01dd32b1229c"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Use"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -774,9 +774,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""priority"": 0
                 },
                 {
-                    ""name"": ""Look_Left"",
+                    ""name"": ""Use"",
                     ""type"": ""Button"",
-                    ""id"": ""9e799a77-6f0e-48dd-9fba-e35696158af2"",
+                    ""id"": ""795dc1fa-67fb-405c-9d9a-bb765dc22862"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -784,19 +784,19 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""priority"": 0
                 },
                 {
-                    ""name"": ""Look_Right"",
-                    ""type"": ""Button"",
-                    ""id"": ""bba3e711-d6c2-46f7-8ab6-71af504964d2"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false,
-                    ""priority"": 0
-                },
-                {
-                    ""name"": ""Cycle_Relic"",
+                    ""name"": ""Cycle"",
                     ""type"": ""Button"",
                     ""id"": ""10813b9a-48f7-4a2c-a57e-30b01fcf47c2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Button"",
+                    ""id"": ""9e799a77-6f0e-48dd-9fba-e35696158af2"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -884,33 +884,22 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""f57758f5-eaad-4250-a743-1fcbfa51f9ff"",
-                    ""path"": ""<Keyboard>/numpad1"",
+                    ""path"": ""<Keyboard>/ctrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Look_Left"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""43a4df81-1c2b-48db-9a36-6771b36cfa49"",
-                    ""path"": ""<Keyboard>/numpad3"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look_Right"",
+                    ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""cd02e141-55de-4265-98b9-f30318377145"",
-                    ""path"": ""<Keyboard>/numpad0"",
+                    ""path"": ""<Keyboard>/numpad3"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Cycle_Relic"",
+                    ""action"": ""Cycle"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -922,6 +911,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""HitTest"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""61897125-55c0-48c7-8ec5-1940ab5d7da0"",
+                    ""path"": ""<Keyboard>/numpad2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Use"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1532,17 +1532,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player1 = asset.FindActionMap("Player1", throwIfNotFound: true);
         m_Player1_Move = m_Player1.FindAction("Move", throwIfNotFound: true);
         m_Player1_Interact = m_Player1.FindAction("Interact", throwIfNotFound: true);
-        m_Player1_Look_Left = m_Player1.FindAction("Look_Left", throwIfNotFound: true);
-        m_Player1_Look_Right = m_Player1.FindAction("Look_Right", throwIfNotFound: true);
-        m_Player1_Cycle_Relic = m_Player1.FindAction("Cycle_Relic", throwIfNotFound: true);
+        m_Player1_Cycle = m_Player1.FindAction("Cycle", throwIfNotFound: true);
+        m_Player1_Use = m_Player1.FindAction("Use", throwIfNotFound: true);
+        m_Player1_Look = m_Player1.FindAction("Look", throwIfNotFound: true);
         m_Player1_HitTest = m_Player1.FindAction("HitTest", throwIfNotFound: true);
         // Player2
         m_Player2 = asset.FindActionMap("Player2", throwIfNotFound: true);
         m_Player2_Move = m_Player2.FindAction("Move", throwIfNotFound: true);
         m_Player2_Interact = m_Player2.FindAction("Interact", throwIfNotFound: true);
-        m_Player2_Look_Left = m_Player2.FindAction("Look_Left", throwIfNotFound: true);
-        m_Player2_Look_Right = m_Player2.FindAction("Look_Right", throwIfNotFound: true);
-        m_Player2_Cycle_Relic = m_Player2.FindAction("Cycle_Relic", throwIfNotFound: true);
+        m_Player2_Use = m_Player2.FindAction("Use", throwIfNotFound: true);
+        m_Player2_Cycle = m_Player2.FindAction("Cycle", throwIfNotFound: true);
+        m_Player2_Look = m_Player2.FindAction("Look", throwIfNotFound: true);
         m_Player2_HitTest = m_Player2.FindAction("HitTest", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
@@ -1825,9 +1825,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private List<IPlayer1Actions> m_Player1ActionsCallbackInterfaces = new List<IPlayer1Actions>();
     private readonly InputAction m_Player1_Move;
     private readonly InputAction m_Player1_Interact;
-    private readonly InputAction m_Player1_Look_Left;
-    private readonly InputAction m_Player1_Look_Right;
-    private readonly InputAction m_Player1_Cycle_Relic;
+    private readonly InputAction m_Player1_Cycle;
+    private readonly InputAction m_Player1_Use;
+    private readonly InputAction m_Player1_Look;
     private readonly InputAction m_Player1_HitTest;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player1".
@@ -1849,17 +1849,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Interact => m_Wrapper.m_Player1_Interact;
         /// <summary>
-        /// Provides access to the underlying input action "Player1/Look_Left".
+        /// Provides access to the underlying input action "Player1/Cycle".
         /// </summary>
-        public InputAction @Look_Left => m_Wrapper.m_Player1_Look_Left;
+        public InputAction @Cycle => m_Wrapper.m_Player1_Cycle;
         /// <summary>
-        /// Provides access to the underlying input action "Player1/Look_Right".
+        /// Provides access to the underlying input action "Player1/Use".
         /// </summary>
-        public InputAction @Look_Right => m_Wrapper.m_Player1_Look_Right;
+        public InputAction @Use => m_Wrapper.m_Player1_Use;
         /// <summary>
-        /// Provides access to the underlying input action "Player1/Cycle_Relic".
+        /// Provides access to the underlying input action "Player1/Look".
         /// </summary>
-        public InputAction @Cycle_Relic => m_Wrapper.m_Player1_Cycle_Relic;
+        public InputAction @Look => m_Wrapper.m_Player1_Look;
         /// <summary>
         /// Provides access to the underlying input action "Player1/HitTest".
         /// </summary>
@@ -1896,15 +1896,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
-            @Look_Left.started += instance.OnLook_Left;
-            @Look_Left.performed += instance.OnLook_Left;
-            @Look_Left.canceled += instance.OnLook_Left;
-            @Look_Right.started += instance.OnLook_Right;
-            @Look_Right.performed += instance.OnLook_Right;
-            @Look_Right.canceled += instance.OnLook_Right;
-            @Cycle_Relic.started += instance.OnCycle_Relic;
-            @Cycle_Relic.performed += instance.OnCycle_Relic;
-            @Cycle_Relic.canceled += instance.OnCycle_Relic;
+            @Cycle.started += instance.OnCycle;
+            @Cycle.performed += instance.OnCycle;
+            @Cycle.canceled += instance.OnCycle;
+            @Use.started += instance.OnUse;
+            @Use.performed += instance.OnUse;
+            @Use.canceled += instance.OnUse;
+            @Look.started += instance.OnLook;
+            @Look.performed += instance.OnLook;
+            @Look.canceled += instance.OnLook;
             @HitTest.started += instance.OnHitTest;
             @HitTest.performed += instance.OnHitTest;
             @HitTest.canceled += instance.OnHitTest;
@@ -1925,15 +1925,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
-            @Look_Left.started -= instance.OnLook_Left;
-            @Look_Left.performed -= instance.OnLook_Left;
-            @Look_Left.canceled -= instance.OnLook_Left;
-            @Look_Right.started -= instance.OnLook_Right;
-            @Look_Right.performed -= instance.OnLook_Right;
-            @Look_Right.canceled -= instance.OnLook_Right;
-            @Cycle_Relic.started -= instance.OnCycle_Relic;
-            @Cycle_Relic.performed -= instance.OnCycle_Relic;
-            @Cycle_Relic.canceled -= instance.OnCycle_Relic;
+            @Cycle.started -= instance.OnCycle;
+            @Cycle.performed -= instance.OnCycle;
+            @Cycle.canceled -= instance.OnCycle;
+            @Use.started -= instance.OnUse;
+            @Use.performed -= instance.OnUse;
+            @Use.canceled -= instance.OnUse;
+            @Look.started -= instance.OnLook;
+            @Look.performed -= instance.OnLook;
+            @Look.canceled -= instance.OnLook;
             @HitTest.started -= instance.OnHitTest;
             @HitTest.performed -= instance.OnHitTest;
             @HitTest.canceled -= instance.OnHitTest;
@@ -1976,9 +1976,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private List<IPlayer2Actions> m_Player2ActionsCallbackInterfaces = new List<IPlayer2Actions>();
     private readonly InputAction m_Player2_Move;
     private readonly InputAction m_Player2_Interact;
-    private readonly InputAction m_Player2_Look_Left;
-    private readonly InputAction m_Player2_Look_Right;
-    private readonly InputAction m_Player2_Cycle_Relic;
+    private readonly InputAction m_Player2_Use;
+    private readonly InputAction m_Player2_Cycle;
+    private readonly InputAction m_Player2_Look;
     private readonly InputAction m_Player2_HitTest;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player2".
@@ -2000,17 +2000,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Interact => m_Wrapper.m_Player2_Interact;
         /// <summary>
-        /// Provides access to the underlying input action "Player2/Look_Left".
+        /// Provides access to the underlying input action "Player2/Use".
         /// </summary>
-        public InputAction @Look_Left => m_Wrapper.m_Player2_Look_Left;
+        public InputAction @Use => m_Wrapper.m_Player2_Use;
         /// <summary>
-        /// Provides access to the underlying input action "Player2/Look_Right".
+        /// Provides access to the underlying input action "Player2/Cycle".
         /// </summary>
-        public InputAction @Look_Right => m_Wrapper.m_Player2_Look_Right;
+        public InputAction @Cycle => m_Wrapper.m_Player2_Cycle;
         /// <summary>
-        /// Provides access to the underlying input action "Player2/Cycle_Relic".
+        /// Provides access to the underlying input action "Player2/Look".
         /// </summary>
-        public InputAction @Cycle_Relic => m_Wrapper.m_Player2_Cycle_Relic;
+        public InputAction @Look => m_Wrapper.m_Player2_Look;
         /// <summary>
         /// Provides access to the underlying input action "Player2/HitTest".
         /// </summary>
@@ -2047,15 +2047,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
-            @Look_Left.started += instance.OnLook_Left;
-            @Look_Left.performed += instance.OnLook_Left;
-            @Look_Left.canceled += instance.OnLook_Left;
-            @Look_Right.started += instance.OnLook_Right;
-            @Look_Right.performed += instance.OnLook_Right;
-            @Look_Right.canceled += instance.OnLook_Right;
-            @Cycle_Relic.started += instance.OnCycle_Relic;
-            @Cycle_Relic.performed += instance.OnCycle_Relic;
-            @Cycle_Relic.canceled += instance.OnCycle_Relic;
+            @Use.started += instance.OnUse;
+            @Use.performed += instance.OnUse;
+            @Use.canceled += instance.OnUse;
+            @Cycle.started += instance.OnCycle;
+            @Cycle.performed += instance.OnCycle;
+            @Cycle.canceled += instance.OnCycle;
+            @Look.started += instance.OnLook;
+            @Look.performed += instance.OnLook;
+            @Look.canceled += instance.OnLook;
             @HitTest.started += instance.OnHitTest;
             @HitTest.performed += instance.OnHitTest;
             @HitTest.canceled += instance.OnHitTest;
@@ -2076,15 +2076,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
-            @Look_Left.started -= instance.OnLook_Left;
-            @Look_Left.performed -= instance.OnLook_Left;
-            @Look_Left.canceled -= instance.OnLook_Left;
-            @Look_Right.started -= instance.OnLook_Right;
-            @Look_Right.performed -= instance.OnLook_Right;
-            @Look_Right.canceled -= instance.OnLook_Right;
-            @Cycle_Relic.started -= instance.OnCycle_Relic;
-            @Cycle_Relic.performed -= instance.OnCycle_Relic;
-            @Cycle_Relic.canceled -= instance.OnCycle_Relic;
+            @Use.started -= instance.OnUse;
+            @Use.performed -= instance.OnUse;
+            @Use.canceled -= instance.OnUse;
+            @Cycle.started -= instance.OnCycle;
+            @Cycle.performed -= instance.OnCycle;
+            @Cycle.canceled -= instance.OnCycle;
+            @Look.started -= instance.OnLook;
+            @Look.performed -= instance.OnLook;
+            @Look.canceled -= instance.OnLook;
             @HitTest.started -= instance.OnHitTest;
             @HitTest.performed -= instance.OnHitTest;
             @HitTest.canceled -= instance.OnHitTest;
@@ -2474,26 +2474,26 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInteract(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Look_Left" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Cycle" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnLook_Left(InputAction.CallbackContext context);
+        void OnCycle(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Look_Right" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Use" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnLook_Right(InputAction.CallbackContext context);
+        void OnUse(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Cycle_Relic" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Look" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnCycle_Relic(InputAction.CallbackContext context);
+        void OnLook(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "HitTest" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -2524,26 +2524,26 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInteract(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Look_Left" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Use" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnLook_Left(InputAction.CallbackContext context);
+        void OnUse(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Look_Right" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Cycle" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnLook_Right(InputAction.CallbackContext context);
+        void OnCycle(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Cycle_Relic" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Look" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnCycle_Relic(InputAction.CallbackContext context);
+        void OnLook(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "HitTest" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

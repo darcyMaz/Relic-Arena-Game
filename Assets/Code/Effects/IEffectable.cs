@@ -53,6 +53,11 @@ public abstract class IEffectable: MonoBehaviour
     protected List<Effect> _activeEffects = new List<Effect>();
 
     /// <summary>
+    /// Dictionary mapping LaunchTypes to their functions.
+    /// </summary>
+    protected Dictionary<LaunchType, Action<Effect, string>> _launchTypeFuncs = new Dictionary<LaunchType, Action<Effect, string>>();
+
+    /// <summary>
     /// Method that runs on Awake.
     /// </summary>
     protected virtual void Awake()
@@ -96,6 +101,7 @@ public abstract class IEffectable: MonoBehaviour
         InitCancellationDict();
         InitEffectDict();
         InitFormatDict();
+        InitLaunchDict();
     }
 
     /// <summary>
@@ -149,6 +155,26 @@ public abstract class IEffectable: MonoBehaviour
         }
     }
 
+    private void InitLaunchDict()
+    {
+        // Add all LaunchTypes to the dictionary, where each LaunchType has a corresponding function.
+        _launchTypeFuncs.TryAdd(LaunchType.None, LaunchNone);
+        _launchTypeFuncs.TryAdd(LaunchType.Raycasted, LaunchRaycast);
+        _launchTypeFuncs.TryAdd(LaunchType.Thrown, LaunchThrow);
+        _launchTypeFuncs.TryAdd(LaunchType.Immediate, LaunchImmediate);
+
+        // Then do a check at the end to see if the size of the dictionary matches up with the number of Effects.
+        int launchCount = Enum.GetNames(typeof(LaunchType)).Length;
+        if (launchCount > _launchTypeFuncs.Count)
+        {
+            Debug.Log("IEffectable does not implement every Effect in the Effect enum.");
+        }
+        else if (launchCount < _launchTypeFuncs.Count)
+        {
+            Debug.LogError("IEffectable somehow has more implementions for Effects than there are Effects listed in the enum.");
+        }
+    }
+
     /// <summary>
     /// Method which provides initializatons for the OnEnable function.
     /// </summary>
@@ -187,7 +213,7 @@ public abstract class IEffectable: MonoBehaviour
     /// <param name="collision"> The body colliding with the IEffectable. </param>
     private void OnTriggerEnter(Collider other)
     {
-        // If the collision object has a Relic component on it, then the IEffectable has been hit by a Relic.
+        // If the collision object has a ThrownRelic component on it, then the IEffectable has been hit by a Relic.
         ThrownRelic thrownRelic;
         if (other.gameObject.TryGetComponent(out thrownRelic))
         {
@@ -198,11 +224,9 @@ public abstract class IEffectable: MonoBehaviour
                 return;
             }
 
-            ReceiveActiveEffect(relic.GetActiveEffect(), relic.GetActiveEffectDetails());
+            ApplyActiveEffect(relic.GetActiveEffect(), relic.GetActiveEffectDetails());
             Destroy(other.gameObject);
         }
-
-        
     }
 
     /// <summary>
@@ -221,13 +245,22 @@ public abstract class IEffectable: MonoBehaviour
         }
     }
 
+    /*
+    /// <summary>
+    /// Method which, upon implementing in child classes, allows for IEffectables to receive Active effects.
+    /// </summary>
+    /// <param name="activeEffect"> The active Effect being applied. </param>
+    /// <param name="effectDetails"> The details of the Effect as a string. </param>
+    /// <param name="receiveDetails"> The details relating to receiving the Effect. </param>
+    protected abstract void ReceiveActiveEffect(Effect activeEffect, string effectDetails);
+    */
 
     /// <summary>
     /// This method is called by those seeking to apply active Effects to this IEffectable. 
     /// </summary>
     /// <param name="activeEffect"> Active effect being applied. </param>
     /// <param name="activeEffectDetails"> Details to the active effect being applied. </param>
-    public void ReceiveActiveEffect(Effect activeEffect, string activeEffectDetails)
+    protected bool ApplyActiveEffect(Effect activeEffect, string activeEffectDetails)
     {
         // If the incoming active effect is neither in the active effects list or the passive effects dictionary then activate this effect.
         if (!_activeEffects.Contains(activeEffect) && !_passiveEffects.TryGetValue(activeEffect, out _) && activeEffect != Effect.None)
@@ -236,13 +269,24 @@ public abstract class IEffectable: MonoBehaviour
             _activeEffects.Add(activeEffect);
             // Run the Effect Action where the relic is null.
             RunEffectAction(activeEffect, activeEffectDetails, null);
+            return true;
         }
         else
         {
             Debug.Log("An active Effect was receieved by an IEffectable but it was already active on the IEffectable so it was ignored.");
+            return false;
         }
     }
-    protected abstract void LaunchActiveEffect(Vector2 direction);
+
+    protected abstract void LaunchActiveEffect(Effect activeEffect, string activeEffectDetails, LaunchType launchType);
+
+    protected abstract void LaunchRaycast(Effect activeEffect, string activeEffectDetails);
+
+    protected abstract void LaunchThrow(Effect activeEffect, string activeEffectDetails);
+
+    protected abstract void LaunchImmediate(Effect activeEffect, string activeEffectDetails);
+
+    protected abstract void LaunchNone(Effect activeEffect, string activeEffectDetails);
 
     /// <summary>
     /// Method which takes an Effect and runs its respective action. 

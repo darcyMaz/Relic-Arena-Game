@@ -17,6 +17,7 @@ MonoBehaviour:
   Price: 100
   ActiveEffect: 0
   ActiveEffectDetails: 
+  LaunchType: 3
   PassiveEffects: 04000000
   PassiveEffectsDetails:
   - 

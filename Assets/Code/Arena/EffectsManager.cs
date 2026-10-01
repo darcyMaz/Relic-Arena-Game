@@ -61,6 +61,11 @@ public class EffectsManager : MonoBehaviour
     public event Action<Vector3> OnLightningStrike;
 
     /// <summary>
+    /// Event invoked whenever an active Effect is launched at another player.
+    /// </summary>
+    public event Action<Effect, string, int, int> OnActiveEffectLaunched;
+
+    /// <summary>
     /// The Awake function checks if the current object is the singleton.
     /// </summary>
     private void Awake()
@@ -82,6 +87,19 @@ public class EffectsManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Method which calls the OnActiveEffectLaunched event.
+    /// All EffectableBase objects will listen to that event.
+    /// </summary>
+    /// <param name="activeEffect"> The active Effect being launched. </param>
+    /// <param name="playerSource"> The source of the event, the player number as an int. </param>
+    /// <param name="playerTarget"> The target of the event, the player number as an int.</param>
+    public void LaunchActiveEffect(Effect activeEffect, string effectDetails, int playerSource, int playerTarget)
+    {
+        // invoke a func which informs everyone about the effect being applied
+        OnActiveEffectLaunched?.Invoke(activeEffect, effectDetails, playerSource, playerTarget);
+    }
+
+    /// <summary>
     /// Strikes the endPos with lightning. The Lightning component will be called and its line renderer will send a lightning-looking line to hit the endPos.
     /// </summary>
     /// <param name="endPos"> The destination of the line renderer. </param>
@@ -98,9 +116,15 @@ public class EffectsManager : MonoBehaviour
     /// <returns> The scarab aid GameObject to display. </returns>
     public GameObject GetDisplayScarab(Vector3 initialPosition)
     {
+        if (ScarabDisplay == null) return null;
         return Instantiate(ScarabDisplay, initialPosition, Quaternion.identity);
     }
 
+    /// <summary>
+    /// Method which returns the Fog gameobject.
+    /// </summary>
+    /// <param name="parent"> The transform to attach the fog to. </param>
+    /// <returns> The Fog gameObject. </returns>
     public GameObject GetFog(Transform parent)
     {
         return Instantiate(Fog, parent);

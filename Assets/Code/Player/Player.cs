@@ -51,6 +51,11 @@ public class Player : IEffectable
     private InputAction _dig;
 
     /// <summary>
+    /// The Use relic InputAction.
+    /// </summary>
+    private InputAction _use;
+
+    /// <summary>
     /// The RigidBody component attached to this Player.
     /// </summary>
     private Rigidbody _rigidBody;
@@ -119,7 +124,7 @@ public class Player : IEffectable
     /// <summary>
     /// The InputAction related to cycling the relic in hand.
     /// </summary>
-    private InputAction _cycleRelicAction;
+    private InputAction _cycle;
 
     /// <summary>
     /// Invincibility time.
@@ -135,6 +140,11 @@ public class Player : IEffectable
     /// The last direction the player was moving in.
     /// </summary>
     private float _lastDirection = 0;
+
+    /// <summary>
+    /// Bool which helps the script understand whether the EffectsManager.Instance was found onEnable.
+    /// </summary>
+    private bool _wasEffectsManagerFound = false;
 
     /// <summary>
     /// Method which runs on awake.
@@ -239,6 +249,7 @@ public class Player : IEffectable
         // Initialize the input system.
         DigInit();
         CycleInit();
+        UseInit();
 
         // Subscribe to events.
         OnEnableEventSubscribers();
@@ -260,8 +271,11 @@ public class Player : IEffectable
         _dig.Enable();
 
         // Instantiate the action for cycling a relic.
-        _cycleRelicAction.Enable();
-        _cycleRelicAction.performed += CycleEffectRelic;
+        _cycle.performed += CycleEffectRelic;
+        _cycle.Enable();
+        
+        _use.performed += LaunchEffectPressed;
+        _use.Enable();
 
         // When the player is damaged, receive the hit.
         OnPlayerDamaged += ReceiveHit;
@@ -279,6 +293,12 @@ public class Player : IEffectable
             _inventory.OnInventoryChange += InventoryChangeCycleRelic;
         }
 
+        if (EffectsManager.Instance != null)
+        {
+            EffectsManager.Instance.OnActiveEffectLaunched += ReceiveActiveEffect;
+            _wasEffectsManagerFound = true;
+        }
+        
         // For testing purposes.
         _getHitTest = _actions.Player.Crouch;
         _getHitTest.Enable();
@@ -290,19 +310,27 @@ public class Player : IEffectable
     {
         // Disable event actions
         _dig.Disable();
+        _use.Disable();
+        _cycle.Disable();
+
         _getHitTest.Disable();
-        _cycleRelicAction.Disable();
 
         // Unsubscribe from events.
         OnRelicConsumed -= ConsumeRelic;
         OnPlayerDamaged -= ReceiveHit;
         OnCycleRelicInHand -= UpdateRelicInHand;
-        _cycleRelicAction.performed -= CycleEffectRelic;
+        _cycle.performed -= CycleEffectRelic;
         if (_hasInventory)
         {
             // _inventory.OnInventoryCleared -= ConsumeAllAfterClear;
             _inventory.OnInventoryChange -= InventoryChangeCycleRelic;
         }
+
+        if (EffectsManager.Instance != null)
+        {
+            EffectsManager.Instance.OnActiveEffectLaunched -= ReceiveActiveEffect;
+        }
+
         _dig.performed -= Dig;
         _getHitTest.performed -= HitPlayerTest;
 
@@ -330,21 +358,40 @@ public class Player : IEffectable
     }
 
     /// <summary>
-    /// Initialization for the cycle input.
+    /// Initialize the use relic mechanic.
+    /// </summary>
+    private void UseInit()
+    {
+        if (PlayerNumber == 1)
+        {
+            _use = _actions.Player1.Use;
+        }
+        else if (PlayerNumber == 2)
+        {
+            _use = _actions.Player2.Use;
+        }
+        else
+        {
+            _use = _actions.Player.Attack;
+        }
+    }
+
+    /// <summary>
+    /// Initialize the cycle mechanic.
     /// </summary>
     private void CycleInit()
     {
         if (PlayerNumber == 1)
         {
-            _cycleRelicAction = _actions.Player1.Cycle_Relic;
+            _cycle = _actions.Player1.Cycle;
         }
         else if (PlayerNumber == 2)
         {
-            _cycleRelicAction = _actions.Player2.Cycle_Relic;
+            _cycle = _actions.Player2.Cycle;
         }
         else
         {
-            _cycleRelicAction = _actions.Player.Jump;
+            _cycle = _actions.Player.Jump;
         }
     }
 
@@ -355,6 +402,18 @@ public class Player : IEffectable
     {
         // Call the IEffectable Start function.
         base.Start();
+
+        StartHelper();
+    }
+
+    private void StartHelper()
+    {
+        // If the EffectsManager instance was not found OnEnable.
+        if (!_wasEffectsManagerFound)
+        {
+            // Subscribe to the event here.
+            EffectsManager.Instance.OnActiveEffectLaunched += ReceiveActiveEffect;
+        }
     }
 
     /// <summary>
@@ -383,6 +442,14 @@ public class Player : IEffectable
 
             // Play the digging animation.
             anim.SetTrigger("IsDigging");
+
+            /*
+             * Note on throwing and digging being the same button:
+             * Some logic may have to change to make this work.
+             * Check first if there is a relic found, if not, then call the throw method.
+             * Otherwise, dig as usual.
+             */
+
 
             // Stop the player's movement.
             ChangeSpeed(0);
@@ -648,11 +715,115 @@ public class Player : IEffectable
     }
 
     /// <summary>
+    /// Method which receives an Active Effect while listening to the EffectsManager. It attempts to apply the Effect if this Player has the same number as the target parameter.
+    /// </summary>
+    /// <param name="activeEffect"> The active Effect to be potentially applied to the Player. </param>
+    /// <param name="effectDetails"> The details of that active Effect. </param>
+    /// <param name="source"> The source of the Effect as an int representing the player number. </param>
+    /// <param name="target"> The target of the Effect as an int representing the player number. </param>
+    private void ReceiveActiveEffect(Effect activeEffect, string effectDetails, int source, int target)
+    {
+        // Check whether this player is accepting this Effect.
+        bool wasEffectAdded = false;
+        if (target == PlayerNumber)
+        {
+            // Apply the Effect.
+            wasEffectAdded = ApplyActiveEffect(activeEffect, effectDetails);
+        }
+
+        if (wasEffectAdded)
+        {
+            Debug.Log("The Active Effect " + activeEffect + " was potentially added to the player #" + target + " from the player #" + source);
+        }
+    }
+
+    /// <summary>
+    /// Method invoked when the launch button was pressed.
+    /// </summary>
+    private void LaunchEffectPressed(InputAction.CallbackContext context)
+    {
+        // Initialize the relic.
+        Relic relicInHand;
+
+        // Check the validity of the _relicInHandIndex first.
+        if (_relicInHandIndex < 0 || _relicInHandIndex >= _inventory.Count())
+        {
+            return;
+        }
+
+        // Get the relic in hand.
+        relicInHand = _inventory.GetRelicAt(_relicInHandIndex);
+
+        // Check if the relic in hand is actually an effect relic (it should be anyway).
+        if (!IsEffectRelic(relicInHand))
+        {
+            return;
+        }
+
+        // Call LaunchActiveEffect()
+        LaunchActiveEffect(relicInHand.GetActiveEffect(), relicInHand.GetActiveEffectDetails(), relicInHand.GetLaunchType());
+    }
+
+    /// <summary>
     /// Implemented method which launches active effects.
     /// </summary>
     /// <param name="direction"> The direction this relic is being launched. </param>
     /// <exception cref="NotImplementedException"></exception>
-    protected override void LaunchActiveEffect(Vector2 direction)
+    protected override void LaunchActiveEffect(Effect activeEffect, string activeEffectDetails, LaunchType launchType)
+    {
+        // Call a specific function mapped to this LaunchType.
+        Action<Effect, string> _launchFunc;
+        if (_launchTypeFuncs.TryGetValue(launchType, out _launchFunc)) 
+        {
+            _launchFunc.Invoke(activeEffect, activeEffectDetails);
+        }
+        else
+        {
+            Debug.LogError("There was an attempt by Player#" + PlayerNumber + " to launch an active Effect, but the LaunchType was invalid.");
+        }
+    }
+
+    protected override void LaunchRaycast(Effect activeEffect, string activeEffectDetails)
+    {
+        // get the direction of the pointer
+        // raycast that way
+        // check for the nearest player
+        // apply the effect to them
+
+        throw new NotImplementedException();
+    }
+    private Vector3 GetPointerDirection()
+    {
+        return Vector3.zero;
+    }
+
+    protected override void LaunchThrow(Effect activeEffect, string activeEffectDetails)
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void LaunchImmediate(Effect activeEffect, string activeEffectDetails)
+    {
+        // If the EffectsManager exists.
+        if (EffectsManager.Instance != null) 
+        {
+            if (PlayerNumber < 1 || PlayerNumber > 2)
+            {
+                Debug.LogError("Player #" + PlayerNumber+ " tried to perform an immediate active Effect but the playerNum was not valid.");
+                return;
+            }
+
+            // Ideally, there'd be a way to decide which player gets hit.
+            // Maybe random, maybe a selection.
+            // Either way, this should not be so particular.
+            int targetNum = (PlayerNumber == 1) ? 2 : 1;
+
+            // Tell the EffectsManager that someone is getting an Effect placed on them.
+            EffectsManager.Instance.LaunchActiveEffect(activeEffect, activeEffectDetails, PlayerNumber, targetNum);
+        }
+    }
+
+    protected override void LaunchNone(Effect activeEffect, string activeEffectDetails)
     {
         throw new NotImplementedException();
     }
@@ -748,6 +919,7 @@ public class Player : IEffectable
     /// </summary>
     private void AcceptRelic(Relic relic, BuriedRelic buriedRelic)
     {
+        // If this player has an inventory, and the player is digging, and there is no relic temporarily stored at this moment.
         if (_hasInventory && _isDigging && !_isRelicFound)
         { 
             _isRelicFound = true;
@@ -764,9 +936,6 @@ public class Player : IEffectable
     {
         // Add it to the inventory.
         _inventory.AddItem(relic);
-
-        // Adding a relic to the inventory may require a cycle to an Effect relic in the case where this relic is the only one that will be an Effect Relic in the inventory.
-        // OnCycleRelicInHand?.Invoke(false);
 
         BuildEffectRelicList();
     }

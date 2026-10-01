@@ -15,8 +15,9 @@ MonoBehaviour:
   Name: Lightning Test
   Sprite: {fileID: 0}
   Price: 200
-  ActiveEffect: 1
-  ActiveEffectDetails: 4000
+  ActiveEffect: 0
+  ActiveEffectDetails: 
+  LaunchType: 3
   PassiveEffects: 01000000
   PassiveEffectsDetails:
   - 4000

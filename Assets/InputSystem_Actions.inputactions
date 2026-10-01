@@ -510,29 +510,29 @@
                     "priority": 0
                 },
                 {
-                    "name": "Look_Left",
-                    "type": "Button",
-                    "id": "ab160a04-9d28-47d6-a01b-3ed372336c19",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
-                    "name": "Look_Right",
-                    "type": "Button",
-                    "id": "fb82584f-a47f-4320-b2ef-ae53bddb073c",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
-                    "name": "Cycle_Relic",
+                    "name": "Cycle",
                     "type": "Button",
                     "id": "d9b004b0-5563-4285-8cae-401a72db9e57",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Use",
+                    "type": "Button",
+                    "id": "526319e2-271e-465c-93ee-0b68732efb12",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Look",
+                    "type": "Button",
+                    "id": "ab160a04-9d28-47d6-a01b-3ed372336c19",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -609,7 +609,7 @@
                 {
                     "name": "",
                     "id": "a17852f9-15d1-4aa4-abe2-d76e9d50d09b",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/y",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -624,29 +624,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Look_Left",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "340570e2-d753-4382-a041-7cc27037e316",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Look_Right",
+                    "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "9376ffeb-1570-42c5-8dc2-def42246cc31",
-                    "path": "<Keyboard>/q",
+                    "path": "<Keyboard>/i",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Cycle_Relic",
+                    "action": "Cycle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -658,6 +647,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "HitTest",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8ca72fd7-75c5-47e4-9ff9-01dd32b1229c",
+                    "path": "<Keyboard>/u",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Use",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -688,9 +688,9 @@
                     "priority": 0
                 },
                 {
-                    "name": "Look_Left",
+                    "name": "Use",
                     "type": "Button",
-                    "id": "9e799a77-6f0e-48dd-9fba-e35696158af2",
+                    "id": "795dc1fa-67fb-405c-9d9a-bb765dc22862",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -698,19 +698,19 @@
                     "priority": 0
                 },
                 {
-                    "name": "Look_Right",
-                    "type": "Button",
-                    "id": "bba3e711-d6c2-46f7-8ab6-71af504964d2",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
-                    "name": "Cycle_Relic",
+                    "name": "Cycle",
                     "type": "Button",
                     "id": "10813b9a-48f7-4a2c-a57e-30b01fcf47c2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Look",
+                    "type": "Button",
+                    "id": "9e799a77-6f0e-48dd-9fba-e35696158af2",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -798,33 +798,22 @@
                 {
                     "name": "",
                     "id": "f57758f5-eaad-4250-a743-1fcbfa51f9ff",
-                    "path": "<Keyboard>/numpad1",
+                    "path": "<Keyboard>/ctrl",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Look_Left",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "43a4df81-1c2b-48db-9a36-6771b36cfa49",
-                    "path": "<Keyboard>/numpad3",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Look_Right",
+                    "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "cd02e141-55de-4265-98b9-f30318377145",
-                    "path": "<Keyboard>/numpad0",
+                    "path": "<Keyboard>/numpad3",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Cycle_Relic",
+                    "action": "Cycle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -836,6 +825,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "HitTest",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "61897125-55c0-48c7-8ec5-1940ab5d7da0",
+                    "path": "<Keyboard>/numpad2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Use",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

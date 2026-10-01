@@ -20,6 +20,11 @@ public class RelicSO : ItemSO
     [SerializeField] private string ActiveEffectDetails;
 
     /// <summary>
+    /// The LaunchType of the active Effect.
+    /// </summary>
+    [SerializeField] private LaunchType LaunchType;
+
+    /// <summary>
     /// Passive Effects on this relic.
     /// </summary>
     [SerializeField] private List<Effect> PassiveEffects = new List<Effect>();
@@ -29,20 +34,42 @@ public class RelicSO : ItemSO
     /// </summary>
     [SerializeField] private List<string> PassiveEffectsDetails = new List<string>();
 
+    /// <summary>
+    /// Method which gets the price of this relic.
+    /// </summary>
+    /// <returns> The price of this relic as a float. </returns>
     public float GetPrice()
     {
         return Price;
     }
-    /*
-    public Effect GetEffect()
+
+    /// <summary>
+    /// Method which returns the active Effect for this relic.
+    /// </summary>
+    /// <returns> The active Effect. </returns>
+    public Effect GetActiveEffect()
     {
-        return Effect;
+        return ActiveEffect;
     }
-    */
+
+    /// <summary>
+    /// Method which returns the active Effect details.
+    /// </summary>
+    /// <returns> The active Effect details as a string. </returns>
     public string GetActiveEffectDetails()
     {
         return ActiveEffectDetails;
     }
+
+    /// <summary>
+    /// Method which returns the LaunchType for the active Effect.
+    /// </summary>
+    /// <returns> The LaunchType </returns>
+    public LaunchType GetLaunchType()
+    {
+        return LaunchType;
+    }
+
     /// <summary>
     /// Method which returns the list of passive effects associated with this relic.
     /// </summary>
@@ -62,9 +89,5 @@ public class RelicSO : ItemSO
         List<string> shallowCopy = new List<string>();
         foreach (var effect in PassiveEffectsDetails) { shallowCopy.Add(effect); }
         return shallowCopy;
-    }
-    public Effect GetActiveEffect()
-    {
-        return ActiveEffect;
     }
 }
