@@ -10,7 +10,7 @@ public class BulletWarning : MonoBehaviour
     private Vector3 warnPos;
 
     private GameObject spawnedBullet;
-    private BulletBehavior bulletBehavior;
+    private BulletBehavior bulletBehaviorScript;
 
     private float bSpeed;
     private float bRotation;
@@ -21,12 +21,6 @@ public class BulletWarning : MonoBehaviour
     private void Update()
     {
         WarningTimer();
-    }
-
-    //TEMPORARY
-    private void Awake()
-    {
-        WarnSetup(relicEffectSO);
     }
 
     public void WarnSetup(RelicEffectSO relicType)
@@ -65,8 +59,8 @@ public class BulletWarning : MonoBehaviour
     {
         //1. Spawns Bullet, 2. Executes Bullet Setup, 3. Explodes
         GameObject spawnedBullet = Instantiate(bullet, warnPos, Quaternion.Euler(0f, 0f, bRotation));
-        bulletBehavior = spawnedBullet.GetComponent<BulletBehavior>();
-        bulletBehavior.BulletSetup(relicEffectSO);
+        bulletBehaviorScript = spawnedBullet.GetComponent<BulletBehavior>();
+        bulletBehaviorScript.BulletSetup(relicEffectSO);
         
         Destroy(this.gameObject);
     }

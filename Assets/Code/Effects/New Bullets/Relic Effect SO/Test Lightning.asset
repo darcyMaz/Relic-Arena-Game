@@ -15,15 +15,15 @@ MonoBehaviour:
   numberOfBullets: 3
   spawnType: 1
   spawnLocationList: []
-  spawnAOEHalfX: 2.5
-  spawnAOEHalfY: 2.5
+  spawnAOEHalfX: 1.5
+  spawnAOEHalfY: 1.5
   spawnAOEOffsetX: 0
   spawnAOEOffsetY: 0
   b2bCooldown: 1
   p2pCooldown: 2
-  bulletSpeed: 0
-  bulletLifespan: 0.5
+  bulletSpeed: 3
+  bulletLifespan: 0.3
   bulletScaleX: 1
   bulletScaleY: 1
   bulletRotationZ: 0
-  warnBulletLifespan: 3
+  warnBulletLifespan: 1.5

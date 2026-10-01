@@ -6,8 +6,10 @@ public class BulletPatternSpawner : MonoBehaviour
 {
     #region Bullet Spawn Variables
 
-    //Relic Effect Scriptable Object
-    [SerializeField] RelicEffectSO relicEffectSO;
+    //Relic Effect References
+    [SerializeField] private RelicEffectSO relicEffectSO;
+    [SerializeField] private GameObject bulletWarning;
+    private BulletWarning bulletWarningScript;
 
     //Player Position
     private Vector3 playerPos;
@@ -36,7 +38,7 @@ public class BulletPatternSpawner : MonoBehaviour
     private int currentBullet = 1;
 
     //Spawned Bullet Warning
-    private GameObject recentWarnBullet;
+    private GameObject spawnedWarnBullet;
 
     //Bullet Spawn Point Vector
     private Vector3 spawnPoint;
@@ -44,25 +46,32 @@ public class BulletPatternSpawner : MonoBehaviour
     //Bullet Spawn cooldown (Bullet to Bullet) (Pattern to Pattern)
     private float b2bCooldown = 1f;
     private float p2pCooldown = 3f;
-
+    private bool onCooldown = false;
+    private float cooldownWaittime = 0f;
     private float timer;
+
+    //Bullet Manager ready
+    private bool bManagerReady = false;
 
     #endregion
 
     private void Awake()
     {
         //TEMPORARY, to be moved into ieffectable
-        PatternSetup();
+        PatternSetup(relicEffectSO);
     }
 
     private void Update()
     {
-        
+        Timer();
+        BulletPatternManger();
     }
 
     //Set up spawner with SO values
-    private void PatternSetup()
+    private void PatternSetup(RelicEffectSO relicType)
     {
+        relicEffectSO = relicType;
+
         bAmount = relicEffectSO.numberOfBullets;
         spawnType = relicEffectSO.spawnType;
         spawnLocationList = relicEffectSO.spawnLocationList;
@@ -72,8 +81,42 @@ public class BulletPatternSpawner : MonoBehaviour
         spawnOffsetY = relicEffectSO.spawnAOEOffsetY;
         b2bCooldown = relicEffectSO.b2bCooldown;
         p2pCooldown = relicEffectSO.p2pCooldown;
+
+        bManagerReady = true;
+    }
+    private void BulletPatternManger()
+    {
+        if (bManagerReady)
+        {
+            if (!onCooldown)
+            {
+                //Set Spawn Location
+                SpawningSpot();
+                //Spawn and Setup Bullet Warning
+                spawnedWarnBullet = Instantiate(bulletWarning, spawnPoint, Quaternion.identity);
+                bulletWarningScript = spawnedWarnBullet.GetComponent<BulletWarning>();
+                bulletWarningScript.WarnSetup(relicEffectSO);
+
+                //Play correct Cooldown
+                if (currentBullet >= bAmount)
+                {
+                    //Play pattern to pattern cooldown
+                    onCooldown = true;
+                    timer = 0f;
+                    cooldownWaittime = p2pCooldown;
+                    currentBullet = 1;
+                }
+                else
+                {
+                    //Play bullet to bullet cooldown
+                    onCooldown = true;
+                    timer = 0f;
+                    cooldownWaittime = b2bCooldown;
+                    currentBullet += 1;
+                }
+            }
+        }
         
-        SpawningSpot();
     }
 
     private void SpawningSpot()
@@ -84,7 +127,7 @@ public class BulletPatternSpawner : MonoBehaviour
         //If: Spawn Locations
         if (spawnType == 0)
         {
-
+            //Set a random spawn from selected spots
         }
 
         //If: Spawn Spot in AOE
@@ -93,6 +136,10 @@ public class BulletPatternSpawner : MonoBehaviour
             SpawningAOESetup();
             spawnPoint = new Vector3(Random.Range(minX,maxX), Random.Range(minY, maxY), playerPos.z);
         }
+    }
+    private void SpawnBulletWarning()
+    {
+
     }
 
     private void SpawningAOESetup()
@@ -107,5 +154,9 @@ public class BulletPatternSpawner : MonoBehaviour
     private void Timer()
     {
         timer += Time.deltaTime;
+        if (timer >= cooldownWaittime)
+        {
+            onCooldown = false;
+        }
     }
 }
