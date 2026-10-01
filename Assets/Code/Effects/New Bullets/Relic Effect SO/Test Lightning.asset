@@ -21,7 +21,7 @@ MonoBehaviour:
   spawnAOEOffsetY: 0
   b2bCooldown: 1
   p2pCooldown: 2
-  bulletSpeed: 3
+  bulletSpeed: 0
   bulletLifespan: 0.3
   bulletScaleX: 1
   bulletScaleY: 1
