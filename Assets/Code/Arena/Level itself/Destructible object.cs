@@ -51,11 +51,8 @@ public class Destructibleobject : MonoBehaviour
         {
             return;
         }
-        AudioClip clip = Random.value < 0.5f ? _DestructionSound1 : _DestructionSound2;
-        if (clip != null)
-        {
-            AudioSource.PlayClipAtPoint(clip, transform.position);
-        }
+        //AudioClip clip = Random.value < 0.5f ? _DestructionSound1 : _DestructionSound2;
+        //if (clip != null){}        
                 TakeHit();
     }
 
@@ -92,8 +89,10 @@ public class Destructibleobject : MonoBehaviour
         transform.position = currentPosition;
         isShaking = false;
     }
-// when this function is called reduce 1 hp and destroy self if 0, or start coroutine of the shake
+// when this function is called reduce 1 hp and destroy self if 0, or start coroutine of the shake. Play sound from sound manager
     private void TakeHit(){
+                SoundManager.Instance.Play(SoundManager.Instance.WallRumble);
+
          HitPoints -= 1;
             if (HitPoints == 0)
         DestroySelf();

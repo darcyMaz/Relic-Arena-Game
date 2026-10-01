@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
+    [SerializeField] public AudioClip WallRumble;
     /// <summary>
     /// AudioSource to play audio.
     /// </summary>
@@ -57,6 +58,15 @@ public class SoundManager : MonoBehaviour
             _ongoingMetalDetectors.Remove(audioClip);
         }
     }
+
+    public void Play (AudioClip clip, float volume = 1f){
+            Debug.Log("Play called with: " + (clip != null ? clip.name : "NULL"), this);
+
+        if (clip != null)
+            _audioSource.PlayOneShot(clip,volume);
+    }
+
+
 
     /**
      * Todo:
