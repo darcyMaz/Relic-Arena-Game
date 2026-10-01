@@ -29,5 +29,4 @@ public class RelicEffectSO : ScriptableObject
 
     [Header("Bullet Warning")]
     public float warnBulletLifespan = 2f;
-    public bool warnArrow;
 }
