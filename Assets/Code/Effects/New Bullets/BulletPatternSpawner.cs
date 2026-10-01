@@ -93,9 +93,7 @@ public class BulletPatternSpawner : MonoBehaviour
                 //Set Spawn Location
                 SpawningSpot();
                 //Spawn and Setup Bullet Warning
-                spawnedWarnBullet = Instantiate(bulletWarning, spawnPoint, Quaternion.identity);
-                bulletWarningScript = spawnedWarnBullet.GetComponent<BulletWarning>();
-                bulletWarningScript.WarnSetup(relicEffectSO);
+                SpawnBulletWarning();
 
                 //Play correct Cooldown
                 if (currentBullet >= bAmount)
@@ -139,7 +137,9 @@ public class BulletPatternSpawner : MonoBehaviour
     }
     private void SpawnBulletWarning()
     {
-
+        spawnedWarnBullet = Instantiate(bulletWarning, spawnPoint, Quaternion.identity);
+        bulletWarningScript = spawnedWarnBullet.GetComponent<BulletWarning>();
+        bulletWarningScript.WarnSetup(relicEffectSO);
     }
 
     private void SpawningAOESetup()
