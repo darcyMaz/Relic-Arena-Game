@@ -776,6 +776,7 @@ public class Player : IEffectable
         if (_launchTypeFuncs.TryGetValue(launchType, out _launchFunc)) 
         {
             _launchFunc.Invoke(activeEffect, activeEffectDetails);
+            // consume the relic here?
         }
         else
         {
@@ -825,7 +826,7 @@ public class Player : IEffectable
 
     protected override void LaunchNone(Effect activeEffect, string activeEffectDetails)
     {
-        throw new NotImplementedException();
+        Debug.Log("This Relic does not get thrown.");
     }
 
     /// <summary>
