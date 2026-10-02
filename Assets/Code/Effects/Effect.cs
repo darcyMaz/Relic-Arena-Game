@@ -4,6 +4,7 @@ public enum Effect
     DelayedLightning,
     Fog,
     ExtraLives,
-    LightningForray
+    LightningForray,
+    LightingRain,
     
 }

@@ -1,25 +1,18 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
-
 
 /// <summary>
 /// A singleton class which manages the arena.
 /// To be precise, it spawns in buried relics for the players to find.
 /// </summary>
 [RequireComponent (typeof(Renderer))]
-public class ArenaManager : MonoBehaviour
+public class RelicSpawnPlane : MonoBehaviour
 {
     /// <summary>
     /// Boolean that determines whether relics will be buried or whether the game is done.
     /// </summary>
     [SerializeField] private bool IsGameActive = true;
-
-    /// <summary>
-    /// Event called when the number of buried relics is lower than the maximum.
-    /// </summary>
-    // public event Action OnLackingBuriedRelics;
 
     /// <summary>
     /// Rows in the arena grid. The grid represents where relics are buried.
@@ -67,11 +60,6 @@ public class ArenaManager : MonoBehaviour
     /// The arena's renderer. So that its size can be understood.
     /// </summary>
     private Renderer _renderer;
-
-    /// <summary>
-    /// The shop gameObject so that its size can be understood.
-    /// </summary>
-    [SerializeField] private GameObject _shop;
 
     /// <summary>
     /// Function called before the game starts.
@@ -154,7 +142,7 @@ public class ArenaManager : MonoBehaviour
         Vector2 randomCoord = GenerateCoords();
         if (randomCoord.x == int.MinValue)
         {
-            Debug.Log("The ArenaManager tried to bury a relic but there were no available arena coordinates to bury it in.");
+            Debug.Log("The RelicSpawnPlane tried to bury a relic but there were no available arena coordinates to bury it in.");
             return;
         }
 
@@ -181,7 +169,7 @@ public class ArenaManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("The ArenaManager tried to add a BuriedRelic to its respective dictionary. However, the cloned gameObject did not have the component.");
+            Debug.Log("The RelicSpawnPlane tried to add a BuriedRelic to its respective dictionary. However, the cloned gameObject did not have the component.");
         }
     }
 

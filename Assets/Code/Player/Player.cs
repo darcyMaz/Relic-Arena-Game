@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : IEffectable
+public class Player : EffectableBase
 {
     /// <summary>
     /// The Player's number, set in the inspector.
@@ -245,7 +245,7 @@ public class Player : IEffectable
     /// </summary>
     private void OnEnableInit()
     {
-        // Run the IEffectable OnEnable().
+        // Run the EffectableBase OnEnable().
         base.OnEnable();
 
         // Initialize the input system.
@@ -402,7 +402,7 @@ public class Player : IEffectable
     /// </summary>
     private void StartInit()
     {
-        // Call the IEffectable Start function.
+        // Call the EffectableBase Start function.
         base.Start();
 
         StartHelper();
@@ -741,6 +741,8 @@ public class Player : IEffectable
     /// <param name="target"> The target of the Effect as an int representing the player number. </param>
     private void ReceiveActiveEffect(Effect activeEffect, string effectDetails, int source, int target)
     {
+        Debug.Log("Active Effect " + activeEffect + " Received on Player #" + PlayerNumber);
+
         // Check whether this player is accepting this Effect.
         bool wasEffectAdded = false;
         if (target == PlayerNumber)
@@ -782,25 +784,7 @@ public class Player : IEffectable
         LaunchActiveEffect(relicInHand.GetActiveEffect(), relicInHand.GetActiveEffectDetails(), relicInHand.GetLaunchType());
     }
 
-    /// <summary>
-    /// Implemented method which launches active effects.
-    /// </summary>
-    /// <param name="direction"> The direction this relic is being launched. </param>
-    /// <exception cref="NotImplementedException"></exception>
-    protected override void LaunchActiveEffect(Effect activeEffect, string activeEffectDetails, LaunchType launchType)
-    {
-        // Call a specific function mapped to this LaunchType.
-        Action<Effect, string> _launchFunc;
-        if (_launchTypeFuncs.TryGetValue(launchType, out _launchFunc)) 
-        {
-            _launchFunc.Invoke(activeEffect, activeEffectDetails);
-            // consume the relic here?
-        }
-        else
-        {
-            Debug.LogError("There was an attempt by Player#" + PlayerNumber + " to launch an active Effect, but the LaunchType was invalid.");
-        }
-    }
+    
 
     protected override void LaunchRaycast(Effect activeEffect, string activeEffectDetails)
     {
@@ -1038,11 +1022,19 @@ public class Player : IEffectable
     }
 
     /// <summary>
-    /// Implementation of the LightningForray Effect.
+    /// Implementation of custom aspects of the LightningForray Effect for the player.
     /// </summary>
     protected override void ApplyLightningForray()
     {
         PlayerHit();
+    }
+
+    /// <summary>
+    /// Implementation of custom aspects of the LightningRain Effect for the Player..
+    /// </summary>
+    protected override void ApplyLightningRain()
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>

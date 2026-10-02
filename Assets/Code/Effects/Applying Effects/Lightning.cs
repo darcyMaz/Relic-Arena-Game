@@ -5,7 +5,7 @@ using UnityEngine;
 public class Lightning : MonoBehaviour
 {
     /// <summary>
-    /// The LineRenderer represents the bolt of lightning to hit an IEffectable.
+    /// The LineRenderer represents the bolt of lightning to hit an EffectableBase.
     /// </summary>
     private LineRenderer _lineRenderer;
 

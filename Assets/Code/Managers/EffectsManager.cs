@@ -152,7 +152,7 @@ public class EffectsManager : MonoBehaviour
     }
     
     /// <summary>
-    /// Method which returns the maximum variation in the lightning marker's position from the IEffectable being struck.
+    /// Method which returns the maximum variation in the lightning marker's position from the EffectableBase being struck.
     /// </summary>
     /// <returns> The variation as a float in seconds. </returns>
     public float GetLightningMarkerMaxVariation()
