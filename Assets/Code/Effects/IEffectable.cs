@@ -472,8 +472,6 @@ public abstract class IEffectable: MonoBehaviour
             try
             {
 
-                
-
                 // Wait for the delay or upon cancellation, skip the lightning strike. 
                 await Task.Delay(delayInt, token);
 
@@ -649,29 +647,28 @@ public abstract class IEffectable: MonoBehaviour
             // This effect gets all of its info from the EffectsManager.
             // This should probably be changed so that different relics can have variations for this.
 
+
             try
             {
                 // Debug.Log("Before lightning forray loop, 3 seconds");
                 // await Task.Delay(3000);
 
+                // Note: cancelling any Task.Delay seems to throw the OperationCancelledException rather than just cancelling the effect and there's an if statement that really cancels.
 
                 while (true)
                 {
-                    Debug.Log("Start of lightning forray loop.");
-
                     // Create the lighting marker.
                     Vector3 markposition = RandomPositionVariation(EffectsManager.Instance.GetLightningMarkerMaxVariation());
                     GameObject mark = EffectsManager.Instance.GetLightningMarker(markposition + new Vector3(0, 0, 0.5f));
 
-                    Debug.Log("Mark is spawned in and the wait will now start. Token is: " + token.IsCancellationRequested);
-
                     // Wait the assigned amount of time.
                     await Task.Delay(EffectsManager.Instance.GetLightningMarkerDelay(), token);
 
-                    Debug.Log("Mark is spawned in and the wait has elapsed.");
+                    Debug.Log("After mark wait");
 
                     if (token.IsCancellationRequested)
                     {
+                        Debug.Log("After mark wait but it was cancelled");
                         Destroy(mark.gameObject);
                         throw new OperationCanceledException();
                     }
@@ -703,7 +700,7 @@ public abstract class IEffectable: MonoBehaviour
             }
             catch (OperationCanceledException)
             {
-                
+                Debug.Log("Cancellation of lightning forray");
             }
         }
         catch (FormatException fe)
