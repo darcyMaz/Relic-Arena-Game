@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI TestTextUI;
     [SerializeField] private TextMeshProUGUI P1Score;
     [SerializeField] private TextMeshProUGUI P2Score;
+    [SerializeField] private TextMeshProUGUI RoundWinner;
     //[SerializeField] private Text _scoreText;
 
     private void Awake()
@@ -38,5 +39,15 @@ public class UIManager : MonoBehaviour
     public void CallP2Score(float Score){
 
         P2Score.text = "Player Two Score: " + Score;
+    }
+
+    public void DeclareWinner(int PlayerNum)
+    {
+        RoundWinner.gameObject.SetActive(true);
+        RoundWinner.text = "Player " + PlayerNum + " wins!";
+    }
+    public void ClearWinnerUI()
+    {
+        RoundWinner.gameObject.SetActive(false);
     }
 }
