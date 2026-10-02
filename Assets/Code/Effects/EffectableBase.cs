@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 
 // Note on compressing this class:
 //      The formatDict could be changed to lambda funcs
 //      A function called EffectFunc() could have most of what's in the Effect funcs already made and then make smaller funcs for each effect
+// Having an object of type EffectBundle (or smthing) for each Effect:
+//      Format check for each effect
+//      bundle.GetEffectBody() would fit into the shell as so: try { async EffectBody() } catch (FormatException, TaskCancelledException, OperationCancelledException) {}
 
 /// <summary>
 /// Abstract class where those implementing it become Effectable.
@@ -120,7 +122,7 @@ public abstract class EffectableBase: MonoBehaviour
         _effectsDict.TryAdd(Effect.Fog, Fog);
         _effectsDict.TryAdd(Effect.ExtraLives, ExtraLives);
         _effectsDict.TryAdd(Effect.LightningForray, LightningForray);
-        _effectsDict.TryAdd(Effect.LightingRain, LightingRain);
+        _effectsDict.TryAdd(Effect.LightingRain, LightningRain);
 
         // Then do a check at the end to see if the size of the dictionary matches up with the number of Effects.
         int EffectCount = Enum.GetNames(typeof(Effect)).Length;
@@ -151,7 +153,9 @@ public abstract class EffectableBase: MonoBehaviour
             "Float representing the radius of the hit zone. " +
             "Int representing the delay between a strike and spawning a new marker: 3.2f,1000,2f,2000");
         _formatDict.TryAdd(Effect.LightingRain, 
-            "Float representing the width of the lightning rain.");
+            "Float representing the width of the lightning rain area." +
+            "Float representing the height of the lightning rain area." +
+            "Int representing the number of lightning strikes.");
     }
 
     /// <summary>
@@ -457,58 +461,7 @@ public abstract class EffectableBase: MonoBehaviour
         
     }
 
-    /*
-<<<<<<< Updated upstream:Assets/Code/Effects/IEffectable.cs
-=======
-    /// <summary>
-    /// Cancel the effects related to this relic.
-    /// It is set to private because the order of method operations must stay inside EffectableBase.
-    /// </summary>
-    /// <param name="relic"> The relic whose effects must be cancelled. </param>
-    private void CancelEffectsOnRelic(Relic relic)
-    {
-        Dictionary<Effect,string>.KeyCollection effectsToCancel = relic.GetPassiveEffects().Keys;
 
-        // For each Effect held by this Relic.
-        foreach (Effect effect in effectsToCancel)
-        {
-
-            // If this Effect even is active (it should be logically).
-            Relic associatedRelic;
-            if (_passiveEffects.TryGetValue(effect, out associatedRelic))
-            {
-                // If the incoming relic and the relic associated with this effect are the same then this Effect will be removed.
-                if (relic == associatedRelic)
-                {
-                    // Remove this Effect from the dictionary.
-                    _passiveEffects.Remove(effect);
-
-                    // Cancel the task at hand using the cancellation token source.
-                    CancellationTokenSource token;
-                    bool tokenFound = _effectsCancellationTokens.TryGetValue(effect, out token);
-
-                    // If the token existed.
-                    if (tokenFound)
-                    {
-                        token.Cancel();
-
-                        // Here, make a new cancellationtokensource and replace the old one.
-                        _effectsCancellationTokens.Remove(effect);
-                        _effectsCancellationTokens.Add(effect, new CancellationTokenSource());
-                    }
-                    // Otherwise inform the error log.
-                    else
-                    {
-                        Debug.LogError("There was an attempt to cancel a passive effect, but the effects cancellation token did not exist in the effectsCancellationTokens dictonary.");
-                    }
-                }
-            }
-            
-        }
-        OnRelicConsumed?.Invoke(relic);
-    }
->>>>>>> Stashed changes:Assets/Code/Effects/EffectableBase.cs
-    */
     // TO-DO: Cut down the code of later effect action functions which all use this format.
     /*
     private async void EffectShell(Relic thisRelic)
@@ -563,6 +516,10 @@ public abstract class EffectableBase: MonoBehaviour
                 if (this.gameObject != null) EffectsManager.Instance.Lightning(transform.position);
                 ApplyLightning();
             }
+            catch (TaskCanceledException)
+            {
+
+            }
             catch (OperationCanceledException) 
             {
                 //Debug.Log("Lightning cancelled");
@@ -615,11 +572,16 @@ public abstract class EffectableBase: MonoBehaviour
                 }
                 
             }
+            catch (TaskCanceledException)
+            {
+
+            }
             catch (OperationCanceledException)
             {
-                // This does cause an error without the if statement when the game shuts down mid-game and this clone exists.
-                if (FogClone != null) Destroy(FogClone.gameObject);
+                
             }
+            // This does cause an error without the if statement when the game shuts down mid-game and this clone exists.
+            if (FogClone != null) Destroy(FogClone.gameObject);
         }
         catch (FormatException fe)
         {
@@ -699,41 +661,12 @@ public abstract class EffectableBase: MonoBehaviour
     protected abstract void CancelExtraLives();
 
     /// <summary>
-    /// Method which implements the ExtraLife effect.
+    /// Method which runs the LightningForray Effect.
     /// </summary>
-    /// <param name="details"> The string details for this Effect. </param>
-    /// <param name="effect"> The Effect itself. </param>
-    /// <param name="thisRelic"> The Relic this effect comes from. </param>
-    /// <param name="token"> The cancellation token for this async function. </param>
-    private async void LightingRain(string details, Effect currentEffect, Relic thisRelic, CancellationToken token)
-    {
-
-    }
-
-    /// <summary>
-    /// Method which applies custom aspects of the LightingRain effect to each implementation.
-    /// </summary>
-    protected abstract void ApplyLightningRain();
-
-    /// <summary>
-    /// A function which runs when the None Effect runs. It does nothing.
-    /// </summary>
-    /// <param name="details"> The string details for this Effect. </param>
-    /// <param name="effect"> The Effect itself. </param>
-    /// <param name="thisRelic"> The Relic this effect comes from. </param>
-    /// <param name="token"> The cancellation token for this async function. </param>
-    private void NoEffect(string noEffect, Effect currentEffect, Relic thisRelic, CancellationToken token)
-    {
-        // Debug.Log("The no effect effect has been called. Here's the associated details string: " + noEffect);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="details"></param>
-    /// <param name="currentEffect"></param>
-    /// <param name="thisRelic"></param>
-    /// <param name="token"></param>
+    /// <param name="details"> The string details. </param>
+    /// <param name="currentEffect"> The Effect itself. </param>
+    /// <param name="thisRelic"> The Relic related to this Effect. </param>
+    /// <param name="token"> The cancellation token for the Effect. </param>
     private async void LightningForray(string details, Effect currentEffect, Relic thisRelic, CancellationToken token)
     {
         // Ensure the format is correct for this effect.
@@ -749,6 +682,7 @@ public abstract class EffectableBase: MonoBehaviour
 
             try
             {
+                // While the effect is still active.
                 while (true)
                 {
                     // Create the lighting marker.
@@ -811,12 +745,126 @@ public abstract class EffectableBase: MonoBehaviour
             // Should the relic be consumed at this stage?
             LogFormatException(fe, currentEffect);
         }
-        
+
     }
 
     protected abstract void ApplyLightningForray();
 
 
+    /// <summary>
+    /// Method which implements the ExtraLife effect.
+    /// </summary>
+    /// <param name="details"> The string details for this Effect. </param>
+    /// <param name="effect"> The Effect itself. </param>
+    /// <param name="thisRelic"> The Relic this effect comes from. </param>
+    /// <param name="token"> The cancellation token for this async function. </param>
+    private async void LightningRain(string details, Effect currentEffect, Relic thisRelic, CancellationToken token)
+    {
+
+        // Ensure the format is correct for this effect.
+        try
+        {
+            string[] detailsArr = details.Split(",");
+
+            float width = float.Parse(detailsArr[0]);
+            float height = float.Parse(detailsArr[1]);
+            int strikeTotal = int.Parse(detailsArr[2]);
+
+
+            try
+            {
+                // Collect strike marks to later access their positions for strikes and delete them.
+                List<GameObject> strikeMarkers = new List<GameObject>();
+
+                // Create all strike markers.
+                for (int strikeIndex = 0; strikeIndex<strikeTotal; strikeIndex++)
+                {
+                    // Get new strike marker position.
+                    Vector3 strikeSpot = new Vector3
+                    (
+                        UnityEngine.Random.Range(transform.position.x - (width / 2), transform.position.x + (width / 2)), 
+                        UnityEngine.Random.Range(transform.position.y - (height / 2), transform.position.y + (height / 2)), 
+                        0.5f
+                    );
+
+                    // spawn in a spawn marker, place it randomly, add it to the list
+                    GameObject currentStrikeMarker = EffectsManager.Instance.GetLightningMarker(strikeSpot);
+
+                    // At the end of each iteration, check if it's cancelled
+                    if (token.IsCancellationRequested)
+                    {
+                        // If so, delete all strikeMarkers and leave the try scope.
+                        foreach (GameObject strikeMarker in strikeMarkers)
+                        {
+                            Destroy(strikeMarker.gameObject);
+                        }
+                        // Cancel the operation.
+                        throw new OperationCanceledException();
+                    }
+                }
+
+                // Wait for the strike.
+                await Task.Delay(EffectsManager.Instance.GetLightningMarkerDelay(), token);
+
+                // Strike all spots, checking if the player is struck at any of the points.
+                foreach (GameObject strikeMarker in strikeMarkers)
+                {
+                    // Strike the spot with lightning.
+                    EffectsManager.Instance.Lightning(strikeMarker.transform.position);
+                }
+
+                // Strike all spots, checking if the player is struck at any of the points.
+                foreach (GameObject strikeMarker in strikeMarkers)
+                {
+                    // Check if any of the 
+                }
+
+            }
+            catch (TaskCanceledException)
+            {
+
+            }
+            catch (OperationCanceledException)
+            {
+
+            }
+        }
+        catch (FormatException fe)
+        {
+            // Should the relic be consumed at this stage?
+            LogFormatException(fe, currentEffect);
+        }
+
+        // Cancel all effects related to this relic when this one is complete.
+        // Effects associated with a different relic will not be cancelled.
+        if (thisRelic != null) CancelEffectsOnRelic(thisRelic);
+    
+    }
+
+    /// <summary>
+    /// Method which applies custom aspects of the LightingRain effect to each implementation.
+    /// </summary>
+    protected abstract void ApplyLightningRain();
+
+    /// <summary>
+    /// A function which runs when the None Effect runs. It does nothing.
+    /// </summary>
+    /// <param name="details"> The string details for this Effect. </param>
+    /// <param name="effect"> The Effect itself. </param>
+    /// <param name="thisRelic"> The Relic this effect comes from. </param>
+    /// <param name="token"> The cancellation token for this async function. </param>
+    private void NoEffect(string noEffect, Effect currentEffect, Relic thisRelic, CancellationToken token)
+    {
+        // Debug.Log("The no effect effect has been called. Here's the associated details string: " + noEffect);
+    }
+
+
+
+    /// <summary>
+    /// Method which calculates based on the current position and a variation range, a new random position.
+    /// </summary>
+    /// <param name="variationRange"> The range as a float distance. </param>
+    /// <returns> A new position as a Vector3. </returns>
     private Vector3 RandomPositionVariation(float variationRange)
     {
         Vector3 newPosition = new Vector3(0,0,transform.position.z);

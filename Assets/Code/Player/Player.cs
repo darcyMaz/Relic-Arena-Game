@@ -1034,7 +1034,7 @@ public class Player : EffectableBase
     /// </summary>
     protected override void ApplyLightningRain()
     {
-        throw new NotImplementedException();
+        PlayerHit();
     }
 
     /// <summary>

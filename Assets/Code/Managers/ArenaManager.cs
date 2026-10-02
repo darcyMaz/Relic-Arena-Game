@@ -31,11 +31,17 @@ public class ArenaManager : MonoBehaviour
     public bool IsGameActive { get; private set; }
 
     /// <summary>
+    /// A public Vector3 representing the player's z axis.
+    /// </summary>
+    public float PlayerZPosition { get; private set; }
+
+    /// <summary>
     /// Method called on awake.
     /// </summary>
     private void Awake()
     {
         GetSpawnPlanes();
+        PlayerZPosition = 0f;
     }
 
     /// <summary>
