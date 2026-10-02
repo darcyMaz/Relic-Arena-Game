@@ -137,6 +137,7 @@ public class EffectsManager : MonoBehaviour
     /// <returns> The Lightning Counter GameObject </returns>
     public GameObject GetLightningCounter(Vector3 initialPosition)
     {
+        if (LightningCounter == null) throw new NotImplementedException();
         return Instantiate(LightningCounter, initialPosition, Quaternion.identity);
     }
 

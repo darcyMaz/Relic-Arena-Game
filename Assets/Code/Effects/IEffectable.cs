@@ -237,12 +237,62 @@ public abstract class IEffectable: MonoBehaviour
         // For each Effect, there must be a source for cancellation tokens.
         foreach (Effect effect in Enum.GetValues(typeof(Effect)))
         {
-            CancellationTokenSource cts;
-            if (_effectsCancellationTokens.TryGetValue(effect, out cts))
+            CancelEffect(effect);
+        }
+    }
+
+    /// <summary>
+    /// Cancel the effects related to this relic.
+    /// It is set to private because the order of method operations must stay inside IEffectable.
+    /// </summary>
+    /// <param name="relic"> The relic whose effects must be cancelled. </param>
+    private void CancelEffectsOnRelic(Relic relic)
+    {
+        Dictionary<Effect, string>.KeyCollection effectsToCancel = relic.GetPassiveEffects().Keys;
+
+        // For each Effect held by this Relic.
+        foreach (Effect effect in effectsToCancel)
+        {
+            // If this Effect even is active (it should be logically).
+            Relic associatedRelic;
+            if (_passiveEffects.TryGetValue(effect, out associatedRelic))
             {
-                cts.Cancel();
+                // If the incoming relic and the relic associated with this effect are the same then this Effect will be removed.
+                if (relic == associatedRelic)
+                {
+                    // Remove this Effect from the dictionary.
+                    _passiveEffects.Remove(effect);
+
+                    // Cancel the Effect.
+                    CancelEffect(effect);
+                }
             }
         }
+        OnRelicConsumed?.Invoke(relic);
+        // if (relic.GetPassiveEffects.TryGetValue == Effects.LightningForray) Debug.Log("The following ");
+    }
+
+    /// <summary>
+    /// Method which cancels an Effect.
+    /// Cancels the effect and the creates a new CancellationTokenSource for that Effect.
+    /// If no Effect found, add a new token.
+    /// </summary>
+    /// <param name="effect"> The Effect to cancel. </param>
+    private void CancelEffect(Effect effect)
+    {
+        // Try to get the cancellation token.
+        CancellationTokenSource cts;
+        if (_effectsCancellationTokens.TryGetValue(effect, out cts))
+        {
+            // Cancel the Effect.
+            cts.Cancel();
+
+            // Remove the token.
+            _effectsCancellationTokens.Remove(effect);
+        }
+
+        // Replace the token or add it for the first time.
+        _effectsCancellationTokens.Add(effect, new CancellationTokenSource());
     }
 
     /*
@@ -380,53 +430,6 @@ public abstract class IEffectable: MonoBehaviour
         
     }
 
-    /// <summary>
-    /// Cancel the effects related to this relic.
-    /// It is set to private because the order of method operations must stay inside IEffectable.
-    /// </summary>
-    /// <param name="relic"> The relic whose effects must be cancelled. </param>
-    private void CancelEffectsOnRelic(Relic relic)
-    {
-        Dictionary<Effect,string>.KeyCollection effectsToCancel = relic.GetPassiveEffects().Keys;
-
-        // For each Effect held by this Relic.
-        foreach (Effect effect in effectsToCancel)
-        {
-
-            // If this Effect even is active (it should be logically).
-            Relic associatedRelic;
-            if (_passiveEffects.TryGetValue(effect, out associatedRelic))
-            {
-                // If the incoming relic and the relic associated with this effect are the same then this Effect will be removed.
-                if (relic == associatedRelic)
-                {
-                    // Remove this Effect from the dictionary.
-                    _passiveEffects.Remove(effect);
-
-                    // Cancel the task at hand using the cancellation token source.
-                    CancellationTokenSource token;
-                    bool tokenFound = _effectsCancellationTokens.TryGetValue(effect, out token);
-
-                    // If the token existed.
-                    if (tokenFound)
-                    {
-                        token.Cancel();
-
-                        // Here, make a new cancellationtokensource and replace the old one.
-                        _effectsCancellationTokens.Remove(effect);
-                        _effectsCancellationTokens.Add(effect, new CancellationTokenSource());
-                    }
-                    // Otherwise inform the error log.
-                    else
-                    {
-                        Debug.LogError("There was an attempt to cancel a passive effect, but the effects cancellation token did not exist in the effectsCancellationTokens dictonary.");
-                    }
-                }
-            }
-            
-        }
-        OnRelicConsumed?.Invoke(relic);
-    }
 
     // TO-DO: Cut down the code of later effect action functions which all use this format.
     /*
@@ -626,7 +629,7 @@ public abstract class IEffectable: MonoBehaviour
     /// <param name="effect"> The Effect itself. </param>
     /// <param name="thisRelic"> The Relic this effect comes from. </param>
     /// <param name="token"> The cancellation token for this async function. </param>
-    private async void NoEffect(string noEffect, Effect currentEffect, Relic thisRelic, CancellationToken token)
+    private void NoEffect(string noEffect, Effect currentEffect, Relic thisRelic, CancellationToken token)
     {
         // Debug.Log("The no effect effect has been called. Here's the associated details string: " + noEffect);
     }
@@ -654,12 +657,19 @@ public abstract class IEffectable: MonoBehaviour
 
                 while (true)
                 {
+                    Debug.Log("Start of lightning forray loop.");
+
                     // Create the lighting marker.
                     Vector3 markposition = RandomPositionVariation(EffectsManager.Instance.GetLightningMarkerMaxVariation());
                     GameObject mark = EffectsManager.Instance.GetLightningMarker(markposition + new Vector3(0, 0, 0.5f));
 
+                    Debug.Log("Mark is spawned in and the wait will now start. Token is: " + token.IsCancellationRequested);
+
                     // Wait the assigned amount of time.
                     await Task.Delay(EffectsManager.Instance.GetLightningMarkerDelay(), token);
+
+                    Debug.Log("Mark is spawned in and the wait has elapsed.");
+
                     if (token.IsCancellationRequested)
                     {
                         Destroy(mark.gameObject);
@@ -669,19 +679,17 @@ public abstract class IEffectable: MonoBehaviour
                     // Strike lightning at the mark.
                     EffectsManager.Instance.Lightning(mark.transform.position);
 
+                    // Destroy the mark.
+                    Destroy(mark.gameObject);
+
                     // If the player is within the mark's zone, then get hit and also cancel this effect.
                     if (Vector2.Distance(transform.position, mark.transform.position) < EffectsManager.Instance.GetLightningMarkerRadius())
                     {
                         // Hit!
                         ApplyLightningForray();
-                        // Destroy the mark.
-                        Destroy(mark.gameObject);
                         // Cancel the effect.
                         throw new OperationCanceledException();
                     }
-
-                    // Destroy the lightning mark.
-                    Destroy(mark.gameObject);
 
                     // Delay between the spawning in of marks.
                     await Task.Delay(EffectsManager.Instance.GetNextLightningMarkerDelay(), token);
@@ -695,7 +703,7 @@ public abstract class IEffectable: MonoBehaviour
             }
             catch (OperationCanceledException)
             {
-
+                
             }
         }
         catch (FormatException fe)

@@ -1469,6 +1469,10 @@ PrefabInstance:
       propertyPath: m_Positions.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3003001950718471220, guid: 980706de454fb7c408a1b0ab31fc755a, type: 3}
+      propertyPath: LightningMarkerMaxVariation
+      value: 2.2
+      objectReference: {fileID: 0}
     - target: {fileID: 6470522212513148969, guid: 980706de454fb7c408a1b0ab31fc755a, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0

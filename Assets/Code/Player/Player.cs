@@ -196,6 +196,8 @@ public class Player : IEffectable
         base.Awake();
         _actions = new InputSystem_Actions();
         GetComponentsAwake();
+
+        OnExtraLifeChanged += ExtraLifeTest;
     }
 
     /// <summary>
@@ -463,6 +465,8 @@ public class Player : IEffectable
             // If the Player found a relic.
             if (_isRelicFound && (_relicFound != null && _buriedRelicFound != null))
             {
+                Debug.Log("Player found a relic: " + _relicFound.GetName());
+
                 // Add it to the inventory.
                 AddRelicToInventory(_relicFound);
 
@@ -488,18 +492,26 @@ public class Player : IEffectable
     /// </summary>
     private void PlayerHit()
     {
+        // If the ITimer is running, don't apply the hit.
+        if (ITimer > 0)
+        {
+            // Method that runs when ITimer is running upon a hit.
+            ITimeHit();
+
+            // Do not apply the hit. Return.
+            return;
+        }
+
         // If there are more than 0 extra lives.
         if (_extraLives >= 1)
         {
-            // check if iframe timer is going
-
-
             // Reduce and announce the loss of a life.
             OnExtraLifeChanged?.Invoke(--_extraLives);
             // Tank the hit.
             TankHit();
 
-            // If the extraLives var has gone from 1 to 0, the effect mustbe cancelled.
+            // If the extraLives var has gone from 1 to 0, the effect must be cancelled.
+            // Should cancelling the relic be done here? Should the ConsumeRelic() be done instead?.. I don't know...
             if (_extraLives == 0)
             {
                 // Cancel the extra lives effect.
@@ -513,16 +525,22 @@ public class Player : IEffectable
         }
         else
         {
-            // If the invincibility timer is not running.
-            if (ITimer <= 0)
-            {
-                // Damage the player.
-                OnPlayerDamaged?.Invoke();
-            }
+            
+            // Damage the player.
+            OnPlayerDamaged?.Invoke();
+            
             // Ensure that the _extraLives var does not go below zero.
             _extraLives = 0;
         }
 
+    }
+
+    /// <summary>
+    /// Method that runs when a player is hit during the ITime.
+    /// </summary>
+    private void ITimeHit()
+    {
+        Debug.Log("There was a hit during Itime, no hit!");
     }
 
     /// <summary>
@@ -697,7 +715,7 @@ public class Player : IEffectable
     /// </summary>
     private void TankHit()
     {
-        Debug.Log("There was an attempt to tank a hit but it was not implemented.");
+        Debug.Log("A hit was tanked! There is no indication in the game.");
     }
 
     /// <summary>
@@ -935,6 +953,7 @@ public class Player : IEffectable
     /// <param name="relic"> Relic to add to inventory. </param>
     private void AddRelicToInventory(Relic relic)
     {
+
         // Add it to the inventory.
         _inventory.AddItem(relic);
 
@@ -1057,5 +1076,10 @@ public class Player : IEffectable
 
         // Rebuild the effect relic list.
         BuildEffectRelicList();
+    }
+
+    private void ExtraLifeTest(int livesLeft)
+    {
+        Debug.Log("Lives left: " + livesLeft);
     }
 }
