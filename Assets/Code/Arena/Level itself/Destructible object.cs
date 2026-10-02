@@ -6,12 +6,12 @@ public class Destructibleobject : MonoBehaviour
     [SerializeField] private AudioClip _DestructionSound1;
     [SerializeField] private AudioClip _DestructionSound2; 
     [SerializeField] private string _DestructionAnimation;
-    [SerializeField] private float strength = 1.5f;
-    [SerializeField] private float duration = 1.5f;
+    [SerializeField] private float strength = 0.3f;
+    [SerializeField] private float duration = 0.5f;
     [SerializeField] public int HitPoints = 3;
     private bool isShaking = false;
 
-    private BoxCollider _boxCollider;
+    private Collider Collider;
 
 
     /// <summary>
@@ -19,7 +19,7 @@ public class Destructibleobject : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        _boxCollider = GetComponent<BoxCollider>();
+        Collider = GetComponent<Collider>();
     }
 
     /// <summary>
@@ -64,7 +64,7 @@ public class Destructibleobject : MonoBehaviour
     private void LightningStrikeCheck(Vector3 lightningPosition)
     {
         // Is the position where lightning was struck within the collider?
-        if ( _boxCollider.bounds.Contains(lightningPosition) )
+        if ( Collider.bounds.Contains(lightningPosition) )
         {
             // If so, register taking the hit
             TakeHit();
