@@ -20,7 +20,7 @@ public class ScoreManager : MonoBehaviour
     /// <summary>
     /// Whether the round timer is counting down or not.
     /// </summary>
-    private bool RoundTimerActive = false;
+    private bool RoundTimerActive = true;
     /// <summary>
     /// Amound of time the game stays active between rounds.
     /// </summary>
@@ -96,15 +96,19 @@ public class ScoreManager : MonoBehaviour
     private void TimerCountdown()
     {
         RoundTimer -= Time.deltaTime;
+        UIManager.Instance.CallTimerUpdate((int)RoundTimer);
         if (RoundTimer < 0f)
         {
             EndOfRoundSequence();
         }
     }
-
+    /// <summary>
+    /// Function called to transition between rounds.
+    /// </summary>
     private void EndOfRoundSequence()
     {
         RoundTimer = 0f;
+        //Set the PlayerNum to who has the most points in a round.
         int PlayerNum = 0;
         if (Player1Score > Player2Score)
         {
@@ -119,6 +123,7 @@ public class ScoreManager : MonoBehaviour
             PlayerNum = 0;
         }
         UIManager.Instance.DeclareWinner(PlayerNum);
+        //Set the bools to make sure it's in between rounds.
         RoundTimerActive = false;
         EndOfRoundTimerActive = true;
     }

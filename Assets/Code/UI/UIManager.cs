@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI P1Score;
     [SerializeField] private TextMeshProUGUI P2Score;
     [SerializeField] private TextMeshProUGUI RoundWinner;
+    [SerializeField] private TextMeshProUGUI TimerDisplay;
     //[SerializeField] private Text _scoreText;
 
     private void Awake()
@@ -40,14 +41,29 @@ public class UIManager : MonoBehaviour
 
         P2Score.text = "Player Two Score: " + Score;
     }
-
+    public void CallTimerUpdate(int timer)
+    {
+        TimerDisplay.text = timer.ToString();
+    }
     public void DeclareWinner(int PlayerNum)
     {
-        RoundWinner.gameObject.SetActive(true);
-        RoundWinner.text = "Player " + PlayerNum + " wins!";
-    }
+        //RoundWinner.gameObject.SetActive(true);
+        if (PlayerNum == 0)
+        {
+            RoundWinner.text = "Draw!";
+        }
+        
+        else
+        {
+            RoundWinner.text = "Player " + PlayerNum + " wins!";
+        }   
+     }
+    /// <summary>
+    /// Clear the UI to start a new round.
+    /// </summary>
     public void ClearWinnerUI()
     {
-        RoundWinner.gameObject.SetActive(false);
+        //RoundWinner.gameObject.SetActive(false);
+        RoundWinner.text = "";
     }
 }
