@@ -741,14 +741,16 @@ public class Player : EffectableBase
     /// <param name="target"> The target of the Effect as an int representing the player number. </param>
     private void ReceiveActiveEffect(Effect activeEffect, string effectDetails, int source, int target)
     {
-        Debug.Log("Active Effect " + activeEffect + " Received on Player #" + PlayerNumber);
-
+        
         // Check whether this player is accepting this Effect.
         bool wasEffectAdded = false;
         if (target == PlayerNumber)
         {
             // Apply the Effect.
             wasEffectAdded = ApplyActiveEffect(activeEffect, effectDetails);
+
+            Debug.Log("Active Effect " + activeEffect + " Received on Player #" + PlayerNumber);
+
         }
 
         if (wasEffectAdded)
@@ -780,8 +782,15 @@ public class Player : EffectableBase
             return;
         }
 
+        Effect activeEffect = relicInHand.GetActiveEffect();
+        string activeEffectDetails = relicInHand.GetActiveEffectDetails();
+        LaunchType launchType = relicInHand.GetLaunchType();
+
         // Call LaunchActiveEffect()
-        LaunchActiveEffect(relicInHand.GetActiveEffect(), relicInHand.GetActiveEffectDetails(), relicInHand.GetLaunchType());
+        LaunchActiveEffect(relicInHand.GetActiveEffect(), relicInHand.GetActiveEffectDetails(), relicInHand.GetLaunchType(), relicInHand);
+
+        // Consume the relic after launching it.
+        ConsumeRelic(relicInHand);
     }
 
     
@@ -820,6 +829,8 @@ public class Player : EffectableBase
             // Maybe random, maybe a selection.
             // Either way, this should not be so particular.
             int targetNum = (PlayerNumber == 1) ? 2 : 1;
+
+            Debug.Log("The Player #" + PlayerNumber + " launched the " + activeEffect + " Effect at Player #" + targetNum);
 
             // Tell the EffectsManager that someone is getting an Effect placed on them.
             EffectsManager.Instance.LaunchActiveEffect(activeEffect, activeEffectDetails, PlayerNumber, targetNum);

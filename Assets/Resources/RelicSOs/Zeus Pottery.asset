@@ -15,9 +15,9 @@ MonoBehaviour:
   Name: Zeus Pottery
   Sprite: {fileID: -1392634146273112628, guid: 846061e93515a2e47889ba1940d04016, type: 3}
   Price: 100
-  ActiveEffect: 0
-  ActiveEffectDetails: 
-  LaunchType: 3
+  ActiveEffect: 5
+  ActiveEffectDetails: 2000,1,1,10,10,6
+  LaunchType: 2
   PassiveEffects: 04000000
   PassiveEffectsDetails:
   - 1000,4,1

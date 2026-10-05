@@ -352,14 +352,14 @@ public abstract class EffectableBase: MonoBehaviour
     /// Implemented method which launches active effects.
     /// </summary>
     /// <param name="direction"> The direction this relic is being launched. </param>
-    protected void LaunchActiveEffect(Effect activeEffect, string activeEffectDetails, LaunchType launchType)
+    protected void LaunchActiveEffect(Effect activeEffect, string activeEffectDetails, LaunchType launchType, Relic associatedRelic)
     {
         // Call a specific function mapped to this LaunchType.
         Action<Effect, string> _launchFunc;
         if (_launchTypeFuncs.TryGetValue(launchType, out _launchFunc))
         {
             _launchFunc.Invoke(activeEffect, activeEffectDetails);
-            // consume the relic here?
+            CancelEffectsOnRelic(associatedRelic);
         }
         else
         {
@@ -786,13 +786,14 @@ public abstract class EffectableBase: MonoBehaviour
     /// <param name="token"> The cancellation token for this async function. </param>
     private async void LightningRain(string details, Effect currentEffect, Relic thisRelic, CancellationToken token)
     {
+        Debug.Log("Lightning rain started " + name);
 
         // Ensure the format is correct for this effect.
         try
         {
             string[] detailsArr = details.Split(",");
 
-            // The delay before lightning strikes.
+            // The lifetime of the lightning bolt.
             int lifeTime = int.Parse(detailsArr[0]);
             // The maximum distance that the lightning can kink. 
             float kinkDistance = float.Parse(detailsArr[1]);
@@ -816,6 +817,7 @@ public abstract class EffectableBase: MonoBehaviour
                 // Create all strike markers.
                 for (int strikeIndex = 0; strikeIndex<strikeTotal; strikeIndex++)
                 {
+                    Debug.Log("Spawn strike marker #" + strikeIndex);
                     // Get new strike marker position.
                     Vector3 strikeSpot = new Vector3
                     (
@@ -823,11 +825,13 @@ public abstract class EffectableBase: MonoBehaviour
                         UnityEngine.Random.Range(transform.position.x - (width / 2), transform.position.x + (width / 2)),
                         UnityEngine.Random.Range(transform.position.y - (height / 2), transform.position.y + (height / 2)),
                         // The Z coordinate should be the player's plus a little bit.
-                        ArenaManager.Instance.PlayerZPosition + 0.5f
+                        ArenaManager.Instance.PlayerZPosition - 0.5f
                     );
+                    Debug.Log("strike pos: " + strikeSpot);
 
                     // spawn in a spawn marker, place it randomly, add it to the list
                     GameObject currentStrikeMarker = EffectsManager.Instance.GetLightningMarker(strikeSpot);
+                    strikeMarkers.Add(currentStrikeMarker);
 
                     // At the end of each iteration, check if it's cancelled
                     if (token.IsCancellationRequested)
@@ -835,14 +839,19 @@ public abstract class EffectableBase: MonoBehaviour
                         // Cancel the operation.
                         throw new OperationCanceledException();
                     }
+
+                    await Task.Delay(50, token);
                 }
 
                 // Wait for the strike.
                 await Task.Delay(EffectsManager.Instance.GetLightningMarkerDelay(), token);
 
+                Debug.Log("After marker delay, strikes!");
+
                 // Strike all spots, checking if the player is struck at any of the points.
                 foreach (GameObject strikeMarker in strikeMarkers)
                 {
+                    Debug.Log("\t\tLightning strikes: " + strikeMarker.transform.position);
                     // Strike the spot with lightning.
                     EffectsManager.Instance.Lightning(strikeMarker.transform.position, lifeTime, kinkDistance, kinkExageration);
                 }
@@ -853,6 +862,7 @@ public abstract class EffectableBase: MonoBehaviour
                     // Check if any of the strikes are within the strike range
                     if (Vector3.Distance(strikeMarker.transform.position, transform.position) <= EffectsManager.Instance.GetLightningMarkerRadius())
                     {
+                        Debug.Log("Lightning rain hit.");
                         ApplyLightningRain();
                         break;
                     }
@@ -860,11 +870,11 @@ public abstract class EffectableBase: MonoBehaviour
             }
             catch (TaskCanceledException)
             {
-                
+                Debug.Log("Task cancelled exception");
             }
             catch (OperationCanceledException)
             {
-
+                Debug.Log("Operation cancelled exception");
             }
 
             // Destroy all strike markers.
@@ -885,6 +895,8 @@ public abstract class EffectableBase: MonoBehaviour
 
     private void DestroyListGameObjects(List<GameObject> gameObjects)
     {
+        Debug.Log("Destroy strike markers func below");
+
         // Destroy all gameObjects.
         foreach (GameObject strikeMarker in gameObjects)
         {

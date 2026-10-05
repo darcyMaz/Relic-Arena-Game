@@ -44,7 +44,7 @@ public class ArenaManager : MonoBehaviour
     {
         InitSingleton();
         GetSpawnPlanes();
-        PlayerZPosition = 0f;
+        PlayerZPosition = -5f;
     }
 
     /// <summary>
