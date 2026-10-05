@@ -786,7 +786,7 @@ public abstract class EffectableBase: MonoBehaviour
     /// <param name="token"> The cancellation token for this async function. </param>
     private async void LightningRain(string details, Effect currentEffect, Relic thisRelic, CancellationToken token)
     {
-        Debug.Log("Lightning rain started " + name);
+        //Debug.Log("Lightning rain started " + name);
 
         // Ensure the format is correct for this effect.
         try
@@ -817,7 +817,7 @@ public abstract class EffectableBase: MonoBehaviour
                 // Create all strike markers.
                 for (int strikeIndex = 0; strikeIndex<strikeTotal; strikeIndex++)
                 {
-                    Debug.Log("Spawn strike marker #" + strikeIndex);
+                    //Debug.Log("Spawn strike marker #" + strikeIndex);
                     // Get new strike marker position.
                     Vector3 strikeSpot = new Vector3
                     (
@@ -827,7 +827,7 @@ public abstract class EffectableBase: MonoBehaviour
                         // The Z coordinate should be the player's plus a little bit.
                         ArenaManager.Instance.PlayerZPosition - 0.5f
                     );
-                    Debug.Log("strike pos: " + strikeSpot);
+                    //Debug.Log("strike pos: " + strikeSpot);
 
                     // spawn in a spawn marker, place it randomly, add it to the list
                     GameObject currentStrikeMarker = EffectsManager.Instance.GetLightningMarker(strikeSpot);
@@ -846,12 +846,12 @@ public abstract class EffectableBase: MonoBehaviour
                 // Wait for the strike.
                 await Task.Delay(EffectsManager.Instance.GetLightningMarkerDelay(), token);
 
-                Debug.Log("After marker delay, strikes!");
+                //Debug.Log("After marker delay, strikes!");
 
                 // Strike all spots, checking if the player is struck at any of the points.
                 foreach (GameObject strikeMarker in strikeMarkers)
                 {
-                    Debug.Log("\t\tLightning strikes: " + strikeMarker.transform.position);
+                    //Debug.Log("\t\tLightning strikes: " + strikeMarker.transform.position);
                     // Strike the spot with lightning.
                     EffectsManager.Instance.Lightning(strikeMarker.transform.position, lifeTime, kinkDistance, kinkExageration);
                 }
@@ -862,7 +862,7 @@ public abstract class EffectableBase: MonoBehaviour
                     // Check if any of the strikes are within the strike range
                     if (Vector3.Distance(strikeMarker.transform.position, transform.position) <= EffectsManager.Instance.GetLightningMarkerRadius())
                     {
-                        Debug.Log("Lightning rain hit.");
+                        //Debug.Log("Lightning rain hit.");
                         ApplyLightningRain();
                         break;
                     }
@@ -870,11 +870,11 @@ public abstract class EffectableBase: MonoBehaviour
             }
             catch (TaskCanceledException)
             {
-                Debug.Log("Task cancelled exception");
+               // Debug.Log("Task cancelled exception");
             }
             catch (OperationCanceledException)
             {
-                Debug.Log("Operation cancelled exception");
+               // Debug.Log("Operation cancelled exception");
             }
 
             // Destroy all strike markers.
@@ -895,7 +895,7 @@ public abstract class EffectableBase: MonoBehaviour
 
     private void DestroyListGameObjects(List<GameObject> gameObjects)
     {
-        Debug.Log("Destroy strike markers func below");
+        //Debug.Log("Destroy strike markers func below");
 
         // Destroy all gameObjects.
         foreach (GameObject strikeMarker in gameObjects)
