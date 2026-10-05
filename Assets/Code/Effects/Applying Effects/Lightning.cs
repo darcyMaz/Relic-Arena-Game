@@ -22,16 +22,16 @@ public class Lightning : MonoBehaviour
     /// <summary>
     /// A value between 0 and 1 that determines how exaggerated the lightning kinks will look.
     /// </summary>
-    [SerializeField] private float LightningKinkExaggeration = 0;
+    //[SerializeField] private float LightningKinkExaggeration = 0;
     /// <summary>
     /// The maximum distance for which a lightning can kink if LightningKinkExaggeration is 1.
     /// </summary>
-    [SerializeField] private float LightningKinkDistance = 3;
+    //[SerializeField] private float LightningKinkDistance = 3;
 
     /// <summary>
     /// The lifetime of the lightning strike in milliseconds.
     /// </summary>
-    [SerializeField] private int LightningLifetime = 750;
+    //[SerializeField] private int LightningLifetime = 750;
 
     /// <summary>
     /// Initializations before the game starts.
@@ -45,16 +45,19 @@ public class Lightning : MonoBehaviour
     /// 
     /// </summary>
     /// <param name="endPos"></param>
-    public async void LightningStrike(Vector3 endPos)
+    public async void LightningStrike(Vector3 endPos, int lifeTime, float maxKinkDistance, float kinkExageration)
     {
         // Create the lightning line    
-        BuildLine(endPos);
+        BuildLine(endPos, maxKinkDistance, kinkExageration);
 
         // Allow the lightning to exist for a short time.
-        await Task.Delay(LightningLifetime);
+        await Task.Delay(lifeTime);
 
         // Destroy the lightning line
         RemoveLine();
+
+        // Destroy the gameObject when a strike is complete.
+        Destroy(gameObject);
     }
 
     /// <summary>
@@ -65,7 +68,7 @@ public class Lightning : MonoBehaviour
     ///     (3) Builds the lightning strike with the line renderer based on those cuts, where those cuts have small variance.
     ///         This gives the line the appearance of a straight line with kinks, i.e. a lightning strike.
     /// </summary>
-    private void BuildLine(Vector3 endPos)
+    private void BuildLine(Vector3 endPos, float kinkDistance, float kinkExageration)
     {
         // Set the positionCount to be Anchor+TotalKinks+End
         int positionCount = TotalKinksInLine + 2;
@@ -91,7 +94,7 @@ public class Lightning : MonoBehaviour
             Vector3 pointAhead = AnchorPosition.position + (direction * (distance * ((float) positionIndex/ (float) (TotalKinksInLine+1)) ) );
 
             // Create the random variance, then add that new point to the line renderer.
-            _lineRenderer.SetPosition(positionIndex, SmallRandomVariance(pointAhead));
+            _lineRenderer.SetPosition(positionIndex, SmallRandomVariance(pointAhead, kinkDistance, kinkExageration));
         }
 
         // Set the final position as the last position on the line.
@@ -112,18 +115,17 @@ public class Lightning : MonoBehaviour
     /// </summary>
     /// <param name="point"> The input point. </param>
     /// <returns> The input point with random adjustments. </returns>
-    private Vector3 SmallRandomVariance(Vector3 point)
+    private Vector3 SmallRandomVariance(Vector3 point, float kinkDistance, float kinkExageration)
     {
         // Point to change and return.
         Vector3 newPoint = point;
 
         // Range to change the point.
-        float range = LightningKinkDistance * LightningKinkExaggeration;
+        float range = kinkDistance * kinkExageration;
         
         // Randomly alter point based on range.
         newPoint.x = UnityEngine.Random.Range(newPoint.x - range, range + newPoint.x);
         newPoint.y = UnityEngine.Random.Range(newPoint.y - range, range + newPoint.y);
-        newPoint.z = UnityEngine.Random.Range(newPoint.z - range, range + newPoint.z);
 
         return newPoint;
     }

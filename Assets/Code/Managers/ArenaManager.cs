@@ -20,6 +20,8 @@ public class ArenaManager : MonoBehaviour
     //   i leave that in the relic spawners
     //   this is the way to make the spawning more versatile
 
+    public static ArenaManager Instance { get; private set; }
+
     /// <summary>
     /// List of all of the spawn planes in the ArenaManager.
     /// </summary>
@@ -40,6 +42,7 @@ public class ArenaManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        InitSingleton();
         GetSpawnPlanes();
         PlayerZPosition = 0f;
     }
@@ -66,6 +69,19 @@ public class ArenaManager : MonoBehaviour
     private void Start()
     {
         
+    }
+
+    /// <summary>
+    /// Initialize the singleton for ArenaManager.
+    /// </summary>
+    private void InitSingleton()
+    {
+        if (Instance != null && this != Instance)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
     }
 
     /// <summary>

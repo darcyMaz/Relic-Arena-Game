@@ -249,7 +249,7 @@ public abstract class EffectableBase: MonoBehaviour
     /// </summary>
     protected void CancelAllEffects()
     {
-        // For each Effect, there must be a source for cancellation tokens.
+        // For each Effect in the enum, cancel it.
         foreach (Effect effect in Enum.GetValues(typeof(Effect)))
         {
             CancelEffect(effect);
@@ -284,7 +284,6 @@ public abstract class EffectableBase: MonoBehaviour
             }
         }
         OnRelicConsumed?.Invoke(relic);
-        // if (relic.GetPassiveEffects.TryGetValue == Effects.LightningForray) Debug.Log("The following ");
     }
 
     /// <summary>
@@ -308,6 +307,12 @@ public abstract class EffectableBase: MonoBehaviour
 
         // Replace the token or add it for the first time.
         _effectsCancellationTokens.Add(effect, new CancellationTokenSource());
+
+        // Check to see if this is an active effect, remove it from the list.
+        if (_activeEffects.Contains(effect))
+        {
+            _activeEffects.Remove(effect);
+        }
     }
 
     /*
@@ -418,7 +423,6 @@ public abstract class EffectableBase: MonoBehaviour
     /// <param name="effectRelics"> The updated list of EffectRelics. </param>
     private void CheckPassiveEffects(List<Relic> effectRelics)
     {
-        // Debug.Log("Start of check passive effects");
         
         // Go through each relic and add new effects to the _passiveEffects list.
         foreach (Relic relic in effectRelics)
@@ -492,13 +496,19 @@ public abstract class EffectableBase: MonoBehaviour
     /// </summary>
     /// <param name="delay"> The delay before the lightning strikes. </param>
     /// <param name="currentEffect"> The DelayedLightning Effect. </param>
-    private async void DelayedLightning(string delay, Effect currentEffect, Relic thisRelic, CancellationToken token)
+    private async void DelayedLightning(string details, Effect currentEffect, Relic thisRelic, CancellationToken token)
     {
         // Convert from string to float
         // Tell the effect manager to do this effect onto this EffectableBase.
         try
         {
-            int delayInt = int.Parse(delay);
+            // delay, kink distance, kink exag
+            string[] detailsArr = details.Split(',');
+
+            int delayInt = int.Parse(detailsArr[0]);
+            int lifeTime = int.Parse(detailsArr[1]);
+            float kinkDistance = float.Parse(detailsArr[2]);
+            float kinkExageration = float.Parse(detailsArr[3]);
 
             try
             {
@@ -513,7 +523,7 @@ public abstract class EffectableBase: MonoBehaviour
                 }
 
                 // Strike lightning!
-                if (this.gameObject != null) EffectsManager.Instance.Lightning(transform.position);
+                if (this.gameObject != null) EffectsManager.Instance.Lightning(transform.position, lifeTime, kinkDistance, kinkExageration);
                 ApplyLightning();
             }
             catch (TaskCanceledException)
@@ -522,7 +532,7 @@ public abstract class EffectableBase: MonoBehaviour
             }
             catch (OperationCanceledException) 
             {
-                //Debug.Log("Lightning cancelled");
+                
             }
         }
         catch (FormatException fe)
@@ -533,6 +543,8 @@ public abstract class EffectableBase: MonoBehaviour
 
         // If this is a passive Effect related to a Relic.
         if (thisRelic != null) CancelEffectsOnRelic(thisRelic);
+        // Else if there is no relic associated with this effect, then this is an active Effect. Cancel it directly.
+        else CancelEffect(currentEffect);
     }
     protected abstract void ApplyLightning();
 
@@ -593,6 +605,8 @@ public abstract class EffectableBase: MonoBehaviour
         // Effects associated with a different relic will not be cancelled.
         // Active Effects will not run this line of code.
         if (thisRelic != null) CancelEffectsOnRelic(thisRelic);
+        // Else if there is no relic associated with this effect, then this is an active Effect. Cancel it directly.
+        else CancelEffect(currentEffect);
     }
 
     /// <summary>
@@ -649,6 +663,8 @@ public abstract class EffectableBase: MonoBehaviour
         // Cancel all effects related to this relic when this one is complete.
         // Effects associated with a different relic will not be cancelled.
         if (thisRelic != null) CancelEffectsOnRelic(thisRelic);
+        // Else if there is no relic associated with this effect, then this is an active Effect. Cancel it directly.
+        else CancelEffect(currentEffect);
     }
     /// <summary>
     /// Method which applies custom aspects of the ExtraLife effect to each implementation.
@@ -674,6 +690,13 @@ public abstract class EffectableBase: MonoBehaviour
         {
             // This effect gets all of its info from the EffectsManager.
             // This should probably be changed so that different relics can have variations for this.
+
+            // delay, kink distance, kink exag
+            string[] detailsArr = details.Split(',');
+
+            int lifeTime = int.Parse(detailsArr[0]);
+            float kinkDistance = float.Parse(detailsArr[1]);
+            float kinkExageration = float.Parse(detailsArr[2]);
 
             // Create the Lightning marker.
             GameObject mark = EffectsManager.Instance.GetLightningMarker(new Vector3(0, 0, 0.5f));
@@ -701,7 +724,7 @@ public abstract class EffectableBase: MonoBehaviour
                     }
 
                     // Strike lightning at the mark.
-                    EffectsManager.Instance.Lightning(mark.transform.position);
+                    EffectsManager.Instance.Lightning(mark.transform.position, lifeTime, kinkDistance, kinkExageration);
 
                     // If the player is within the mark's zone, then get hit and also cancel this effect.
                     if (Vector2.Distance(transform.position, mark.transform.position) < EffectsManager.Instance.GetLightningMarkerRadius())
@@ -736,9 +759,7 @@ public abstract class EffectableBase: MonoBehaviour
             // If the mark still exists after all of that, remove it.
             if (mark != null) Destroy(mark.gameObject);
 
-            // Cancel all effects related to this relic when this one is complete.
-            // Effects associated with a different relic will not be cancelled.
-            if (thisRelic != null) CancelEffectsOnRelic(thisRelic);
+            
         }
         catch (FormatException fe)
         {
@@ -746,6 +767,11 @@ public abstract class EffectableBase: MonoBehaviour
             LogFormatException(fe, currentEffect);
         }
 
+        // Cancel all effects related to this relic when this one is complete.
+        // Effects associated with a different relic will not be cancelled.
+        if (thisRelic != null) CancelEffectsOnRelic(thisRelic);
+        // Else if there is no relic associated with this effect, then this is an active Effect. Cancel it directly.
+        else CancelEffect(currentEffect);
     }
 
     protected abstract void ApplyLightningForray();
@@ -766,25 +792,38 @@ public abstract class EffectableBase: MonoBehaviour
         {
             string[] detailsArr = details.Split(",");
 
-            float width = float.Parse(detailsArr[0]);
-            float height = float.Parse(detailsArr[1]);
-            int strikeTotal = int.Parse(detailsArr[2]);
+            // The delay before lightning strikes.
+            int lifeTime = int.Parse(detailsArr[0]);
+            // The maximum distance that the lightning can kink. 
+            float kinkDistance = float.Parse(detailsArr[1]);
+            // A percentage representing a cap on the kink distance.
+            float kinkExageration = float.Parse(detailsArr[2]);
 
+            // The width of the strike zone.
+            float width = float.Parse(detailsArr[3]);
+            // The height of the strike zone.
+            float height = float.Parse(detailsArr[4]);
+            // The number of strikes within the strike zone.
+            int strikeTotal = int.Parse(detailsArr[5]);
+
+            
+
+            // Collect strike marks to later access their positions for strikes and delete them.
+            List<GameObject> strikeMarkers = new List<GameObject>();
 
             try
             {
-                // Collect strike marks to later access their positions for strikes and delete them.
-                List<GameObject> strikeMarkers = new List<GameObject>();
-
                 // Create all strike markers.
                 for (int strikeIndex = 0; strikeIndex<strikeTotal; strikeIndex++)
                 {
                     // Get new strike marker position.
                     Vector3 strikeSpot = new Vector3
                     (
-                        UnityEngine.Random.Range(transform.position.x - (width / 2), transform.position.x + (width / 2)), 
-                        UnityEngine.Random.Range(transform.position.y - (height / 2), transform.position.y + (height / 2)), 
-                        0.5f
+                        // The X and Y coordinates are randomly within the given area.
+                        UnityEngine.Random.Range(transform.position.x - (width / 2), transform.position.x + (width / 2)),
+                        UnityEngine.Random.Range(transform.position.y - (height / 2), transform.position.y + (height / 2)),
+                        // The Z coordinate should be the player's plus a little bit.
+                        ArenaManager.Instance.PlayerZPosition + 0.5f
                     );
 
                     // spawn in a spawn marker, place it randomly, add it to the list
@@ -793,11 +832,6 @@ public abstract class EffectableBase: MonoBehaviour
                     // At the end of each iteration, check if it's cancelled
                     if (token.IsCancellationRequested)
                     {
-                        // If so, delete all strikeMarkers and leave the try scope.
-                        foreach (GameObject strikeMarker in strikeMarkers)
-                        {
-                            Destroy(strikeMarker.gameObject);
-                        }
                         // Cancel the operation.
                         throw new OperationCanceledException();
                     }
@@ -810,24 +844,31 @@ public abstract class EffectableBase: MonoBehaviour
                 foreach (GameObject strikeMarker in strikeMarkers)
                 {
                     // Strike the spot with lightning.
-                    EffectsManager.Instance.Lightning(strikeMarker.transform.position);
+                    EffectsManager.Instance.Lightning(strikeMarker.transform.position, lifeTime, kinkDistance, kinkExageration);
                 }
 
                 // Strike all spots, checking if the player is struck at any of the points.
                 foreach (GameObject strikeMarker in strikeMarkers)
                 {
-                    // Check if any of the 
+                    // Check if any of the strikes are within the strike range
+                    if (Vector3.Distance(strikeMarker.transform.position, transform.position) <= EffectsManager.Instance.GetLightningMarkerRadius())
+                    {
+                        ApplyLightningRain();
+                        break;
+                    }
                 }
-
             }
             catch (TaskCanceledException)
             {
-
+                
             }
             catch (OperationCanceledException)
             {
 
             }
+
+            // Destroy all strike markers.
+            DestroyListGameObjects(strikeMarkers);
         }
         catch (FormatException fe)
         {
@@ -838,7 +879,19 @@ public abstract class EffectableBase: MonoBehaviour
         // Cancel all effects related to this relic when this one is complete.
         // Effects associated with a different relic will not be cancelled.
         if (thisRelic != null) CancelEffectsOnRelic(thisRelic);
-    
+        // Else if there is no relic associated with this effect, then this is an active Effect. Cancel it directly.
+        else CancelEffect(currentEffect);
+    }
+
+    private void DestroyListGameObjects(List<GameObject> gameObjects)
+    {
+        // Destroy all gameObjects.
+        foreach (GameObject strikeMarker in gameObjects)
+        {
+            Destroy(strikeMarker.gameObject);
+        }
+        // Clear them from the list.
+        gameObjects.Clear();
     }
 
     /// <summary>
@@ -857,8 +910,6 @@ public abstract class EffectableBase: MonoBehaviour
     {
         // Debug.Log("The no effect effect has been called. Here's the associated details string: " + noEffect);
     }
-
-
 
     /// <summary>
     /// Method which calculates based on the current position and a variation range, a new random position.

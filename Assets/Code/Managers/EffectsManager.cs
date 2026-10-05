@@ -11,9 +11,9 @@ public class EffectsManager : MonoBehaviour
     public static EffectsManager Instance { get; private set; }
 
     /// <summary>
-    /// Source of lightning that the EM will be able to use to strike positions.
+    /// Gameobject representing a source for lightning strikes. Holds a Lightning component.
     /// </summary>
-    [SerializeField] private Lightning LightningSource;
+    [SerializeField] private GameObject LightningSourcePrefab;
 
     /// <summary>
     /// A GameObject that can be cloned and accessed representing the display before launching a scarab attack.
@@ -34,6 +34,8 @@ public class EffectsManager : MonoBehaviour
     /// A GameObject that shows the spot where lightning will strike.
     /// </summary>
     [SerializeField] private GameObject LightningMarker;
+
+    // NOTE: The next four lightning vars should NOT be in EffectsManager, and should instead be passed through the Effect.
 
     /// <summary>
     /// A float representing the maximum variation in position that each component of the LightningMarker's position could have.
@@ -103,10 +105,26 @@ public class EffectsManager : MonoBehaviour
     /// Strikes the endPos with lightning. The Lightning component will be called and its line renderer will send a lightning-looking line to hit the endPos.
     /// </summary>
     /// <param name="endPos"> The destination of the line renderer. </param>
-    public void Lightning(Vector3 endPos)
+    public void Lightning(Vector3 endPos, int lifetime, float kinkDistance, float kinkExageration)
     {
-        LightningSource.LightningStrike(endPos);
-        OnLightningStrike?.Invoke(endPos);
+        // The cloned lightning source.
+        GameObject lightningClone = Instantiate(LightningSourcePrefab, transform);
+
+        // Change its X position to match that of the end of the strike.
+        lightningClone.transform.position = transform.position + new Vector3(endPos.x, 0, 0);
+
+        // Get the lightning component from this clone.
+        Lightning lightningComponent;
+        if (lightningClone.TryGetComponent(out lightningComponent))
+        {
+            // Strike lightning!
+            lightningComponent.LightningStrike(endPos, lifetime, kinkDistance, kinkExageration);
+            OnLightningStrike?.Invoke(endPos);
+        }
+        else
+        {
+            Debug.Log("Lightning strike was not performed by the EffectsManager because the prefab did not contain the Lightning component.");
+        }
     }
     
     /// <summary>

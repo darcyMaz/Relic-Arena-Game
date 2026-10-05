@@ -20,4 +20,4 @@ MonoBehaviour:
   LaunchType: 3
   PassiveEffects: 01000000
   PassiveEffectsDetails:
-  - 4000
+  - '4000, 1000, 3, 1 '

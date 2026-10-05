@@ -9,7 +9,7 @@ public class LightningTester : MonoBehaviour
     void Update()
     {
         if (Keyboard.current.spaceKey.wasPressedThisFrame){
-                EffectsManager.Instance.Lightning(target.position);
+                EffectsManager.Instance.Lightning(target.position, 1000, 3, 1);
         }
     }
 }
