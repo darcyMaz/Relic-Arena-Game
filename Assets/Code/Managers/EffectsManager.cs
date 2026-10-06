@@ -11,6 +11,11 @@ public class EffectsManager : MonoBehaviour
     public static EffectsManager Instance { get; private set; }
 
     /// <summary>
+    /// The GameObject prefab for bullet pattern spawners.
+    /// </summary>
+    [SerializeField] private GameObject PatternSpawnerPrefab;
+
+    /// <summary>
     /// Gameobject representing a source for lightning strikes. Holds a Lightning component.
     /// </summary>
     [SerializeField] private GameObject LightningSourcePrefab;
@@ -57,6 +62,8 @@ public class EffectsManager : MonoBehaviour
     /// </summary>
     [SerializeField] private int NextLightningMarkerDelay = 1000;
 
+
+
     /// <summary>
     /// Event invoked whenever a lightning strikes the scene.
     /// </summary>
@@ -66,6 +73,8 @@ public class EffectsManager : MonoBehaviour
     /// Event invoked whenever an active Effect is launched at another player.
     /// </summary>
     public event Action<Effect, string, int, int> OnActiveEffectLaunched;
+
+
 
     /// <summary>
     /// The Awake function checks if the current object is the singleton.
@@ -168,7 +177,17 @@ public class EffectsManager : MonoBehaviour
     {
         return Instantiate(LightningMarker, position, Quaternion.identity);
     }
-    
+
+    /// <summary>
+    /// Method which returns the BulletPatternSpawner prefab and parents the input transform to it.
+    /// </summary>
+    /// <param name="parent"> The parent Transform of the spawner. </param>
+    /// <returns> The GameObject prefab. </returns>
+    public GameObject GetBulletPatternSpawner(Transform parent)
+    {
+        return Instantiate(PatternSpawnerPrefab, parent);
+    }
+
     /// <summary>
     /// Method which returns the maximum variation in the lightning marker's position from the EffectableBase being struck.
     /// </summary>

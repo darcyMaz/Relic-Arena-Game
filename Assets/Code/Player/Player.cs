@@ -150,6 +150,11 @@ public class Player : EffectableBase
     private Action<Relic> _consumeRelicEventFunc;
 
     /// <summary>
+    /// Dictionary which maps relic's using the other passive relic system to the bullet spawners related to them.
+    /// </summary>
+    private Dictionary<Relic, GameObject> _passiveEffectGameObjects = new Dictionary<Relic, GameObject>();
+
+    /// <summary>
     /// Method which runs on awake.
     /// </summary>
     protected override void Awake()
@@ -291,7 +296,11 @@ public class Player : EffectableBase
         _consumeRelicEventFunc = (Relic relic) => 
         { 
             // Remove the relic from the inventory.
-            _inventory.RemoveItem(relic); 
+            _inventory.RemoveItem(relic);
+
+            // if it's of the other system, remove its effects
+            _passiveEffectGameObjects.Remove(relic);
+
             // Rebuild the Effect Relic list.
             BuildEffectRelicList(); 
         };
@@ -477,10 +486,10 @@ public class Player : EffectableBase
             // If the Player found a relic.
             if (_isRelicFound && (_relicFound != null && _buriedRelicFound != null))
             {
-                Debug.Log("Player found a relic: " + _relicFound.GetName());
-
                 // Add it to the inventory.
                 AddRelicToInventory(_relicFound);
+
+
 
                 // Play found relic animation.
                 ////
@@ -967,6 +976,25 @@ public class Player : EffectableBase
     /// <param name="relic"> Relic to add to inventory. </param>
     private void AddRelicToInventory(Relic relic)
     {
+        
+        // Is this relic of the other effect system?
+        // spawn in the thing
+        if (relic.UsesOtherSystem)
+        {
+            GameObject spawnerGO = EffectsManager.Instance.GetBulletPatternSpawner(transform);
+            BulletPatternSpawner spawner;
+            if (spawnerGO.TryGetComponent(out spawner))
+            {
+                // Start the New System pattern setup.
+                spawner.PatternSetup(relic.GetOtherSystemSO());
+                _passiveEffectGameObjects.Add(relic, spawnerGO);
+            }
+            else
+            {
+                Debug.LogError("There was an attempt for a relic to use the new passive effect system. The prefab did not have the BulletPatternSpawner as expected.");
+                Destroy(spawnerGO);
+            }
+        }
 
         // Add it to the inventory.
         _inventory.AddItem(relic);

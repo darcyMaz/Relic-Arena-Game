@@ -24,6 +24,8 @@ public class BuriedRelic : MonoBehaviour
     /// </summary>
     [SerializeField] private RelicSO _relicSO;
 
+    private RelicEffectSO _relicEffectSO;
+
     /// <summary>
     /// The arena coordinates where this BuriedRelic is situated.
     /// </summary>
@@ -54,6 +56,17 @@ public class BuriedRelic : MonoBehaviour
     public void SetRelicData(RelicSO relicSO)
     {
         _relicSO = relicSO;
+        _relicEffectSO = null;
+    }
+
+    /// <summary>
+    /// Set the RelicEffectSO data.
+    /// </summary>
+    /// <param name="effectRelicSO"> The RelicEffectSO to set. </param>
+    public void SetRelicData(RelicEffectSO effectRelicSO)
+    {
+        _relicEffectSO = effectRelicSO;
+        _relicSO = null;
     }
 
     /// <summary>

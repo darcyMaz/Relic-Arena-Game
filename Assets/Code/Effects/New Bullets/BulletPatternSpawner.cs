@@ -63,7 +63,7 @@ public class BulletPatternSpawner : MonoBehaviour
     }
 
     //Set up spawner with SO values
-    private void PatternSetup(RelicEffectSO relicType)
+    public void PatternSetup(RelicEffectSO relicType)
     {
         relicEffectSO = relicType;
 
