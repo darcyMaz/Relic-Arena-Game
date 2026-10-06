@@ -54,11 +54,7 @@ public class BulletPatternSpawner : MonoBehaviour
 
     #endregion
 
-    private void Awake()
-    {
-        //TEMPORARY, to be moved into ieffectable
-        PatternSetup(relicEffectSO);
-    }
+    //Awake was here to test PatternSetup(relicEffectSO)
 
     private void Update()
     {
