@@ -36,7 +36,7 @@ public class RelicEffectSO : ScriptableObject
     // 3 = Set Rotation per set spawnLocation
     #endregion
     public float bulletRotationZ = 0f;
-    public float bulletRotationRate = 1f;
+    public float bulletRotationRate = 0.001f;
 
     [Header("Bullet Warning")]
     public float warnBulletLifespan = 2f;

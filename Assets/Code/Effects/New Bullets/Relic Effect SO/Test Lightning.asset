@@ -19,7 +19,7 @@ MonoBehaviour:
   spawnAOEHalfY: 1.5
   b2bCooldown: 1
   p2pCooldown: 2
-  bulletPrefab: {fileID: 0}
+  bulletPrefab: {fileID: 7221345284844433121, guid: d2592bcd8ab78e44da098a21acfdeeb1, type: 3}
   bulletSpeed: 0
   bulletLifespan: 0.3
   bulletScaleX: 1
