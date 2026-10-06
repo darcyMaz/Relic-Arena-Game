@@ -219,7 +219,6 @@ public abstract class EffectableBase: MonoBehaviour
     {
 
     }
-
     
     /// <summary>
     /// The OnCollisionEnter method is where Effects start being applied to IEffectables.
@@ -261,7 +260,7 @@ public abstract class EffectableBase: MonoBehaviour
     /// It is set to private because the order of method operations must stay inside IEffectable.
     /// </summary>
     /// <param name="relic"> The relic whose effects must be cancelled. </param>
-    private void CancelEffectsOnRelic(Relic relic)
+    protected void CancelEffectsOnRelic(Relic relic)
     {
         Dictionary<Effect, string>.KeyCollection effectsToCancel = relic.GetPassiveEffects().Keys;
 
@@ -283,6 +282,8 @@ public abstract class EffectableBase: MonoBehaviour
                 }
             }
         }
+
+        Debug.Log("Relic Consumed Event in EffectableBase: " + relic.GetName());
         OnRelicConsumed?.Invoke(relic);
     }
 

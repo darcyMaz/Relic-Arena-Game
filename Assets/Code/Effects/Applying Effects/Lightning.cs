@@ -47,7 +47,7 @@ public class Lightning : MonoBehaviour
     /// <param name="endPos"></param>
     public async void LightningStrike(Vector3 endPos, int lifeTime, float maxKinkDistance, float kinkExageration)
     {
-        Debug.Log("Lightning strike func called in cloned LightningSource.Lightning");
+        //Debug.Log("Lightning strike func called in cloned LightningSource.Lightning");
 
         // Create the lightning line    
         BuildLine(endPos, maxKinkDistance, kinkExageration);

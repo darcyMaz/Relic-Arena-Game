@@ -12,7 +12,10 @@ public class Relic
     /// </summary>
     [SerializeField] private RelicSO _relic;
 
-
+    /// <summary>
+    /// Bool which indicates whether this Relic uses the other effect system.
+    /// </summary>
+    public bool UsesOtherSystem { get; private set; } = false;
 
     /// <summary>
     /// Public constructor for the Relic class.
@@ -20,11 +23,11 @@ public class Relic
     /// <param name="relicSO"> The RelicSO data to be associated with this Relic. </param>
     public Relic(RelicSO relicSO)
     {
+        // Get and set the SO into the class variable.
         _relic = relicSO;
-    }
 
-    public Relic (Object effectRelic)
-    {
+        // Check to see if it uses the other system.
+        UsesOtherSystem = (_relic.GetOtherSystemSO() == null) ? false : true;
 
     }
 
@@ -78,6 +81,10 @@ public class Relic
         return passiveEffects;
     }
 
+    /// <summary>
+    /// Method which returns the price of this relic.
+    /// </summary>
+    /// <returns>  </returns>
     public float GetPrice()
     {
         CheckRelic();
@@ -93,6 +100,22 @@ public class Relic
     {
         CheckRelic();
         return _relic.GetActiveEffectDetails();
+    }
+
+    /// <summary>
+    /// Method which returns the Scriptable Object for the other passive Effect system.
+    /// </summary>
+    /// <returns> A RelicEffectSO </returns>
+    public RelicEffectSO GetOtherSystemSO()
+    {
+        if (UsesOtherSystem)
+        {
+            return _relic.GetOtherSystemSO();
+        }
+        else
+        {
+            return null;
+        }
     }
 
     private void CheckRelic()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -146,6 +147,8 @@ public class Player : EffectableBase
     /// </summary>
     private bool _wasEffectsManagerFound = false;
 
+    private Action<Relic> _consumeRelicEventFunc;
+
     /// <summary>
     /// Method which runs on awake.
     /// </summary>
@@ -283,7 +286,16 @@ public class Player : EffectableBase
         OnPlayerDamaged += ReceiveHit;
 
         // Subscribe to the OnRelicConsumed event.
-        OnRelicConsumed += ConsumeRelic;
+        // This function is anonymous because the Player should NOT be calling this in the Player script.
+        // This script should instead call CancelEffectsOnRelic(Relic) or CancelEffect(Effect)
+        _consumeRelicEventFunc = (Relic relic) => 
+        { 
+            // Remove the relic from the inventory.
+            _inventory.RemoveItem(relic); 
+            // Rebuild the Effect Relic list.
+            BuildEffectRelicList(); 
+        };
+        OnRelicConsumed += _consumeRelicEventFunc;
 
         // Subscribe the UpdateRelicInHand function to the related event.
         OnCycleRelicInHand += UpdateRelicInHand;
@@ -318,7 +330,7 @@ public class Player : EffectableBase
         _getHitTest.Disable();
 
         // Unsubscribe from events.
-        OnRelicConsumed -= ConsumeRelic;
+        OnRelicConsumed -= _consumeRelicEventFunc;
         OnPlayerDamaged -= ReceiveHit;
         OnCycleRelicInHand -= UpdateRelicInHand;
         _cycle.performed -= CycleEffectRelic;
@@ -643,7 +655,7 @@ public class Player : EffectableBase
             // If there were indeed no Effect relics, then note that and return.
             if (nearestEffectRelic == -1)
             {
-                // Debug.Log("-- nearest effect relic is -1");
+                //Debug.Log("-- nearest effect relic is -1");
 
                 _relicInHandIndex = -1;
                 OnRelicInHandChanged?.Invoke( BuildDisplayList(0) );
@@ -651,10 +663,11 @@ public class Player : EffectableBase
             }
             // If there was an Effect Relic but ONLY ONE of them.
             // Then there will be no cycling.
-            if (nextEffectRelic == -1)
+            else if (nextEffectRelic == -1)
             {
-                // Debug.Log("-- next effect relic is -1");
+                //Debug.Log("-- next effect relic is -1");
 
+                _relicInHandIndex = nearestEffectRelic;
                 OnRelicInHandChanged?.Invoke(BuildDisplayList( _relicInHandIndex ));
                 return;
             }
@@ -749,13 +762,13 @@ public class Player : EffectableBase
             // Apply the Effect.
             wasEffectAdded = ApplyActiveEffect(activeEffect, effectDetails);
 
-            Debug.Log("Active Effect " + activeEffect + " Received on Player #" + PlayerNumber);
+            //Debug.Log("Active Effect " + activeEffect + " Received on Player #" + PlayerNumber);
 
         }
 
         if (wasEffectAdded)
         {
-            Debug.Log("The Active Effect " + activeEffect + " was potentially added to the player #" + target + " from the player #" + source);
+            //Debug.Log("The Active Effect " + activeEffect + " was potentially added to the player #" + target + " from the player #" + source);
         }
     }
 
@@ -776,21 +789,27 @@ public class Player : EffectableBase
         // Get the relic in hand.
         relicInHand = _inventory.GetRelicAt(_relicInHandIndex);
 
+        Debug.Log("Launch press func ~ relic in hand index: " + _relicInHandIndex + " relic name: " + relicInHand.GetName());
+
         // Check if the relic in hand is actually an effect relic (it should be anyway).
         if (!IsEffectRelic(relicInHand))
         {
             return;
         }
+        if (relicInHand.GetLaunchType() == LaunchType.None)
+        {
+            return;
+        }
 
-        Effect activeEffect = relicInHand.GetActiveEffect();
-        string activeEffectDetails = relicInHand.GetActiveEffectDetails();
-        LaunchType launchType = relicInHand.GetLaunchType();
+        //Effect activeEffect = relicInHand.GetActiveEffect();
+        //string activeEffectDetails = relicInHand.GetActiveEffectDetails();
+        //LaunchType launchType = relicInHand.GetLaunchType();
 
         // Call LaunchActiveEffect()
         LaunchActiveEffect(relicInHand.GetActiveEffect(), relicInHand.GetActiveEffectDetails(), relicInHand.GetLaunchType(), relicInHand);
 
         // Consume the relic after launching it.
-        ConsumeRelic(relicInHand);
+        // CancelEffectsOnRelic(relicInHand);
     }
 
     
@@ -830,7 +849,7 @@ public class Player : EffectableBase
             // Either way, this should not be so particular.
             int targetNum = (PlayerNumber == 1) ? 2 : 1;
 
-            Debug.Log("The Player #" + PlayerNumber + " launched the " + activeEffect + " Effect at Player #" + targetNum);
+            //Debug.Log("The Player #" + PlayerNumber + " launched the " + activeEffect + " Effect at Player #" + targetNum);
 
             // Tell the EffectsManager that someone is getting an Effect placed on them.
             EffectsManager.Instance.LaunchActiveEffect(activeEffect, activeEffectDetails, PlayerNumber, targetNum);
@@ -952,34 +971,6 @@ public class Player : EffectableBase
         // Add it to the inventory.
         _inventory.AddItem(relic);
 
-        BuildEffectRelicList();
-    }
-
-    /// <summary>
-    /// Consume a relic. In other words delete it.
-    /// </summary>
-    /// <param name="relic"> The relic to remove. </param>
-    private void ConsumeRelic(Relic relic)
-    {
-        // Debug.Log("Relic consumed: " + relic.GetName());
-
-        // Remove the item from the inventory.
-        _inventory.RemoveItem(relic);
-        // Check whether the relic in hand needs to change.
-        // OnCycleRelicInHand?.Invoke(false);
-
-        // Recalculate the passive effects.
-        BuildEffectRelicList();
-    }
-
-    /// <summary>
-    /// Consume a relic at an index. In other words delete it.
-    /// </summary>
-    /// <param name="index"> The inventory index to remove a relic. </param>
-    private void ConsumeRelicAt(int index)
-    {
-        _inventory.RemoveItemAt(index);
-        // OnCycleRelicInHand?.Invoke(false);
         BuildEffectRelicList();
     }
 

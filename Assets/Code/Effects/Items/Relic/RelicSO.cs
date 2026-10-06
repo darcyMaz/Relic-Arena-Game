@@ -10,6 +10,11 @@ public class RelicSO : ItemSO
     [SerializeField] private float Price;
 
     /// <summary>
+    /// 
+    /// </summary>
+    [SerializeField] private RelicEffectSO OtherSystemSO; 
+
+    /// <summary>
     /// The active effect attached to this relic.
     /// </summary>
     [SerializeField] private Effect ActiveEffect;
@@ -89,5 +94,14 @@ public class RelicSO : ItemSO
         List<string> shallowCopy = new List<string>();
         foreach (var effect in PassiveEffectsDetails) { shallowCopy.Add(effect); }
         return shallowCopy;
+    }
+
+    /// <summary>
+    /// Method which returns the EffectRelicSO representing the values for the bullet effect system.
+    /// </summary>
+    /// <returns> The Scriptable Object used to interpret the other system. </returns>
+    public RelicEffectSO GetOtherSystemSO()
+    {
+        return (OtherSystemSO != null) ? OtherSystemSO : null;
     }
 }
