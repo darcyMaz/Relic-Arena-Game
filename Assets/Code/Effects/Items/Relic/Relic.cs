@@ -12,6 +12,8 @@ public class Relic
     /// </summary>
     [SerializeField] private RelicSO _relic;
 
+
+
     /// <summary>
     /// Public constructor for the Relic class.
     /// </summary>
@@ -19,6 +21,11 @@ public class Relic
     public Relic(RelicSO relicSO)
     {
         _relic = relicSO;
+    }
+
+    public Relic (Object effectRelic)
+    {
+
     }
 
     /// <summary>
