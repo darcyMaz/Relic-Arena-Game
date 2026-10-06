@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9808736d6dcecd3469fd62e2a894a2a5, type: 3}
-  m_Name: Test Lightning
+  m_Name: Test Homing Bullet
   m_EditorClassIdentifier: Assembly-CSharp::RelicEffectSO
-  numberOfBullets: 3
+  numberOfBullets: 1
   spawnType: 1
   spawnLocationList: []
-  spawnAOEHalfX: 1.5
-  spawnAOEHalfY: 1.5
+  spawnAOEHalfX: 2
+  spawnAOEHalfY: 2
   b2bCooldown: 1
-  p2pCooldown: 2
-  bulletPrefab: {fileID: 0}
-  bulletSpeed: 0
-  bulletLifespan: 0.3
+  p2pCooldown: 60
+  bulletPrefab: {fileID: 9070830274694276698, guid: 27d6d764fc308c24fa964cfc79f6daad, type: 3}
+  bulletSpeed: 3
+  bulletLifespan: 20
   bulletScaleX: 1
   bulletScaleY: 1
   rotationType: 1
   bulletRotationZ: 0
-  bulletRotationRate: 1
-  warnBulletLifespan: 1.5
+  bulletRotationRate: 0.001
+  warnBulletLifespan: 2

@@ -5,7 +5,7 @@ public class BulletWarning : MonoBehaviour
     
     [SerializeField] private RelicEffectSO relicEffectSO;
     [SerializeField] private GameObject warnArrow;
-    [SerializeField] private GameObject bullet;
+    private GameObject spawnerRef;
 
     private Vector3 warnPos;
 
@@ -23,9 +23,10 @@ public class BulletWarning : MonoBehaviour
         WarningTimer();
     }
 
-    public void WarnSetup(RelicEffectSO relicType)
+    public void WarnSetup(RelicEffectSO relicType, GameObject spawner)
     {
         relicEffectSO = relicType;
+        spawnerRef = spawner;
 
         bSpeed = relicEffectSO.bulletSpeed;
         bRotation = relicEffectSO.bulletRotationZ;
@@ -58,9 +59,9 @@ public class BulletWarning : MonoBehaviour
     private void SpawnBullet()
     {
         //1. Spawns Bullet, 2. Executes Bullet Setup, 3. Explodes
-        GameObject spawnedBullet = Instantiate(bullet, warnPos, Quaternion.Euler(0f, 0f, bRotation));
+        GameObject spawnedBullet = Instantiate(relicEffectSO.bulletPrefab, warnPos, Quaternion.Euler(0f, 0f, bRotation));
         bulletBehaviorScript = spawnedBullet.GetComponent<BulletBehavior>();
-        bulletBehaviorScript.BulletSetup(relicEffectSO);
+        bulletBehaviorScript.BulletSetup(relicEffectSO, spawnerRef);
         
         Destroy(this.gameObject);
     }

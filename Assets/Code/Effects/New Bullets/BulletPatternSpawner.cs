@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BulletPatternSpawner : MonoBehaviour
@@ -30,8 +31,6 @@ public class BulletPatternSpawner : MonoBehaviour
     private float maxX;
     private float minY;
     private float maxY;
-    private float spawnOffsetX;
-    private float spawnOffsetY;
 
     //Number of Bullets in a Pattern
     private int bAmount = 2;
@@ -77,8 +76,6 @@ public class BulletPatternSpawner : MonoBehaviour
         spawnLocationList = relicEffectSO.spawnLocationList;
         spawnHalfX = relicEffectSO.spawnAOEHalfX;
         spawnHalfY = relicEffectSO.spawnAOEHalfY;
-        spawnOffsetX = relicEffectSO.spawnAOEOffsetX;
-        spawnOffsetY = relicEffectSO.spawnAOEOffsetY;
         b2bCooldown = relicEffectSO.b2bCooldown;
         p2pCooldown = relicEffectSO.p2pCooldown;
 
@@ -95,7 +92,7 @@ public class BulletPatternSpawner : MonoBehaviour
                 //Spawn and Setup Bullet Warning
                 SpawnBulletWarning();
 
-                //Play correct Cooldown
+                //Play correct Cooldown depending on bullet count
                 if (currentBullet >= bAmount)
                 {
                     //Play pattern to pattern cooldown
@@ -139,7 +136,8 @@ public class BulletPatternSpawner : MonoBehaviour
     {
         spawnedWarnBullet = Instantiate(bulletWarning, spawnPoint, Quaternion.identity);
         bulletWarningScript = spawnedWarnBullet.GetComponent<BulletWarning>();
-        bulletWarningScript.WarnSetup(relicEffectSO);
+        bulletWarningScript.WarnSetup(relicEffectSO, this.gameObject);
+
     }
 
     private void SpawningAOESetup()
@@ -158,5 +156,10 @@ public class BulletPatternSpawner : MonoBehaviour
         {
             onCooldown = false;
         }
+    }
+
+    public void RemovePassiveEffect()
+    {
+        Destroy(this.gameObject);
     }
 }

@@ -6,7 +6,8 @@ public class BulletBehavior : MonoBehaviour
 
     //References
     [SerializeField] Rigidbody rb;
-    [SerializeField] RelicEffectSO relicEffectSO;
+    [SerializeField] public RelicEffectSO relicEffectSO;
+    public GameObject spawnerRef;
 
     //Bullet Speed
     private float bSpeed = 1f;
@@ -19,7 +20,8 @@ public class BulletBehavior : MonoBehaviour
     private Vector3 spawnPoint;
 
     //Bullet Rotation
-    [SerializeField] private float bRotateZ = 0f;
+    private float bRotateZ = 0f;
+    public Vector3 moveDirection = Vector3.right;
 
     #endregion
 
@@ -29,10 +31,11 @@ public class BulletBehavior : MonoBehaviour
         spawnPoint = new Vector3(transform.position.x, transform.position.y, transform.position.z);
     }
 
-    public void BulletSetup(RelicEffectSO relicSO)
+    public virtual void BulletSetup(RelicEffectSO relicSO, GameObject spawner)
     {
         //Call the Info from the SO
         relicEffectSO = relicSO;
+        spawnerRef = spawner;
 
         bSpeed = relicEffectSO.bulletSpeed;
         bLifespan = relicEffectSO.bulletLifespan;
@@ -40,7 +43,7 @@ public class BulletBehavior : MonoBehaviour
 
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         BulletTimer();
         BulletMove();
@@ -57,11 +60,11 @@ public class BulletBehavior : MonoBehaviour
         timer += Time.deltaTime;
     }
 
-    private void BulletMove()
+    protected virtual void BulletMove()
     {
         //Moves bullet (1f, 0f, 0f) * bullet speed * Time between frames
         //Turned by rotation of bullet (of which the warning sets)
-        transform.Translate(Vector3.right * bSpeed * Time.deltaTime);
+        transform.Translate(moveDirection.normalized * bSpeed * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)

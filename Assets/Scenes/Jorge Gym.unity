@@ -190,7 +190,7 @@ GameObject:
   - component: {fileID: 565358387}
   - component: {fileID: 565358388}
   m_Layer: 0
-  m_Name: Bullet Manager
+  m_Name: Pattern Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf3be22ac31d13049b36242aafa55c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BulletPatternSpawner
-  relicEffectSO: {fileID: 11400000, guid: b491dd9f393b2824888baa4c66ccec68, type: 2}
+  relicEffectSO: {fileID: 11400000, guid: f44031b66cfa5704f871f11dab054c29, type: 2}
   bulletWarning: {fileID: 6282215631573761188, guid: 5e9a2be545efea547b1fc6b01e636cbf, type: 3}
 --- !u!1 &666046766
 GameObject:
@@ -951,6 +951,67 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d2592bcd8ab78e44da098a21acfdeeb1, type: 3}
+--- !u!1001 &4441153905816101781
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 8729054413190372679, guid: 27d6d764fc308c24fa964cfc79f6daad, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8729054413190372679, guid: 27d6d764fc308c24fa964cfc79f6daad, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8729054413190372679, guid: 27d6d764fc308c24fa964cfc79f6daad, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8729054413190372679, guid: 27d6d764fc308c24fa964cfc79f6daad, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8729054413190372679, guid: 27d6d764fc308c24fa964cfc79f6daad, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8729054413190372679, guid: 27d6d764fc308c24fa964cfc79f6daad, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8729054413190372679, guid: 27d6d764fc308c24fa964cfc79f6daad, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8729054413190372679, guid: 27d6d764fc308c24fa964cfc79f6daad, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8729054413190372679, guid: 27d6d764fc308c24fa964cfc79f6daad, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8729054413190372679, guid: 27d6d764fc308c24fa964cfc79f6daad, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9070830274694276698, guid: 27d6d764fc308c24fa964cfc79f6daad, type: 3}
+      propertyPath: m_Name
+      value: Bullet Homing
+      objectReference: {fileID: 0}
+    - target: {fileID: 9070830274694276698, guid: 27d6d764fc308c24fa964cfc79f6daad, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 27d6d764fc308c24fa964cfc79f6daad, type: 3}
 --- !u!1001 &4461374115245518612
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1024,4 +1085,5 @@ SceneRoots:
   - {fileID: 1064692799}
   - {fileID: 851483413}
   - {fileID: 209797716420841257}
+  - {fileID: 4441153905816101781}
   - {fileID: 4461374115245518612}
