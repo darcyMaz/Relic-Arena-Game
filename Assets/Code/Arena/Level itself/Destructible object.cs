@@ -90,11 +90,11 @@ public class Destructibleobject : MonoBehaviour
         isShaking = false;
     }
 // when this function is called reduce 1 hp and destroy self if 0, or start coroutine of the shake. Play sound from sound manager
-    private void TakeHit(){
+    public void TakeHit(int amount = 1){
                 SoundManager.Instance.Play(SoundManager.Instance.WallRumble);
 
-         HitPoints -= 1;
-            if (HitPoints == 0)
+         HitPoints -= amount;
+            if (HitPoints <= 0)
         DestroySelf();
         else if (!isShaking){
             StartCoroutine(ShakeNBake());

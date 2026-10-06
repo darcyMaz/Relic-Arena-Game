@@ -8249,8 +8249,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1176490974817153580, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
   m_PrefabInstance: {fileID: 8095061708731486577}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &6880079636797207999
-BoxCollider:
+--- !u!136 &6880079636797207991
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -8267,9 +8267,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.41, y: 1.63, z: 0.19999999}
-  m_Center: {x: 0.000002861023, y: 0, z: 0}
+  serializedVersion: 2
+  m_Radius: 0.85333323
+  m_Height: 1.7066665
+  m_Direction: 1
+  m_Center: {x: 0.0000038146973, y: 0, z: 0}
 --- !u!1001 &8095061708731486577
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8352,7 +8354,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3434011169272234523, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6880079636797207999}
+      addedObject: {fileID: 6880079636797207991}
   m_SourcePrefab: {fileID: 100100000, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
 --- !u!1001 &8536335913484119523
 PrefabInstance:
