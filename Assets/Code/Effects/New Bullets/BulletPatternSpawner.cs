@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -52,13 +53,16 @@ public class BulletPatternSpawner : MonoBehaviour
     //Bullet Manager ready
     private bool bManagerReady = false;
 
+    //Bullet Kill event
+    //public event Action OnPattSpawnerDeath;
+
     #endregion
 
     //Awake was here to test PatternSetup(relicEffectSO)
-    //private void //Awake()
-    //{
-    //    PatternSetup(relicEffectSO);
-    //}
+    private void Awake()
+    {
+        PatternSetup(relicEffectSO);
+    }
 
     private void Update()
     {
@@ -129,7 +133,7 @@ public class BulletPatternSpawner : MonoBehaviour
         else if(spawnType == 1)
         {
             SpawningAOESetup();
-            spawnPoint = new Vector3(Random.Range(minX,maxX), Random.Range(minY, maxY), playerPos.z);
+            spawnPoint = new Vector3(UnityEngine.Random.Range(minX,maxX), UnityEngine.Random.Range(minY, maxY), playerPos.z);
         }
     }
     private void SpawnBulletWarning()

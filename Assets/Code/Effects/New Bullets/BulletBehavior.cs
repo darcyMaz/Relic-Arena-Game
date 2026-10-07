@@ -9,6 +9,8 @@ public class BulletBehavior : MonoBehaviour
     [SerializeField] public RelicEffectSO relicEffectSO;
     public GameObject spawnerRef;
 
+    private bool bSetup = false;
+
     //Bullet Speed
     private float bSpeed = 1f;
 
@@ -48,10 +50,14 @@ public class BulletBehavior : MonoBehaviour
         bScaleX = relicEffectSO.bulletScaleX;
         bScaleY = relicEffectSO.bulletScaleY;
         transform.localScale = new Vector3(bScaleX, bScaleY, 1f);
+
+        //Bullet is setup
+        bSetup = true;
     }
 
     protected virtual void Update()
     {
+        LoseRelicDestoryBullet();
         BulletTimer();
         BulletMove();
     }
@@ -86,6 +92,17 @@ public class BulletBehavior : MonoBehaviour
         {
             // the other collider does NOT have a player component on it
             Debug.Log("Hit not a Player");
+        }
+    }
+
+    private void LoseRelicDestoryBullet()
+    {
+        if (bSetup)
+        {
+            if (spawnerRef == null)
+            {
+                Destroy(this.gameObject);
+            }
         }
     }
 }
