@@ -294,12 +294,20 @@ public class Player : EffectableBase
         // This function is anonymous because the Player should NOT be calling this in the Player script.
         // This script should instead call CancelEffectsOnRelic(Relic) or CancelEffect(Effect)
         _consumeRelicEventFunc = (Relic relic) => 
-        { 
+        {
+            // If this relic has a passive effect gameObject associated with it, destroy it!
+            GameObject passiveGO;
+            if (_passiveEffectGameObjects.TryGetValue(relic, out passiveGO))
+            {
+                Debug.Log("GameObject found and to be destroyed: " + passiveGO.name);
+                Destroy(passiveGO);
+
+                // Remove it from the list.
+                _passiveEffectGameObjects.Remove(relic);
+            }
+
             // Remove the relic from the inventory.
             _inventory.RemoveItem(relic);
-
-            // if it's of the other system, remove its effects
-            _passiveEffectGameObjects.Remove(relic);
 
             // Rebuild the Effect Relic list.
             BuildEffectRelicList(); 
@@ -511,7 +519,7 @@ public class Player : EffectableBase
     /// <summary>
     /// This method runs when a Player is hit. Whether they tank the hit or receive it is determined by this method.
     /// </summary>
-    private void PlayerHit()
+    public void PlayerHit()
     {
         // If the ITimer is running, don't apply the hit.
         if (ITimer > 0)
@@ -746,11 +754,12 @@ public class Player : EffectableBase
     private void ReceiveHit()
     {
         // LOSE ALL RELICS
-        _inventory.Clear();
-        BuildEffectRelicList();
+        ConsumeAllRelics();
 
+        // Set ITimer to ITime.
         ITimer = ITime;
 
+        // Hit animation trigger.
         anim.SetTrigger("GetHit");
     }
 
@@ -1084,8 +1093,22 @@ public class Player : EffectableBase
         // Cancel all effects.
         CancelAllEffects();
 
+        DestroyAllPassiveGOs();
+
         // Rebuild the effect relic list.
         BuildEffectRelicList();
+    }
+
+    /// <summary>
+    /// Method which destroys all passive effect GameObjects active.
+    /// </summary>
+    private void DestroyAllPassiveGOs()
+    {
+        foreach (Relic passiveGOsRelic in _passiveEffectGameObjects.Keys)
+        {
+            Destroy(_passiveEffectGameObjects[passiveGOsRelic]);
+        }
+        _passiveEffectGameObjects.Clear();
     }
 
     private void ExtraLifeTest(int livesLeft)

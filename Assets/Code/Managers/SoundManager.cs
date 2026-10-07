@@ -59,25 +59,12 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void Play (AudioClip clip, float volume = 1f){
-            Debug.Log("Play called with: " + (clip != null ? clip.name : "NULL"), this);
+    public void Play (AudioClip clip, float volume = 1f)
+    {
+        Debug.Log("Play called with: " + (clip != null ? clip.name : "NULL"), this);
 
         if (clip != null)
             _audioSource.PlayOneShot(clip,volume);
     }
 
-
-
-    /**
-     * Todo:
-     * Make the metal detector noises a queue.
-     * So, PlayMetalDetector changes to QueueMetalDetector
-     * If that clip is in the queue, do nothing
-     * Else, Add it to the queue
-     * Every frame:
-     *      Check if something is currently playing
-     *      Check if something is in the queue
-     *      Play or don't play
-     * 
-     */
 }

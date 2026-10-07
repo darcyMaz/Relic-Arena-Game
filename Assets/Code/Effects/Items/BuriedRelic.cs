@@ -80,13 +80,17 @@ public class BuriedRelic : MonoBehaviour
         MetalDetector metalDetector;
         if (other.TryGetComponent(out metalDetector))
         {
-            float volume = 1f - Vector3.Distance(metalDetector.GetDigSpot(), transform.position) / (_sphereCollider.radius * transform.localScale.x);
+            // The volumeFraction is based on the distance from the center of the BuriedRelic radius.
+            // It is the inverse percentage of the distance to the center. So you take the distance to the center, divide by the radius, then inverse the percentage.
+            float volumeFraction = Mathf.Clamp(1f - Vector3.Distance(metalDetector.GetDigSpot(), transform.position) / (_sphereCollider.radius * transform.localScale.x), 0.1f, 1);
+
+            
             // If the gameObject is within the "very close range"
             // Calculate the distance between the Metal Detector's specified dig spot and the center of the buried relic gameobject.
             if (Vector3.Distance(metalDetector.GetDigSpot(), transform.position) <= _actualCloseDistance)
             {
                 // Tell the SoundManager to play the Very Close Sound.
-                SoundManager.Instance.PlayMetalDetector(metalDetector.GetVeryCloseSound(), volume);
+                SoundManager.Instance.PlayMetalDetector(metalDetector.GetVeryCloseSound(), volumeFraction);
 
                 // Instantiate the relic object.
                 Relic relic = new Relic(_relicSO);
@@ -98,7 +102,7 @@ public class BuriedRelic : MonoBehaviour
             else
             {
                 // Tell the SoundManager to play the Near Sound.
-                SoundManager.Instance.PlayMetalDetector(metalDetector.GetCloseSound(), volume);
+                SoundManager.Instance.PlayMetalDetector(metalDetector.GetCloseSound(), volumeFraction);
             }
         }
     }

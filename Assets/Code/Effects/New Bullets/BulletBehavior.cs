@@ -86,12 +86,12 @@ public class BulletBehavior : MonoBehaviour
         if (other.TryGetComponent(out player))
         {
             // the other collider has a player component on it
-            Debug.Log("Hit Player");
+            player.PlayerHit();
         }
         else
         {
             // the other collider does NOT have a player component on it
-            Debug.Log("Hit not a Player");
+            // Debug.Log("Hit not a Player");
         }
     }
 

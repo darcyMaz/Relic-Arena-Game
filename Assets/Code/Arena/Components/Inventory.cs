@@ -5,10 +5,14 @@ using UnityEngine;
 public class Inventory : MonoBehaviour, IEnumerable<Relic>
 {
 
-    // A private list of Items.
+    /// <summary>
+    /// A private list of Items.
+    /// </summary>
     private List<Relic> _inventory = new List<Relic>();
 
-    // An event that informs whoever is listening that the inventory has changed.
+    /// <summary>
+    /// An event that informs whoever is listening that the inventory has changed.
+    /// </summary>
     public event Action<IEnumerator<Relic>> OnInventoryChange;
 
     /// <summary>
