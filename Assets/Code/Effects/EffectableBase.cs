@@ -834,14 +834,23 @@ public abstract class EffectableBase: MonoBehaviour
                         // The X and Y coordinates are randomly within the given area.
                         UnityEngine.Random.Range(transform.position.x - (width / 2), transform.position.x + (width / 2)),
                         UnityEngine.Random.Range(transform.position.y - (height / 2), transform.position.y + (height / 2)),
-                        // The Z coordinate should be the player's plus a little bit.
-                        ArenaManager.Instance.PlayerZPosition - 0.5f
+                        0
                     );
-                    //Debug.Log("strike pos: " + strikeSpot);
 
-                    // spawn in a spawn marker, place it randomly, add it to the list
+                    // Spawn in a spawn marker, place it randomly, add it to the list
                     GameObject currentStrikeMarker = EffectsManager.Instance.GetLightningMarker(strikeSpot);
                     strikeMarkers.Add(currentStrikeMarker);
+                    
+                    // Set the sorting layer.
+                    SpriteRenderer spriteRenderer;
+                    if (currentStrikeMarker.TryGetComponent(out spriteRenderer))
+                    {
+                        spriteRenderer.sortingOrder = 4;
+                    }
+                    else
+                    {
+                        Debug.Log("A strike marker tried to be added but its SpriteRenderer did not exist.");
+                    }
 
                     // At the end of each iteration, check if it's cancelled
                     if (token.IsCancellationRequested)
