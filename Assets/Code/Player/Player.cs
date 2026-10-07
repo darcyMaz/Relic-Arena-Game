@@ -763,21 +763,10 @@ public class Player : EffectableBase
     /// <param name="target"> The target of the Effect as an int representing the player number. </param>
     private void ReceiveActiveEffect(Effect activeEffect, string effectDetails, int source, int target)
     {
-        
-        // Check whether this player is accepting this Effect.
-        bool wasEffectAdded = false;
         if (target == PlayerNumber)
         {
             // Apply the Effect.
-            wasEffectAdded = ApplyActiveEffect(activeEffect, effectDetails);
-
-            //Debug.Log("Active Effect " + activeEffect + " Received on Player #" + PlayerNumber);
-
-        }
-
-        if (wasEffectAdded)
-        {
-            //Debug.Log("The Active Effect " + activeEffect + " was potentially added to the player #" + target + " from the player #" + source);
+            ApplyActiveEffect(activeEffect, effectDetails);
         }
     }
 
@@ -798,7 +787,7 @@ public class Player : EffectableBase
         // Get the relic in hand.
         relicInHand = _inventory.GetRelicAt(_relicInHandIndex);
 
-        Debug.Log("Launch press func ~ relic in hand index: " + _relicInHandIndex + " relic name: " + relicInHand.GetName() + " player #: " + PlayerNumber);
+        // Debug.Log("Launch press func ~ relic in hand index: " + _relicInHandIndex + " relic name: " + relicInHand.GetName() + " player #: " + PlayerNumber);
 
         // Check if the relic in hand is actually an effect relic (it should be anyway).
         if (!IsEffectRelic(relicInHand))
@@ -1101,6 +1090,6 @@ public class Player : EffectableBase
 
     private void ExtraLifeTest(int livesLeft)
     {
-        Debug.Log("Lives left: " + livesLeft);
+        // Debug.Log("Lives left: " + livesLeft);
     }
 }
