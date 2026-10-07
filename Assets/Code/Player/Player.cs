@@ -798,7 +798,7 @@ public class Player : EffectableBase
         // Get the relic in hand.
         relicInHand = _inventory.GetRelicAt(_relicInHandIndex);
 
-        Debug.Log("Launch press func ~ relic in hand index: " + _relicInHandIndex + " relic name: " + relicInHand.GetName());
+        Debug.Log("Launch press func ~ relic in hand index: " + _relicInHandIndex + " relic name: " + relicInHand.GetName() + " player #: " + PlayerNumber);
 
         // Check if the relic in hand is actually an effect relic (it should be anyway).
         if (!IsEffectRelic(relicInHand))

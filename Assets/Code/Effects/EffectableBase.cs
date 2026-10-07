@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 // Note on compressing this class:
 //      The formatDict could be changed to lambda funcs
@@ -59,6 +60,11 @@ public abstract class EffectableBase: MonoBehaviour
     /// Dictionary mapping LaunchTypes to their functions.
     /// </summary>
     private Dictionary<LaunchType, Action<Effect, string>> _launchTypeFuncs = new Dictionary<LaunchType, Action<Effect, string>>();
+
+    /// <summary>
+    /// Boolean which locks the start of an async effect.
+    /// </summary>
+    private bool _effectStartLock = false;
 
     /// <summary>
     /// Method that runs on Awake.
@@ -277,6 +283,7 @@ public abstract class EffectableBase: MonoBehaviour
                     // Remove this Effect from the dictionary.
                     _passiveEffects.Remove(effect);
 
+                    Debug.Log("CancelEffectsOnRelic: effect being cancelled");
                     // Cancel the Effect.
                     CancelEffect(effect);
                 }
@@ -295,6 +302,9 @@ public abstract class EffectableBase: MonoBehaviour
     /// <param name="effect"> The Effect to cancel. </param>
     private void CancelEffect(Effect effect)
     {
+        // Before cancelling the Effect, lock others from starting.
+        LockEffectStart();
+
         // Try to get the cancellation token.
         CancellationTokenSource cts;
         if (_effectsCancellationTokens.TryGetValue(effect, out cts))
@@ -314,17 +324,47 @@ public abstract class EffectableBase: MonoBehaviour
         {
             _activeEffects.Remove(effect);
         }
+
+        // Unlock the ability to start an effect.
+        UnlockEffectStart();
     }
 
-    /*
     /// <summary>
-    /// Method which, upon implementing in child classes, allows for IEffectables to receive Active effects.
+    /// Method which locks the _effectStartLock.
     /// </summary>
-    /// <param name="activeEffect"> The active Effect being applied. </param>
-    /// <param name="effectDetails"> The details of the Effect as a string. </param>
-    /// <param name="receiveDetails"> The details relating to receiving the Effect. </param>
-    protected abstract void ReceiveActiveEffect(Effect activeEffect, string effectDetails);
-    */
+    private void LockEffectStart()
+    {
+        _effectStartLock = true;
+    }
+
+    /// <summary>
+    /// Method which unlocks the _effectStartLock.
+    /// </summary>
+    private void UnlockEffectStart()
+    {
+        _effectStartLock = false;
+    }
+
+    /// <summary>
+    /// Method which checks whether the _effectStartLock is active and waits for it to deactivate.
+    /// </summary>
+    private async void LockCheck()
+    {
+        Debug.Log("Start of lock check");
+        int howLongCheck = 0;
+        while (_effectStartLock)
+        {
+            Debug.Log("Lock check running!");
+
+            howLongCheck += 50;
+            if (howLongCheck > 5000)
+            {
+                Debug.Log("The LockCheck in EffectableBase has been running for more than 5 seconds. This is not good!");
+            }
+
+            await Task.Delay(50);
+        }
+    }
 
     /// <summary>
     /// This method is called by those seeking to apply active Effects to this EffectableBase. 
@@ -384,6 +424,11 @@ public abstract class EffectableBase: MonoBehaviour
     /// <param name="relic"> The Relic related to the Effect. </param>
     private void RunEffectAction(Effect effect, string effectDetails, Relic relic)
     {
+        Debug.Log("Before lock check");
+        // If the effect start lock is active, then wait before running the effect.
+        LockCheck();
+        Debug.Log("After lock check");
+
         // Try to get a cancellation token source for the effect at hand.
         CancellationTokenSource cancellationTokenSource;
         // Try to get the effect function for the effect at hand.
@@ -542,6 +587,8 @@ public abstract class EffectableBase: MonoBehaviour
             LogFormatException(fe, currentEffect);
         }
 
+        // Mutex lock on
+
         // If this is a passive Effect related to a Relic.
         if (thisRelic != null) CancelEffectsOnRelic(thisRelic);
         // Else if there is no relic associated with this effect, then this is an active Effect. Cancel it directly.
@@ -686,6 +733,8 @@ public abstract class EffectableBase: MonoBehaviour
     /// <param name="token"> The cancellation token for the Effect. </param>
     private async void LightningForray(string details, Effect currentEffect, Relic thisRelic, CancellationToken token)
     {
+        Debug.Log("Start of lightning forray, is token true? " + token.IsCancellationRequested);
+
         // Ensure the format is correct for this effect.
         try
         {
@@ -770,7 +819,10 @@ public abstract class EffectableBase: MonoBehaviour
 
         // Cancel all effects related to this relic when this one is complete.
         // Effects associated with a different relic will not be cancelled.
-        if (thisRelic != null) CancelEffectsOnRelic(thisRelic);
+        if (thisRelic != null)
+        {
+            CancelEffectsOnRelic(thisRelic);
+        }
         // Else if there is no relic associated with this effect, then this is an active Effect. Cancel it directly.
         else CancelEffect(currentEffect);
     }
