@@ -39,7 +39,7 @@ public class SoundManager : MonoBehaviour
     /// Plays metal detector noises.
     /// </summary>
     /// <param name="audioClip"> The audio clip to play. </param>
-    public async void PlayMetalDetector(AudioClip audioClip)
+    public async void PlayMetalDetector(AudioClip audioClip, float volume)
     {
         // If this audio clip is not in the ongoingMetalDetector list, then it is not already playing.
         if (!_ongoingMetalDetectors.Contains(audioClip))
@@ -51,7 +51,7 @@ public class SoundManager : MonoBehaviour
             int audioClipDuration = (int) audioClip.length * 1000;
 
             // PLAY the audio clip.
-            _audioSource.PlayOneShot(audioClip);
+            _audioSource.PlayOneShot(audioClip, volume);
 
             await Task.Delay(audioClipDuration);
 
