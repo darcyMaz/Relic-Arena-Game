@@ -55,10 +55,10 @@ public class BulletPatternSpawner : MonoBehaviour
     #endregion
 
     //Awake was here to test PatternSetup(relicEffectSO)
-    private void Awake()
-    {
-        PatternSetup(relicEffectSO);
-    }
+    //private void //Awake()
+    //{
+    //    PatternSetup(relicEffectSO);
+    //}
 
     private void Update()
     {
