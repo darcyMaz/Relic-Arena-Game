@@ -23,6 +23,10 @@ public class BulletBehavior : MonoBehaviour
     private float bRotateZ = 0f;
     public Vector3 moveDirection = Vector3.right;
 
+    //Bullet Scale
+    private float bScaleX = 1f;
+    private float bScaleY = 1f;
+
     #endregion
 
     private void Awake()
@@ -41,6 +45,9 @@ public class BulletBehavior : MonoBehaviour
         bLifespan = relicEffectSO.bulletLifespan;
         bRotateZ = relicEffectSO.bulletRotationZ;
 
+        bScaleX = relicEffectSO.bulletScaleX;
+        bScaleY = relicEffectSO.bulletScaleY;
+        transform.localScale = new Vector3(bScaleX, bScaleY, 1f);
     }
 
     protected virtual void Update()

@@ -13,6 +13,7 @@ public class RelicEffectSO : ScriptableObject
     // 0 = Set Spawn Locations List
     // 1 = Spawning AOE
     #endregion
+    //CURRENTLY NOT USED
     public List<Vector3> spawnLocationList;
     public float spawnAOEHalfX = 2;
     public float spawnAOEHalfY = 2;
@@ -25,7 +26,6 @@ public class RelicEffectSO : ScriptableObject
     public float bulletSpeed = 1f;
     public float bulletLifespan = 5f;
     [Space]
-    //CURRENTLY NOT USED
     public float bulletScaleX = 1f;
     public float bulletScaleY = 1f;
     [Space]

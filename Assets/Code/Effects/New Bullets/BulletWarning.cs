@@ -18,6 +18,9 @@ public class BulletWarning : MonoBehaviour
     private float bWarnLifespan = 5f;
     private float timer = 0f;
 
+    private float bScaleX = 1f;
+    private float bScaleY = 1f;
+
     private void Update()
     {
         WarningTimer();
@@ -31,6 +34,10 @@ public class BulletWarning : MonoBehaviour
         bSpeed = relicEffectSO.bulletSpeed;
         bRotation = relicEffectSO.bulletRotationZ;
         bWarnLifespan = relicEffectSO.warnBulletLifespan;
+
+        bScaleX = relicEffectSO.bulletScaleX;
+        bScaleY = relicEffectSO.bulletScaleY;
+        transform.localScale = new Vector3(bScaleX, bScaleY, 1f);
 
         warnPos = this.transform.position;
         WarningArrowRotation();
@@ -46,6 +53,7 @@ public class BulletWarning : MonoBehaviour
         {
             warnArrow.SetActive(true);
         }
+        //**to be updated if homing
         transform.rotation = Quaternion.Euler(0f, 0f, bRotation);
     }
 
