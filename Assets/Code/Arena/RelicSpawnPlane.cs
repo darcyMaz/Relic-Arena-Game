@@ -102,6 +102,12 @@ public class RelicSpawnPlane : MonoBehaviour
         // Organize them into Effect and No Effect lists.
         foreach (RelicSO RelicSO in RelicSOs)
         {
+            if (RelicSO.GetOtherSystemSO() != null)
+            {
+                _relicSOsEffect.Add(RelicSO);
+                continue;
+            }
+
             // If this relic has at least one Effect that is not the None effect.
             int notNoneEffectCount = 0;
             foreach (Effect effect in RelicSO.GetPassiveEffects())
@@ -112,7 +118,7 @@ public class RelicSpawnPlane : MonoBehaviour
                 }
             }
 
-            //  das  
+            // 
             if (notNoneEffectCount > 0)
             {
                 _relicSOsEffect.Add(RelicSO);

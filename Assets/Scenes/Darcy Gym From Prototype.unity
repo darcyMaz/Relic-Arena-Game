@@ -2107,7 +2107,7 @@ MonoBehaviour:
   IsGameActive: 1
   GridRows: 10
   GridColumns: 10
-  EffectRelicSOSpawnRate: 0.8
+  EffectRelicSOSpawnRate: 0.7
   MaxRelicsBuried: 10
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
 --- !u!64 &1926875181

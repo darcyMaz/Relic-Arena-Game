@@ -977,8 +977,7 @@ public class Player : EffectableBase
     private void AddRelicToInventory(Relic relic)
     {
         
-        // Is this relic of the other effect system?
-        // spawn in the thing
+        // Is this relic of the other effect system? Spawn in the gameObject.
         if (relic.UsesOtherSystem)
         {
             GameObject spawnerGO = EffectsManager.Instance.GetBulletPatternSpawner(transform);
