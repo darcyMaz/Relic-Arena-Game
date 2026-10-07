@@ -42,6 +42,10 @@ public class BulletWarning : MonoBehaviour
         {
             warnArrow.SetActive(false);
         }
+        else
+        {
+            warnArrow.SetActive(true);
+        }
         transform.rotation = Quaternion.Euler(0f, 0f, bRotation);
     }
 

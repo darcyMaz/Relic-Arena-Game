@@ -25,11 +25,13 @@ public class RelicEffectSO : ScriptableObject
     public float bulletSpeed = 1f;
     public float bulletLifespan = 5f;
     [Space]
+    //CURRENTLY NOT USED
     public float bulletScaleX = 1f;
     public float bulletScaleY = 1f;
     [Space]
     public int rotationType = 1;
     #region Rotation Type Legend
+    //CURRENTLY NOT USED
     // 0 = Set Rotation for all Bullets
     // 1 = Rotation follow Player when aiming
     // 2 = Rotation follow Player constant

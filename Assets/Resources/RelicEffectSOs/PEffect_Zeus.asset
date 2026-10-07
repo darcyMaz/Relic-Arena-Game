@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9808736d6dcecd3469fd62e2a894a2a5, type: 3}
+  m_Name: PEffect_Zeus
+  m_EditorClassIdentifier: Assembly-CSharp::RelicEffectSO
+  numberOfBullets: 5
+  spawnType: 1
+  spawnLocationList: []
+  spawnAOEHalfX: 1.5
+  spawnAOEHalfY: 1.5
+  b2bCooldown: 0.5
+  p2pCooldown: 2
+  bulletPrefab: {fileID: 7221345284844433121, guid: d2592bcd8ab78e44da098a21acfdeeb1, type: 3}
+  bulletSpeed: 0
+  bulletLifespan: 0.3
+  bulletScaleX: 1
+  bulletScaleY: 1
+  rotationType: 1
+  bulletRotationZ: 0
+  bulletRotationRate: 0.001
+  warnBulletLifespan: 2
