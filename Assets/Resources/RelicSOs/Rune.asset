@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RelicSO
   Name: Rune
   Sprite: {fileID: -1946452170747395511, guid: a911675aa60b6fe49a7966493877aae9, type: 3}
-  Price: 1
+  Price: 50
+  OtherSystemSO: {fileID: 0}
   ActiveEffect: 0
   ActiveEffectDetails: 
   LaunchType: 3

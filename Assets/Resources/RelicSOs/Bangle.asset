@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RelicSO
   Name: Coin
   Sprite: {fileID: 8934923459016888124, guid: 7aa7f1ee0697bcd42870d784768c615d, type: 3}
-  Price: 100
+  Price: 50
+  OtherSystemSO: {fileID: 0}
   ActiveEffect: 0
   ActiveEffectDetails: 
   LaunchType: 3

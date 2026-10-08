@@ -1074,6 +1074,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -3643493362074131656, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
+      propertyPath: relicSpacing
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 241768571983204239, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
       propertyPath: BaseSpeed
       value: 300

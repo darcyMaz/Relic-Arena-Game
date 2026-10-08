@@ -17,6 +17,11 @@ public class RelicStack : MonoBehaviour
     /// </summary>
     [SerializeField] private GameObject _relicPreFab;
 
+    ///<summary>
+    /// Relic per relic spacing distance in Stack
+    /// </summary>
+    [SerializeField] private float relicSpacing = 2;
+
     /// <summary>
     /// The list of relics that are displayed on the player's head.
     /// </summary>
@@ -60,7 +65,7 @@ public class RelicStack : MonoBehaviour
             GameObject go = Instantiate(_relicPreFab, transform);
             
             //Offset the stacking relic
-            go.transform.position = new Vector3(transform.position.x, transform.position.y + (2 * i), transform.position.z);
+            go.transform.position = new Vector3(transform.position.x, transform.position.y + (relicSpacing * i), transform.position.z);
             
             // Change the sprite to reflect the relic's sprite.
             SpriteRenderer _spriteRenderer = go.GetComponent<SpriteRenderer>();
