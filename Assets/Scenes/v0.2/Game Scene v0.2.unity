@@ -2428,6 +2428,18 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: -2
       objectReference: {fileID: 0}
+    - target: {fileID: 8249329119484884282, guid: 89f7cd951031acf4895178f11adefb32, type: 3}
+      propertyPath: _playerSellTimes.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8249329119484884282, guid: 89f7cd951031acf4895178f11adefb32, type: 3}
+      propertyPath: '_playerSellTimes.Array.data[0]'
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8249329119484884282, guid: 89f7cd951031acf4895178f11adefb32, type: 3}
+      propertyPath: '_playerSellTimes.Array.data[1]'
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
