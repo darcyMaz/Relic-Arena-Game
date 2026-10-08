@@ -257,8 +257,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c3dfcbe25a9264ab1803075b08ca4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RelicSpawnPlane
+  IsGameActive: 1
   GridRows: 4
   GridColumns: 3
+  EffectRelicSOSpawnRate: 0.5
   MaxRelicsBuried: 1
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
 --- !u!64 &13152609
@@ -1124,10 +1126,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4666927630188493696, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
-      propertyPath: ITime
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -1473,9 +1471,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c3dfcbe25a9264ab1803075b08ca4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RelicSpawnPlane
+  IsGameActive: 1
   GridRows: 9
   GridColumns: 6
-  MaxRelicsBuried: 3
+  EffectRelicSOSpawnRate: 0.5
+  MaxRelicsBuried: 1
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
 --- !u!64 &1123177428
 MeshCollider:
@@ -2636,8 +2636,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c3dfcbe25a9264ab1803075b08ca4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RelicSpawnPlane
+  IsGameActive: 1
   GridRows: 4
   GridColumns: 3
+  EffectRelicSOSpawnRate: 0.5
   MaxRelicsBuried: 1
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
 --- !u!64 &1892454080
@@ -2819,7 +2821,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1977921948}
-  - component: {fileID: 1977921949}
   m_Layer: 0
   m_Name: Spawn Planes
   m_TagString: Untagged
@@ -2845,23 +2846,6 @@ Transform:
   - {fileID: 1892454078}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1977921949
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1977921947}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b51c1887d14c69e4db38683393fbdafd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ArenaManager
-  MaxRelicsInGame: 5
-  MinRelicSpawnDelay: 2000
-  UpperBoundRelicSpawnDelay: 500
-  EffectRelicSOSpawnRate: 0.5
-  IsGameActive: 1
 --- !u!1 &2034676461
 GameObject:
   m_ObjectHideFlags: 0
@@ -3005,10 +2989,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2953285023961512080, guid: b2389981ec2ebd740bd36b4d6defa673, type: 3}
-      propertyPath: _closeSound
-      value: 
-      objectReference: {fileID: 8300000, guid: 7c17dc39e29f730438eb7ebd78bf3f02, type: 3}
     - target: {fileID: 8205348096973775290, guid: b2389981ec2ebd740bd36b4d6defa673, type: 3}
       propertyPath: m_Name
       value: Player 2

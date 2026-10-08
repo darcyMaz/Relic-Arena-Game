@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -9,11 +11,6 @@ using UnityEngine;
 [RequireComponent (typeof(Renderer))]
 public class RelicSpawnPlane : MonoBehaviour
 {
-    /// <summary>
-    /// Boolean that determines whether relics will be buried or whether the game is done.
-    /// </summary>
-    [SerializeField] private bool IsGameActive = true;
-
     /// <summary>
     /// Rows in the arena grid. The grid represents where relics are buried.
     /// Where the Row/X coordinate starts counting from the top at 1.
@@ -25,21 +22,6 @@ public class RelicSpawnPlane : MonoBehaviour
     /// Where the Column/Z coordinate starts counting from the left at 1.
     /// </summary>
     [SerializeField] private int GridColumns = 10;
-
-    /// <summary>
-    /// All RelicSOs with no effect.
-    /// </summary>
-    private List<RelicSO> _relicSOs = new List<RelicSO>();
-
-    /// <summary>
-    /// All RelicSOs with an effect.
-    /// </summary>
-    private List<RelicSO> _relicSOsEffect = new List<RelicSO>();
-
-    /// <summary>
-    /// Spawn rate of Relics with effects.
-    /// </summary>
-    [SerializeField] private float EffectRelicSOSpawnRate = 0.01f;
 
     /// <summary>
     /// Maximum number of Relics that can be buried at a time.
@@ -62,6 +44,11 @@ public class RelicSpawnPlane : MonoBehaviour
     private Renderer _renderer;
 
     /// <summary>
+    /// Bool which indicates whether the ArenaManager instance has not been found OnEnable.
+    /// </summary>
+    private bool _arenaInstanceNotFound = false;
+
+    /// <summary>
     /// Function called before the game starts.
     /// </summary>
     private void Awake()
@@ -74,59 +61,45 @@ public class RelicSpawnPlane : MonoBehaviour
     /// </summary>
     private void InitAwake()
     {
-        GetRelicSOs();
+        // Checks to see if the plane's arena size is valid.
         CheckArenaSize();
-        _renderer = GetComponent<Renderer>();
+
+        // Gets the renderer.
+        _renderer = GetComponent<Renderer>();   
     }
 
-    /// <summary>
-    /// Runs every frame. It checks to see whether relics need to be buried.
-    /// </summary>
-    private void Update()
+    private void OnEnable()
     {
-        // Check whether the number of relics is too low.
-        if (_buriedRelics.Count < MaxRelicsBuried && IsGameActive)
+        EventSubscriptions();
+    }
+
+    private void OnDisable()
+    {
+        EventUnsubscriptions();
+    }
+
+    private void EventSubscriptions()
+    {
+        if (ArenaManager.Instance != null)
         {
-            BuryRelic();
+            ArenaManager.Instance.OnGameActivation += GameActivation;
+        }
+        else
+        {
+            _arenaInstanceNotFound = true;
         }
     }
 
-    /// <summary>
-    /// Get all RelicSOs from the resource folder.
-    /// </summary>
-    private void GetRelicSOs()
+    private void EventUnsubscriptions()
     {
-        // Grab the RelicSOs from the resources folder.
-        RelicSO[] RelicSOs = Resources.LoadAll<RelicSO>("RelicSOs");
+        ArenaManager.Instance.OnGameActivation -= GameActivation;
+    }
 
-        // Organize them into Effect and No Effect lists.
-        foreach (RelicSO RelicSO in RelicSOs)
+    private void Start()
+    {
+        if (_arenaInstanceNotFound)
         {
-            if (RelicSO.GetOtherSystemSO() != null)
-            {
-                _relicSOsEffect.Add(RelicSO);
-                continue;
-            }
-
-            // If this relic has at least one Effect that is not the None effect.
-            int notNoneEffectCount = 0;
-            foreach (Effect effect in RelicSO.GetPassiveEffects())
-            {
-                if (effect != Effect.None)
-                {
-                    notNoneEffectCount++;
-                }
-            }
-
-            // 
-            if (notNoneEffectCount > 0)
-            {
-                _relicSOsEffect.Add(RelicSO);
-            }
-            else
-            {
-                _relicSOs.Add(RelicSO);
-            }
+            ArenaManager.Instance.OnGameActivation += GameActivation;
         }
     }
 
@@ -142,7 +115,7 @@ public class RelicSpawnPlane : MonoBehaviour
     /// <summary>
     /// Instantiate a BuriedRelic, set its Relic to a randomly chosen one, and then bury it at a grid position.
     /// </summary>
-    private void BuryRelic()
+    public async void BuryRelic(RelicSO relicToBury, int delay)
     {
         // Generate a random coordinate position for the relic.
         Vector2 randomCoord = GenerateCoords();
@@ -151,21 +124,30 @@ public class RelicSpawnPlane : MonoBehaviour
             Debug.Log("The RelicSpawnPlane tried to bury a relic but there were no available arena coordinates to bury it in.");
             return;
         }
-
-        ////Debug.Log("Coord successfully generated: " + randomCoord);
-
         // Translate the coordinates to a position in world space.
         Vector3 relicPosition = CoordToPosition(randomCoord);
 
-        //Debug.Log("World position of generated coord: " + (relicPosition+transform.position));
-
         // Clone a new BuriedRelic and give it a random RelicSO.
-        GameObject buriedRelicClone = InstantiateBuriedRelic(GetRandomRelicSO(), relicPosition, randomCoord);
+        GameObject buriedRelicClone = InstantiateBuriedRelic(relicToBury, relicPosition, randomCoord);
+
+        // Deactivate the GameObject so that players can't interact with it.
+        buriedRelicClone.SetActive(false);
 
         // Finally, add the BuriedRelic to the list.
         AddBuriedRelicToList(buriedRelicClone, randomCoord);
+
+        // Wait before activating the buried relic.
+        await Task.Delay(delay);
+
+        // Activate the BuriedRelic after a delay.
+        buriedRelicClone.SetActive(true);
     }
 
+    /// <summary>
+    /// Method which adds a buried relic to the Dictionary of buried relics.
+    /// </summary>
+    /// <param name="goBuriedRelic"> The GameObject representing the buried relic at hand. </param>
+    /// <param name="coords"> The Vector2 coordinates that are mapped to buried relics. </param>
     private void AddBuriedRelicToList(GameObject goBuriedRelic, Vector2 coords)
     {
         BuriedRelic buriedRelic;
@@ -176,30 +158,6 @@ public class RelicSpawnPlane : MonoBehaviour
         else
         {
             Debug.Log("The RelicSpawnPlane tried to add a BuriedRelic to its respective dictionary. However, the cloned gameObject did not have the component.");
-        }
-    }
-
-    /// <summary>
-    /// Randomly select a RelicSO from the lists of RelicSOs.
-    /// </summary>
-    /// <returns> A RelicSO at random. </returns>
-    private RelicSO GetRandomRelicSO()
-    {
-        // Randomly enerate a float in the range from 0 to 1.
-        float rand = UnityEngine.Random.Range(0f, 1f);
-        int randIndex;
-
-        // If the float is higher than the effect relic spawn rate, return a normal relic.
-        if (rand > EffectRelicSOSpawnRate)
-        {
-            randIndex = UnityEngine.Random.Range(0, _relicSOs.Count);
-            return _relicSOs[randIndex];
-        }
-        // If the float is lower, return an effect relic.
-        else
-        {
-            randIndex = UnityEngine.Random.Range(0, _relicSOsEffect.Count);
-            return _relicSOsEffect[randIndex];
         }
     }
 
@@ -242,12 +200,8 @@ public class RelicSpawnPlane : MonoBehaviour
         // Get the size of the arena.
         Vector3 size = _renderer.bounds.size;
 
-        //Debug.Log("Renderer size: " + size);
-
         // Build the position vector.
         Vector3 position = new Vector3(GetXPosFromCoord((int)coord.x, size.x), GetZPosFromCoord((int)coord.y, size.y), transform.position.z);
-
-        //Debug.Log("Local position of generated coord: " + position);
 
         // Return the coordinate also adding the transform.position as the derived coordinate is a local position.
         return position;
@@ -315,20 +269,52 @@ public class RelicSpawnPlane : MonoBehaviour
     }
 
     /// <summary>
-    /// This function checks if a coordinate is inside of the shop.
+    /// Method which removes a relic based on a given coordinate.
     /// </summary>
-    /// <returns></returns>
-    private bool IsCoordInShop()
-    {
-        // Access the shops transform
-        // compare the coordination's position to the range representing the shop's area
-        // return
-
-        return false;
-    }
-
+    /// <param name="coords"></param>
     private void RemoveRelic(Vector2 coords)
     {
         _buriedRelics.Remove(coords);
+    }
+
+    private void GameActivation(bool onOrOff)
+    {
+        if (!onOrOff)
+        {
+            // Delete all relics.
+            DeleteRelics();
+        }
+    }
+
+    /// <summary>
+    /// Delete all buried relics.
+    /// </summary>
+    private void DeleteRelics()
+    {
+        // For each buried relic, destroy the game object.
+        foreach (Vector2 relicCoord in _buriedRelics.Keys)
+        {
+            Destroy(_buriedRelics[relicCoord]);
+        }
+        // Clear the list.
+        _buriedRelics.Clear();
+    }
+
+    /// <summary>
+    /// Method which returns the number of buried relics.
+    /// </summary>
+    /// <returns> An int representing the number of buried relics. </returns>
+    public int GetTotalRelicsBuried()
+    {
+        return _buriedRelics.Count;
+    }
+
+    /// <summary>
+    /// Method which returns the maximum number of buried relics for this plane.
+    /// </summary>
+    /// <returns> An int representing the max number of buried relics allowed. </returns>
+    public int GetBuriedRelicMax()
+    {
+        return MaxRelicsBuried;
     }
 }
