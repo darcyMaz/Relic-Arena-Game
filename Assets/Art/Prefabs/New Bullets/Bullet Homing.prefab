@@ -82,7 +82,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 51
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2346302928887187388, guid: e96e17b65e394434f9a94cd0770099dd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -109,7 +109,6 @@ MonoBehaviour:
   rb: {fileID: 6454359098353540016}
   relicEffectSO: {fileID: 0}
   spawnerRef: {fileID: 0}
-  bRotateZ: 0
   moveDirection: {x: 1, y: 0, z: 0}
   turnRate: 0.001
 --- !u!54 &6454359098353540016

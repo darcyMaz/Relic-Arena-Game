@@ -172,7 +172,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 50
   m_MaskInteraction: 0
   m_Sprite: {fileID: -5790826046203263574, guid: 286aa340c851bd946b96af0b73e83432, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -198,4 +198,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BulletWarning
   relicEffectSO: {fileID: 0}
   warnArrow: {fileID: 4120188542815399265}
-  bullet: {fileID: 7221345284844433121, guid: d2592bcd8ab78e44da098a21acfdeeb1, type: 3}
