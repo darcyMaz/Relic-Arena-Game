@@ -105,7 +105,7 @@ public class ScoreManager : MonoBehaviour
     {
         RoundTimer -= Time.deltaTime;
         UIManager.Instance.CallTimerUpdate((int)RoundTimer);
-        if (RoundTimer < 0f)
+        if (RoundTimer <= 0f)
         {
             EndOfRoundSequence();
         }
