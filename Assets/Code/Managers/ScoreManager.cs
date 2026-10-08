@@ -139,10 +139,12 @@ public class ScoreManager : MonoBehaviour
             (Player2RoundsWon > 1 && Player2RoundsWon > Player1RoundsWon)||
             (Player1RoundsWon == 2 && Player2RoundsWon == 2))
         {
+            Debug.Log("Game Over");
             UIManager.Instance.DeclareGameWinner(PlayerNum);
         }
         else
         {
+            Debug.Log("Round over");
             UIManager.Instance.DeclareRoundWinner(PlayerNum);
         }
         
