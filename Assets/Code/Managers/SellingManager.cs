@@ -143,7 +143,7 @@ public class SellingManager : MonoBehaviour
     /// <returns> Whether it is valid as a bool. </returns>
     private bool IsValidPlayer(int playerNum)
     {
-        if (playerNum >= _playerSellTimes.Count || playerNum < 1)
+        if (playerNum > _playerSellTimes.Count || playerNum < 1)
         {
             Debug.LogError("A Player entered the SellingManager's zone but its Player Number was invalid (less then 1 or greater than the size of the _playerSellTimes list).");
             return false;

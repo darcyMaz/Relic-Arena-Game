@@ -260,7 +260,7 @@ MonoBehaviour:
   IsGameActive: 1
   GridRows: 4
   GridColumns: 3
-  EffectRelicSOSpawnRate: 0.05
+  EffectRelicSOSpawnRate: 0.5
   MaxRelicsBuried: 1
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
 --- !u!64 &13152609
@@ -1084,7 +1084,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1176490974817153580, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.33
+      value: -6.07
       objectReference: {fileID: 0}
     - target: {fileID: 1176490974817153580, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1474,7 +1474,7 @@ MonoBehaviour:
   IsGameActive: 1
   GridRows: 9
   GridColumns: 6
-  EffectRelicSOSpawnRate: 0.05
+  EffectRelicSOSpawnRate: 0.5
   MaxRelicsBuried: 1
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
 --- !u!64 &1123177428
@@ -2639,7 +2639,7 @@ MonoBehaviour:
   IsGameActive: 1
   GridRows: 4
   GridColumns: 3
-  EffectRelicSOSpawnRate: 0.05
+  EffectRelicSOSpawnRate: 0.5
   MaxRelicsBuried: 1
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
 --- !u!64 &1892454080
@@ -2951,11 +2951,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2123146792292669178, guid: b2389981ec2ebd740bd36b4d6defa673, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.56
+      value: 3.55
       objectReference: {fileID: 0}
     - target: {fileID: 2123146792292669178, guid: b2389981ec2ebd740bd36b4d6defa673, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.13
+      value: -2.86
       objectReference: {fileID: 0}
     - target: {fileID: 2123146792292669178, guid: b2389981ec2ebd740bd36b4d6defa673, type: 3}
       propertyPath: m_LocalPosition.z

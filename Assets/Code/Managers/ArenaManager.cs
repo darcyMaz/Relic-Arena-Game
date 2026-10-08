@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class ArenaManager : MonoBehaviour
 {
@@ -20,7 +21,15 @@ public class ArenaManager : MonoBehaviour
     //   i leave that in the relic spawners
     //   this is the way to make the spawning more versatile
 
+    /// <summary>
+    /// Singleton instance of ArenaManager.
+    /// </summary>
     public static ArenaManager Instance { get; private set; }
+
+    /// <summary>
+    /// Event which informs others, plane spawners in particular, whether the game is active.
+    /// </summary>
+    public event Action<bool> OnGameActivation;
 
     /// <summary>
     /// List of all of the spawn planes in the ArenaManager.
@@ -33,6 +42,7 @@ public class ArenaManager : MonoBehaviour
     public bool IsGameActive { get; private set; }
 
     
+
     /// <summary>
     /// Method called on awake.
     /// </summary>
@@ -110,6 +120,8 @@ public class ArenaManager : MonoBehaviour
                 // turn off spawner
             }
         }
+
+
         // Remove all relics and stop spawning more.
         else if (!isGameActive && IsGameActive)
         {
