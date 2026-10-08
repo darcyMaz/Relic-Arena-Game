@@ -65,7 +65,7 @@ public class RelicStack : MonoBehaviour
             GameObject go = Instantiate(_relicPreFab, transform);
             
             //Offset the stacking relic
-            go.transform.position = new Vector3(transform.position.x, transform.position.y + (relicSpacing * i), transform.position.z);
+            go.transform.position = new Vector3(transform.position.x, transform.position.y + (relicSpacing * i) + 0.5f, transform.position.z);
             
             // Change the sprite to reflect the relic's sprite.
             SpriteRenderer _spriteRenderer = go.GetComponent<SpriteRenderer>();
