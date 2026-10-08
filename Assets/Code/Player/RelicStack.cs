@@ -20,7 +20,7 @@ public class RelicStack : MonoBehaviour
     ///<summary>
     /// Relic per relic spacing distance in Stack
     /// </summary>
-    [SerializeField] private float relicSpacing = 2;
+    [SerializeField] private float relicSpacing = 0.5f;
 
     /// <summary>
     /// The list of relics that are displayed on the player's head.
