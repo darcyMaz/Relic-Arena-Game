@@ -24,7 +24,7 @@ MonoBehaviour:
   bulletLifespan: 0.3
   bulletScaleX: 1
   bulletScaleY: 1
-  rotationType: 1
+  rotationType: 0
   bulletRotationZ: 0
   bulletRotationRate: 0.001
   warnBulletLifespan: 2

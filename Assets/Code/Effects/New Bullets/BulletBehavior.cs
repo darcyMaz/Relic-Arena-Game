@@ -23,7 +23,8 @@ public class BulletBehavior : MonoBehaviour
 
     //Bullet Rotation
     private float bRotateZ = 0f;
-    public Vector3 moveDirection = Vector3.right;
+    private Quaternion bRotation = Quaternion.Euler(0f, 0f, 0f);
+    public Vector3 moveDirection;
 
     //Bullet Scale
     private float bScaleX = 1f;
@@ -46,6 +47,7 @@ public class BulletBehavior : MonoBehaviour
         bSpeed = relicEffectSO.bulletSpeed;
         bLifespan = relicEffectSO.bulletLifespan;
         bRotateZ = relicEffectSO.bulletRotationZ;
+        moveDirection = Quaternion.Euler(0f, 0f, bRotateZ) * Vector3.right;
 
         bScaleX = relicEffectSO.bulletScaleX;
         bScaleY = relicEffectSO.bulletScaleY;
@@ -76,7 +78,6 @@ public class BulletBehavior : MonoBehaviour
     protected virtual void BulletMove()
     {
         //Moves bullet (1f, 0f, 0f) * bullet speed * Time between frames
-        //Turned by rotation of bullet (of which the warning sets)
         transform.Translate(moveDirection.normalized * bSpeed * Time.deltaTime);
     }
 
