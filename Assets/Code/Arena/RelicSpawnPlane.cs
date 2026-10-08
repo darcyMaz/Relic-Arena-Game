@@ -245,7 +245,7 @@ public class RelicSpawnPlane : MonoBehaviour
         //Debug.Log("Renderer size: " + size);
 
         // Build the position vector.
-        Vector3 position = new Vector3(GetXPosFromCoord((int)coord.x, size.x), GetZPosFromCoord((int)coord.y, size.y), -5);
+        Vector3 position = new Vector3(GetXPosFromCoord((int)coord.x, size.x), GetZPosFromCoord((int)coord.y, size.y), transform.position.z);
 
         //Debug.Log("Local position of generated coord: " + position);
 

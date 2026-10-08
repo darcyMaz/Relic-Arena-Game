@@ -32,11 +32,7 @@ public class ArenaManager : MonoBehaviour
     /// </summary>
     public bool IsGameActive { get; private set; }
 
-    /// <summary>
-    /// A public Vector3 representing the player's z axis.
-    /// </summary>
-    public float PlayerZPosition { get; private set; }
-
+    
     /// <summary>
     /// Method called on awake.
     /// </summary>
@@ -44,7 +40,6 @@ public class ArenaManager : MonoBehaviour
     {
         InitSingleton();
         GetSpawnPlanes();
-        PlayerZPosition = -5f;
     }
 
     /// <summary>
