@@ -18,13 +18,13 @@ MonoBehaviour:
   spawnAOEHalfX: 2
   spawnAOEHalfY: 2
   b2bCooldown: 3
-  p2pCooldown: 30
+  p2pCooldown: 20
   bulletPrefab: {fileID: 9070830274694276698, guid: 27d6d764fc308c24fa964cfc79f6daad, type: 3}
   bulletSpeed: 6
-  bulletLifespan: 28
+  bulletLifespan: 18
   bulletScaleX: 1
   bulletScaleY: 1
   rotationType: 1
   bulletRotationZ: 0
   bulletRotationRate: 0.002
-  warnBulletLifespan: 2
+  warnBulletLifespan: 3
