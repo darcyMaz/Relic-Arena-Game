@@ -1,4 +1,6 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.Audio.GeneratorInstance;
 
 public class BulletWarning : MonoBehaviour
 {
@@ -16,6 +18,7 @@ public class BulletWarning : MonoBehaviour
     private float bSpeed;
     private float bRotation;
     private int bRotateType;
+    private Vector3 aimDirection;
 
     private float bWarnLifespan = 5f;
     private float timer = 0f;
@@ -25,6 +28,7 @@ public class BulletWarning : MonoBehaviour
 
     private void Update()
     {
+        LoseRelicDestoryWarnBullet();
         WarningTimer();
         WarningArrowRotation();
     }
@@ -70,7 +74,20 @@ public class BulletWarning : MonoBehaviour
             }
             else if (bRotateType == 1 || bRotateType == 2)
             {
-                transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                //Warning Bullet points towards Player
+                aimDirection = spawnerRef.transform.position - warnPos;
+                if (aimDirection.y >= 0)
+                {
+                    // If y is positive, then calculate the angle between (1,0) and the direction.
+                    bRotation = Vector2.Angle(new Vector3(1f, 0f, 0f), aimDirection);
+                }
+                // If y is negative, then calculate the angle between (-1,0) and the direction and add 180.
+                else
+                {
+                    // Otherwise, set the current position and return it.
+                    bRotation = Vector2.Angle(new Vector3(-1f, 0f, 0), aimDirection) + 180;
+                }
+                transform.rotation = Quaternion.Euler(0f, 0f, bRotation);
             }
             else
             {
@@ -98,5 +115,16 @@ public class BulletWarning : MonoBehaviour
         bulletBehaviorScript.BulletSetup(relicEffectSO, spawnerRef);
         
         Destroy(this.gameObject);
+    }
+
+    private void LoseRelicDestoryWarnBullet()
+    {
+        if (warnSetup)
+        {
+            if (spawnerRef == null)
+            {
+                Destroy(this.gameObject);
+            }
+        }
     }
 }
