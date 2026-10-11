@@ -67,7 +67,7 @@ public class BulletWarning : MonoBehaviour
     }
     private void WarningArrowRotation()
     {
-        if (warnSetup)
+        if (warnSetup && spawnerRef != null)
         {
             //Warning Bullet points 1 direction
             if (bRotateType == 0)

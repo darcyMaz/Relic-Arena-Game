@@ -15,8 +15,11 @@ public class HomingBulletBehavior : BulletBehavior
     protected override void Update()
     {
         base.Update();
-        Vector3 desiredDiff = (spawnerRef.transform.position - transform.position) - moveDirection;
-        moveDirection += desiredDiff * turnRate;
+        if (spawnerRef != null)
+        {
+            Vector3 desiredDiff = (spawnerRef.transform.position - transform.position) - moveDirection;
+            moveDirection += desiredDiff * turnRate;
+        }
     }
     protected override void BulletMove()
     {
