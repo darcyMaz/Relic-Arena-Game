@@ -38,6 +38,7 @@ public class RelicEffectSO : ScriptableObject
     public float bulletRotationZ = 0f;
     public float bulletRotationRate = 0.001f;
     public List<float> spawnLocationRoationList;
+    public bool rotateSprite = true;
 
     [Header("Bullet Warning")]
     public float warnBulletLifespan = 2f;

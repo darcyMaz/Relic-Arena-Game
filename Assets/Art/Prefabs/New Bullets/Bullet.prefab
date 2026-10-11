@@ -49,6 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BulletBehavior
   rb: {fileID: 2057822153524922754}
   relicEffectSO: {fileID: 0}
+  spriteChild: {fileID: 7450691746920475897}
   spawnerRef: {fileID: 0}
   moveDirection: {x: 1, y: 0, z: 0}
 --- !u!54 &2057822153524922754

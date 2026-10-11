@@ -140,6 +140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HomingBulletBehavior
   rb: {fileID: 6454359098353540016}
   relicEffectSO: {fileID: 0}
+  spriteChild: {fileID: 5408921723084347609}
   spawnerRef: {fileID: 0}
   moveDirection: {x: 1, y: 0, z: 0}
   turnRate: 0.001

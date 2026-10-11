@@ -36,4 +36,5 @@ MonoBehaviour:
   - 270
   - 0
   - 90
+  rotateSprite: 1
   warnBulletLifespan: 1.2

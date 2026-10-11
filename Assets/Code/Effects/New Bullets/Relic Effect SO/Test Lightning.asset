@@ -27,4 +27,6 @@ MonoBehaviour:
   rotationType: 1
   bulletRotationZ: 0
   bulletRotationRate: 1
+  spawnLocationRoationList: []
+  rotateSprite: 0
   warnBulletLifespan: 1.5

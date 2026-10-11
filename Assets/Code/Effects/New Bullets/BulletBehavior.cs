@@ -7,6 +7,7 @@ public class BulletBehavior : MonoBehaviour
     //References
     [SerializeField] Rigidbody rb;
     [SerializeField] public RelicEffectSO relicEffectSO;
+    [SerializeField] public GameObject spriteChild;
     public GameObject spawnerRef;
 
     private bool bSetup = false;
@@ -25,6 +26,7 @@ public class BulletBehavior : MonoBehaviour
     private float bRotateZ = 0f;
     private Quaternion bRotation = Quaternion.Euler(0f, 0f, 0f);
     public Vector3 moveDirection;
+    private bool rotateSprite;
 
     //Bullet Scale
     private float bScaleX = 1f;
@@ -49,12 +51,11 @@ public class BulletBehavior : MonoBehaviour
         bRotateZ = relicEffectSO.bulletRotationZ;
         if (relicEffectSO.rotationType == 3)
         {
-            moveDirection = Quaternion.Euler(0f, 0f, listRotation) * Vector3.right;
+            bRotateZ = listRotation;
         }
-        else 
-        {
-            moveDirection = Quaternion.Euler(0f, 0f, bRotateZ) * Vector3.right;
-        }
+        moveDirection = Quaternion.Euler(0f, 0f, bRotateZ) * Vector3.right;
+        
+        rotateSprite = relicEffectSO.rotateSprite;
 
         bScaleX = relicEffectSO.bulletScaleX;
         bScaleY = relicEffectSO.bulletScaleY;
@@ -69,6 +70,7 @@ public class BulletBehavior : MonoBehaviour
         LoseRelicDestoryBullet();
         BulletTimer();
         BulletMove();
+        RotateSprite();
     }
 
     private void BulletTimer()
@@ -100,6 +102,15 @@ public class BulletBehavior : MonoBehaviour
         {
             // the other collider does NOT have a player component on it
             // Debug.Log("Hit not a Player");
+        }
+    }
+
+    private void RotateSprite()
+    {
+        //Rotate Sprite of Bullet
+        if (rotateSprite)
+        {
+            //This is where id rotate the sprite, if i could...
         }
     }
 
