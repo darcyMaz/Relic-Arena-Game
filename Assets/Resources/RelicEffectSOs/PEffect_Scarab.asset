@@ -28,4 +28,4 @@ MonoBehaviour:
   bulletRotationZ: 0
   bulletRotationRate: 0.002
   spawnLocationRoationList: []
-  warnBulletLifespan: 3
+  warnBulletLifespan: 2

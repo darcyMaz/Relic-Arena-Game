@@ -22,8 +22,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 9070830274694276698, guid: 27d6d764fc308c24fa964cfc79f6daad, type: 3}
   bulletSpeed: 1.25
   bulletLifespan: 28
-  bulletScaleX: 1
-  bulletScaleY: 1
+  bulletScaleX: 2
+  bulletScaleY: 2
   rotationType: 2
   bulletRotationZ: 0
   bulletRotationRate: 1
