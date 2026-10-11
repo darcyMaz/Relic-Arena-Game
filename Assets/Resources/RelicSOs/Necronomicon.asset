@@ -18,6 +18,6 @@ MonoBehaviour:
   OtherSystemSO: {fileID: 11400000, guid: edbaf99bacff9f3419d2c65af8afe65e, type: 2}
   ActiveEffect: 0
   ActiveEffectDetails: 
-  LaunchType: 3
+  LaunchType: 0
   PassiveEffects: 
   PassiveEffectsDetails: []

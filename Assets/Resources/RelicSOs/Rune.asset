@@ -18,7 +18,7 @@ MonoBehaviour:
   OtherSystemSO: {fileID: 0}
   ActiveEffect: 0
   ActiveEffectDetails: 
-  LaunchType: 3
+  LaunchType: 0
   PassiveEffects: 00000000
   PassiveEffectsDetails:
   - 

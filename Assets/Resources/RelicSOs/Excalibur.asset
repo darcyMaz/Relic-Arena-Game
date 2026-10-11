@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cf91e1dc6d724c48ab4e32c67668940, type: 3}
   m_Name: Excalibur
   m_EditorClassIdentifier: Assembly-CSharp::RelicSO
-  Name: 
-  Sprite: {fileID: 0}
-  Price: 0
-  OtherSystemSO: {fileID: 0}
+  Name: Excalibur
+  Sprite: {fileID: 1675566126630113127, guid: 087fa48f1608a7a4fa92125a2aca8b90, type: 3}
+  Price: 100
+  OtherSystemSO: {fileID: 11400000, guid: 91d2b9e7243f278489ee078954221a4d, type: 2}
   ActiveEffect: 0
   ActiveEffectDetails: 
   LaunchType: 0

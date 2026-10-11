@@ -15,8 +15,8 @@ MonoBehaviour:
   numberOfBullets: 5
   spawnType: 1
   spawnLocationList: []
-  spawnAOEHalfX: 1.5
-  spawnAOEHalfY: 1.5
+  spawnAOEHalfX: 2
+  spawnAOEHalfY: 2
   b2bCooldown: 0.5
   p2pCooldown: 2
   bulletPrefab: {fileID: 7221345284844433121, guid: d2592bcd8ab78e44da098a21acfdeeb1, type: 3}
@@ -27,4 +27,5 @@ MonoBehaviour:
   rotationType: 0
   bulletRotationZ: 0
   bulletRotationRate: 0.001
+  spawnLocationRoationList: []
   warnBulletLifespan: 2
