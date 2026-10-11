@@ -6,9 +6,9 @@ public class HomingBulletBehavior : BulletBehavior
     public float turnRate = 1f;
 
     
-    public override void BulletSetup(RelicEffectSO relicSO, GameObject spawner)
+    public override void BulletSetup(RelicEffectSO relicSO, GameObject spawner, float listRotation)
     {
-        base.BulletSetup(relicSO, spawner);
+        base.BulletSetup(relicSO, spawner, listRotation);
 
         turnRate = relicEffectSO.bulletRotationRate;
     }

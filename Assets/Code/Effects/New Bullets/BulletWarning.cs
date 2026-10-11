@@ -19,6 +19,7 @@ public class BulletWarning : MonoBehaviour
     private float bRotation;
     private int bRotateType;
     private Vector3 aimDirection;
+    private int chosenListRotate;
 
     private float bWarnLifespan = 5f;
     private float timer = 0f;
@@ -33,7 +34,7 @@ public class BulletWarning : MonoBehaviour
         WarningArrowRotation();
     }
 
-    public void WarnSetup(RelicEffectSO relicType, GameObject spawner)
+    public void WarnSetup(RelicEffectSO relicType, GameObject spawner, int listSpawn)
     {
         relicEffectSO = relicType;
         spawnerRef = spawner;
@@ -41,6 +42,7 @@ public class BulletWarning : MonoBehaviour
         bSpeed = relicEffectSO.bulletSpeed;
         bRotation = relicEffectSO.bulletRotationZ;
         bRotateType = relicEffectSO.rotationType;
+        chosenListRotate = listSpawn;
         bWarnLifespan = relicEffectSO.warnBulletLifespan;
 
         bScaleX = relicEffectSO.bulletScaleX;
@@ -67,14 +69,14 @@ public class BulletWarning : MonoBehaviour
     {
         if (warnSetup)
         {
+            //Warning Bullet points 1 direction
             if (bRotateType == 0)
             {
-                //Warning Bullets points 1 direction
                 transform.rotation = Quaternion.Euler(0f, 0f, bRotation);
             }
+            //Warning Bullet points towards Player
             else if (bRotateType == 1 || bRotateType == 2)
             {
-                //Warning Bullet points towards Player
                 aimDirection = spawnerRef.transform.position - warnPos;
                 if (aimDirection.y >= 0)
                 {
@@ -87,6 +89,12 @@ public class BulletWarning : MonoBehaviour
                     // Otherwise, set the current position and return it.
                     bRotation = Vector2.Angle(new Vector3(-1f, 0f, 0), aimDirection) + 180;
                 }
+                transform.rotation = Quaternion.Euler(0f, 0f, bRotation);
+            }
+            //Warning Bullet point direction depending on spawn location
+            else if (bRotateType == 3)
+            {
+                bRotation = relicEffectSO.spawnLocationRoationList[chosenListRotate];
                 transform.rotation = Quaternion.Euler(0f, 0f, bRotation);
             }
             else
@@ -112,7 +120,7 @@ public class BulletWarning : MonoBehaviour
         //1. Spawns Bullet, 2. Executes Bullet Setup, 3. Explodes
         GameObject spawnedBullet = Instantiate(relicEffectSO.bulletPrefab, warnPos, Quaternion.identity);
         bulletBehaviorScript = spawnedBullet.GetComponent<BulletBehavior>();
-        bulletBehaviorScript.BulletSetup(relicEffectSO, spawnerRef);
+        bulletBehaviorScript.BulletSetup(relicEffectSO, spawnerRef, bRotation);
         
         Destroy(this.gameObject);
     }

@@ -25,6 +25,8 @@ public class BulletPatternSpawner : MonoBehaviour
     #endregion
 
     private List<Vector3> spawnLocationList;
+    private int spawnListChoice = 0;
+    private Vector3 chosenSpawn = new Vector3(0f, 0f, 0f);
 
     private float spawnHalfX;
     private float spawnHalfY;
@@ -59,10 +61,10 @@ public class BulletPatternSpawner : MonoBehaviour
     #endregion
 
     //Awake was here to test PatternSetup(relicEffectSO)
-    //private void Awake()
-    //{
-    //    PatternSetup(relicEffectSO);
-    //}
+    private void Awake()
+    {
+        PatternSetup(relicEffectSO);
+    }
 
     private void Update()
     {
@@ -126,7 +128,10 @@ public class BulletPatternSpawner : MonoBehaviour
         //If: Spawn Locations
         if (spawnType == 0)
         {
-            //Set a random spawn from selected spots
+            //Setting up spawn from List of set locations proportional to playerPos
+            spawnListChoice = UnityEngine.Random.Range(0, spawnLocationList.Count);
+            chosenSpawn = spawnLocationList[spawnListChoice];
+            spawnPoint = playerPos + chosenSpawn;
         }
 
         //If: Spawn Spot in AOE
@@ -136,14 +141,7 @@ public class BulletPatternSpawner : MonoBehaviour
             spawnPoint = new Vector3(UnityEngine.Random.Range(minX,maxX), UnityEngine.Random.Range(minY, maxY), playerPos.z);
         }
     }
-    private void SpawnBulletWarning()
-    {
-        spawnedWarnBullet = Instantiate(bulletWarning, spawnPoint, Quaternion.identity);
-        bulletWarningScript = spawnedWarnBullet.GetComponent<BulletWarning>();
-        bulletWarningScript.WarnSetup(relicEffectSO, this.gameObject);
-
-    }
-
+    
     private void SpawningAOESetup()
     {
         //Setting up Range for possible spawns
@@ -160,6 +158,16 @@ public class BulletPatternSpawner : MonoBehaviour
         {
             onCooldown = false;
         }
+    }
+
+    private void SpawnBulletWarning()
+    {
+        //Spawn the Warn Bullet
+        spawnedWarnBullet = Instantiate(bulletWarning, spawnPoint, Quaternion.identity);
+        //Get the spawned Warn Bullet's Behavior Script
+        bulletWarningScript = spawnedWarnBullet.GetComponent<BulletWarning>();
+        //Start Warn Bullet Setup
+        bulletWarningScript.WarnSetup(relicEffectSO, this.gameObject, spawnListChoice);
     }
 
     public void RemovePassiveEffect()

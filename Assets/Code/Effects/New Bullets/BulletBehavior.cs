@@ -38,7 +38,7 @@ public class BulletBehavior : MonoBehaviour
         spawnPoint = new Vector3(transform.position.x, transform.position.y, transform.position.z);
     }
 
-    public virtual void BulletSetup(RelicEffectSO relicSO, GameObject spawner)
+    public virtual void BulletSetup(RelicEffectSO relicSO, GameObject spawner, float listRotation)
     {
         //Call the Info from the SO
         relicEffectSO = relicSO;
@@ -47,7 +47,14 @@ public class BulletBehavior : MonoBehaviour
         bSpeed = relicEffectSO.bulletSpeed;
         bLifespan = relicEffectSO.bulletLifespan;
         bRotateZ = relicEffectSO.bulletRotationZ;
-        moveDirection = Quaternion.Euler(0f, 0f, bRotateZ) * Vector3.right;
+        if (relicEffectSO.rotationType == 3)
+        {
+            moveDirection = Quaternion.Euler(0f, 0f, listRotation) * Vector3.right;
+        }
+        else 
+        {
+            moveDirection = Quaternion.Euler(0f, 0f, bRotateZ) * Vector3.right;
+        }
 
         bScaleX = relicEffectSO.bulletScaleX;
         bScaleY = relicEffectSO.bulletScaleY;
@@ -77,7 +84,7 @@ public class BulletBehavior : MonoBehaviour
 
     protected virtual void BulletMove()
     {
-        //Moves bullet (1f, 0f, 0f) * bullet speed * Time between frames
+        //Moves bullet (Vector3) * bullet speed * Time between frames
         transform.Translate(moveDirection.normalized * bSpeed * Time.deltaTime);
     }
 

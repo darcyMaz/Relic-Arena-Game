@@ -13,7 +13,6 @@ public class RelicEffectSO : ScriptableObject
     // 0 = Set Spawn Locations List
     // 1 = Spawning AOE
     #endregion
-    //CURRENTLY NOT USED
     public List<Vector3> spawnLocationList;
     public float spawnAOEHalfX = 2;
     public float spawnAOEHalfY = 2;
@@ -31,14 +30,14 @@ public class RelicEffectSO : ScriptableObject
     [Space]
     public int rotationType = 1;
     #region Rotation Type Legend
-    //CURRENTLY NOT USED
     // 0 = Set Rotation for all Bullets
-    // 1 = Rotation follow Player when aiming
+    // [NOT DONE] 1 = Rotation follow Player when aiming
     // 2 = Rotation follow Player constant
     // 3 = Set Rotation per set spawnLocation
     #endregion
     public float bulletRotationZ = 0f;
     public float bulletRotationRate = 0.001f;
+    public List<float> spawnLocationRoationList;
 
     [Header("Bullet Warning")]
     public float warnBulletLifespan = 2f;
