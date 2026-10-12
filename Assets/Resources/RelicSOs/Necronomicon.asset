@@ -15,7 +15,7 @@ MonoBehaviour:
   Name: Necronomicon
   Sprite: {fileID: 7067121964754489339, guid: 80242bb75ef3a8f479bc3e64681842f3, type: 3}
   Price: 100
-  OtherSystemSO: {fileID: 11400000, guid: edbaf99bacff9f3419d2c65af8afe65e, type: 2}
+  BulletSystemSO: {fileID: 11400000, guid: edbaf99bacff9f3419d2c65af8afe65e, type: 2}
   ActiveEffect: 0
   ActiveEffectDetails: 
   LaunchType: 0
