@@ -27,7 +27,7 @@ public class Relic
         _relic = relicSO;
 
         // Check to see if it uses the other system.
-        UsesOtherSystem = (_relic.GetOtherSystemSO() == null) ? false : true;
+        UsesOtherSystem = (_relic.GetBulletSystemSO() == null) ? false : true;
 
     }
 
@@ -110,7 +110,7 @@ public class Relic
     {
         if (UsesOtherSystem)
         {
-            return _relic.GetOtherSystemSO();
+            return _relic.GetBulletSystemSO();
         }
         else
         {

@@ -83,7 +83,6 @@ public class BuriedRelic : MonoBehaviour
             // The volumeFraction is based on the distance from the center of the BuriedRelic radius.
             // It is the inverse percentage of the distance to the center. So you take the distance to the center, divide by the radius, then inverse the percentage.
             float volumeFraction = Mathf.Clamp(1f - Vector3.Distance(metalDetector.GetDigSpot(), transform.position) / (_sphereCollider.radius * transform.localScale.x), 0.1f, 1);
-
             
             // If the gameObject is within the "very close range"
             // Calculate the distance between the Metal Detector's specified dig spot and the center of the buried relic gameobject.
@@ -94,6 +93,10 @@ public class BuriedRelic : MonoBehaviour
 
                 // Instantiate the relic object.
                 Relic relic = new Relic(_relicSO);
+
+                // NOTE On saving memory a bit: Every frame a relic is instantiated and sent in an event.
+                // Would be better to only make a relic once it is found.
+                // So, sending the _relicSO instead of Relic and instantiating it in Player.
 
                 // Give the Relic to the metal detector, which the player listens to.
                 metalDetector.InvokeRelicVeryClose(relic, this);

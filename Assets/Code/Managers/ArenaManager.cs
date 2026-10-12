@@ -166,7 +166,7 @@ public class ArenaManager : MonoBehaviour
         // Organize them into Effect and No Effect lists.
         foreach (RelicSO RelicSO in RelicSOs)
         {
-            if (RelicSO.GetOtherSystemSO() != null)
+            if (RelicSO.GetBulletSystemSO() != null)
             {
                 _relicSOsEffect.Add(RelicSO);
                 continue;
@@ -200,7 +200,9 @@ public class ArenaManager : MonoBehaviour
     /// <returns> A RelicSO at random. </returns>
     private RelicSO GetRandomRelicSO()
     {
-        // Randomly enerate a float in the range from 0 to 1.
+        Debug.Log("_relicSOsEffect size " + _relicSOsEffect.Count);
+
+        // Randomly generate a float in the range from 0 to 1.
         float rand = UnityEngine.Random.Range(0f, 1f);
         int randIndex;
 

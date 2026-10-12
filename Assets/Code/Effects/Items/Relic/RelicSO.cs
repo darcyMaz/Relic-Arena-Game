@@ -12,7 +12,7 @@ public class RelicSO : ItemSO
     /// <summary>
     /// 
     /// </summary>
-    [SerializeField] private RelicEffectSO OtherSystemSO; 
+    [SerializeField] private RelicEffectSO BulletSystemSO; 
 
     /// <summary>
     /// The active effect attached to this relic.
@@ -100,8 +100,8 @@ public class RelicSO : ItemSO
     /// Method which returns the EffectRelicSO representing the values for the bullet effect system.
     /// </summary>
     /// <returns> The Scriptable Object used to interpret the other system. </returns>
-    public RelicEffectSO GetOtherSystemSO()
+    public RelicEffectSO GetBulletSystemSO()
     {
-        return (OtherSystemSO != null) ? OtherSystemSO : null;
+        return (BulletSystemSO != null) ? BulletSystemSO : null;
     }
 }

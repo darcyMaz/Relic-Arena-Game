@@ -15,6 +15,9 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     public static SoundManager Instance { get; private set; }
 
+    private List<AudioClip> _ongoingMetalDetectors = new List<AudioClip>();
+
+
     /// <summary>
     /// Before the game start, initialize the singleton.
     /// </summary>
@@ -33,8 +36,7 @@ public class SoundManager : MonoBehaviour
         Instance = this;
     }
 
-    private List<AudioClip> _ongoingMetalDetectors = new List<AudioClip>();
-
+    
     /// <summary>
     /// Plays metal detector noises.
     /// </summary>
