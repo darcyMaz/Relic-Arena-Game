@@ -1,9 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
-using UnityEditor.ShaderGraph.Internal;
-using System.Threading;
-using System.Threading.Tasks;
 
 public class ArenaManager : MonoBehaviour
 {
@@ -33,6 +30,8 @@ public class ArenaManager : MonoBehaviour
     /// </summary>
     [SerializeField] private int UpperBoundRelicSpawnDelay = 500;
 
+    public GameObject RelicSpawnHelper; // to remove
+    public GameObject SpawnPlaneHelper;
 
     /// <summary>
     /// Spawn rate of Relics with effects.
@@ -230,9 +229,33 @@ public class ArenaManager : MonoBehaviour
             RelicSpawnPlane spawnPlane;
             if (child.gameObject.TryGetComponent(out spawnPlane))
             {
-                _relicSpawnPlanes.Add(spawnPlane);
+                if (spawnPlane.gameObject.activeSelf) _relicSpawnPlanes.Add(spawnPlane);
             }
         }
+
+        // This part of the method ensures that the maximum number of relics allowed in the game at once by the ArenaManager does not exceed the sum of that limit set for each plane.
+
+        // Get the value representing how many relics can be buried in each plane.
+        int maxAllowedRelics = 0;
+
+        // Go through each plane.
+        foreach (RelicSpawnPlane plane in _relicSpawnPlanes)
+        {
+            maxAllowedRelics += plane.GetBuriedRelicMax() - plane.GetTotalRelicsBuried();
+        }
+
+        // If the planes can accept more relics than the arena allows, increase the tolerance for the ArenaManager.
+        if (maxAllowedRelics > MaxRelicsInGame)
+        {
+            MaxRelicsInGame = maxAllowedRelics;
+        }
+        // If the planes cannot accept the required number of relics, decrease the tolerance.
+        else if (maxAllowedRelics < MaxRelicsInGame)
+        {
+            MaxRelicsInGame = maxAllowedRelics;
+        }
+
+        //Debug.Log("SpawnPlane count" + _relicSpawnPlanes.Count);
     }
 
     /// <summary>

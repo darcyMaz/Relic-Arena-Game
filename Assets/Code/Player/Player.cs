@@ -808,19 +808,16 @@ public class Player : EffectableBase
             return;
         }
 
-        //Effect activeEffect = relicInHand.GetActiveEffect();
-        //string activeEffectDetails = relicInHand.GetActiveEffectDetails();
-        //LaunchType launchType = relicInHand.GetLaunchType();
-
         // Call LaunchActiveEffect()
         LaunchActiveEffect(relicInHand.GetActiveEffect(), relicInHand.GetActiveEffectDetails(), relicInHand.GetLaunchType(), relicInHand);
-
-        // Consume the relic after launching it.
-        // CancelEffectsOnRelic(relicInHand);
     }
 
-    
-
+    /// <summary>
+    /// Method which allows the Player to launch an active effect using the LaunchRaycast LaunchType.
+    /// </summary>
+    /// <param name="activeEffect"></param>
+    /// <param name="activeEffectDetails"></param>
+    /// <exception cref="NotImplementedException"></exception>
     protected override void LaunchRaycast(Effect activeEffect, string activeEffectDetails)
     {
         // get the direction of the pointer
@@ -830,16 +827,34 @@ public class Player : EffectableBase
 
         throw new NotImplementedException();
     }
-    private Vector3 GetPointerDirection()
-    {
-        return Vector3.zero;
-    }
 
+    /// <summary>
+    /// Method which allows the Player to launch an active effect using the LaunchThrow LaunchType.
+    /// </summary>
+    /// <param name="activeEffect"></param>
+    /// <param name="activeEffectDetails"></param>
+    /// <exception cref="NotImplementedException"></exception>
     protected override void LaunchThrow(Effect activeEffect, string activeEffectDetails)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Method which returns the direction of (an as of yet not implemented) directional pointer gameobject attached to the player.
+    /// </summary>
+    /// <returns> Vector3 representing the direction the Player is looking. </returns>
+    private Vector3 GetPointerDirection()
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Method which allows the Player to launch an active effect using the LaunchRaycast LaunchType.
+    /// Contacts the EffectsManager to immediately launch an Effect at another Player.
+    /// </summary>
+    /// <param name="activeEffect"></param>
+    /// <param name="activeEffectDetails"></param>
+    /// <exception cref="NotImplementedException"></exception>
     protected override void LaunchImmediate(Effect activeEffect, string activeEffectDetails)
     {
         // If the EffectsManager exists.
@@ -853,14 +868,24 @@ public class Player : EffectableBase
 
             // Ideally, there'd be a way to decide which player gets hit.
             // Maybe random, maybe a selection.
-            // Either way, this should not be so particular.
+            // Either way, this should not be so particular to two players in later versions.
             int targetNum = (PlayerNumber == 1) ? 2 : 1;
-
-            //Debug.Log("The Player #" + PlayerNumber + " launched the " + activeEffect + " Effect at Player #" + targetNum);
 
             // Tell the EffectsManager that someone is getting an Effect placed on them.
             EffectsManager.Instance.LaunchActiveEffect(activeEffect, activeEffectDetails, PlayerNumber, targetNum);
         }
+    }
+
+    /// <summary>
+    /// Method which allows the Player to launch an active effect using the LaunchSelf LaunchType.
+    /// </summary>
+    /// <param name="activeEffect"></param>
+    /// <param name="activeEffectDetails"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    protected override void LaunchSelf(Effect activeEffect, string activeEffectDetails)
+    {
+        Debug.Log("Launch Self activated");
+        ApplyActiveEffect(activeEffect, activeEffectDetails);
     }
 
     protected override void LaunchNone(Effect activeEffect, string activeEffectDetails)
@@ -1057,11 +1082,36 @@ public class Player : EffectableBase
     }
 
     /// <summary>
-    /// Implementation of custom aspects of the LightningRain Effect for the Player..
+    /// Implementation of custom aspects of the LightningRain Effect for the Player.
     /// </summary>
     protected override void ApplyLightningRain()
     {
         PlayerHit();
+    }
+
+    /// <summary>
+    /// Implementation of custom aspects of the YummySpeedChangeEffect for the Player.
+    /// </summary>
+    /// <param name="boostPercentage"> The percentage of the base speed as a float. </param>
+    /// <param name="boostLength"> The length of the speed boost. </param>
+    /// <param name="nerfPercentage"> The percentage of the base speed as a float. </param>
+    /// <param name="nerfLength"> The length of the speed nerf. </param>
+    protected async override void ApplyYummySpeedChange(float boostPercentage, int boostLength, float nerfPercentage, int nerfLength)
+    {
+        // Change the speed based on the given percentage.
+        ChangeSpeed(boostPercentage);
+
+        // Wait the length of the boost length
+        await Task.Delay(boostLength);
+
+        // Nerf the speed
+        ChangeSpeed(nerfPercentage);
+
+        // Wait the length of the nerf length
+        await Task.Delay(nerfLength);
+
+        // Set the speed back to normal
+        ChangeSpeed(1);
     }
 
     /// <summary>
@@ -1115,4 +1165,6 @@ public class Player : EffectableBase
     {
         // Debug.Log("Lives left: " + livesLeft);
     }
+
+    
 }

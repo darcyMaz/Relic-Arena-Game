@@ -258,7 +258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RelicSpawnPlane
   GridRows: 4
-  GridColumns: 3
+  GridColumns: 4
   MaxRelicsBuried: 1
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
 --- !u!64 &13152609
@@ -2872,6 +2872,8 @@ MonoBehaviour:
   MaxRelicsInGame: 5
   MinRelicSpawnDelay: 2000
   UpperBoundRelicSpawnDelay: 500
+  RelicSpawnHelper: {fileID: 7343063177068665414, guid: dcd41f0672cfb3545a7dffe2373679a4, type: 3}
+  SpawnPlaneHelper: {fileID: 6614444877399756388, guid: b6e166c96a9b17a4a89d52508a8140d2, type: 3}
   EffectRelicSOSpawnRate: 0.5
   IsGameActive: 1
 --- !u!1 &2034676461

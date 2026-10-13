@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
-/// A singleton class which manages the arena.
-/// To be precise, it spawns in buried relics for the players to find.
+/// Class which spawns in buried relics for the players to find.
 /// </summary>
 [RequireComponent (typeof(Renderer))]
 public class RelicSpawnPlane : MonoBehaviour
@@ -49,6 +47,11 @@ public class RelicSpawnPlane : MonoBehaviour
     private bool _arenaInstanceNotFound = false;
 
     /// <summary>
+    /// Turns on visual debugging for the relic spawn plane.
+    /// </summary>
+    [SerializeField] private bool VisualDebugging = true;
+
+    /// <summary>
     /// Function called before the game starts.
     /// </summary>
     private void Awake()
@@ -65,7 +68,7 @@ public class RelicSpawnPlane : MonoBehaviour
         CheckArenaSize();
 
         // Gets the renderer.
-        _renderer = GetComponent<Renderer>();   
+        _renderer = GetComponent<Renderer>();
     }
 
     private void OnEnable()
@@ -100,6 +103,19 @@ public class RelicSpawnPlane : MonoBehaviour
         if (_arenaInstanceNotFound)
         {
             ArenaManager.Instance.OnGameActivation += GameActivation;
+        }
+
+        // Helps visualize where the spawn points are.
+        if (VisualDebugging)
+        {
+            // For each possible coordinate, spawn a little helper to visualize its placement.
+            for (int x = 1; x < GridColumns + 1; x++)
+            {
+                for (int y = 1; y < GridRows + 1; y++)
+                {
+                    Instantiate(ArenaManager.Instance.SpawnPlaneHelper, CoordToPosition(new Vector2(x, y)), Quaternion.identity);
+                }
+            }
         }
     }
 
@@ -138,6 +154,9 @@ public class RelicSpawnPlane : MonoBehaviour
 
         // Wait before activating the buried relic.
         await Task.Delay(delay);
+
+        // Uncomment this to spawn a 3D object to visually see where the relic is.
+        if (VisualDebugging) Instantiate(ArenaManager.Instance.RelicSpawnHelper, relicPosition, Quaternion.identity);
 
         // Activate the BuriedRelic after a delay.
         buriedRelicClone.SetActive(true);
@@ -194,14 +213,15 @@ public class RelicSpawnPlane : MonoBehaviour
     /// <param name="coord"> The coordinate to translate. </param>
     private Vector3 CoordToPosition(Vector2 coord)
     {
-        // Get the center of the arena.
-        Vector3 center = transform.position;
-
+        
         // Get the size of the arena.
         Vector3 size = _renderer.bounds.size;
 
+        // Get the top left of the arena.
+        Vector3 corner = transform.position - new Vector3(size.x / 2, size.y / 2, 0);
+
         // Build the position vector.
-        Vector3 position = new Vector3(GetXPosFromCoord((int)coord.x, size.x), GetZPosFromCoord((int)coord.y, size.y), transform.position.z);
+        Vector3 position = new Vector3(GetXPosFromCoord((int)coord.x, size.x) + corner.x, GetYPosFromCoord((int)coord.y, size.y) + corner.y, transform.position.z);
 
         // Return the coordinate also adding the transform.position as the derived coordinate is a local position.
         return position;
@@ -215,28 +235,27 @@ public class RelicSpawnPlane : MonoBehaviour
     /// <returns></returns>
     private float GetXPosFromCoord(int coord, float xLength)
     {
-        float cut = xLength / (GridColumns + 1);
+        // Here is the following calculation for getting the x value at this coordinate.
+        //      Conceptually, cut the plane such that it has GridColumns number of columns. Ex. GridColumns = 4: [ 1 | 2 | 3 | 4 ]
+        //      Say coord is 3, then this method returns the distance from the left side of the plane to the middle of column 3. [  |  | x |  ]
+        //      The formula to achieve this calculates the length of 2 columns plus half of the third one.
+        //      [( width/columns ) * (coord-1)] + [(width/columns) / 2]
+        //      Factored, the forumla is (width / columns) * (coord - 1/2)
 
-        float topOfColumn = transform.position.x + (xLength/2);
-
-        //Debug.Log(topOfColumn - (cut * coord));
-        return topOfColumn - (cut * coord);
+        return (xLength / GridColumns) * (coord - 0.5f);
     }
 
     /// <summary>
-    /// Return the local z position of the grid coordinate.
+    /// Return the local y position of the grid coordinate.
     /// </summary>
-    /// <param name="coord"> The z coordinate. </param>
+    /// <param name="coord"> The y coordinate. </param>
     /// <param name="zLength"> The horizontal length of the arena. </param>
     /// <returns></returns>
-    private float GetZPosFromCoord(int coord, float zLength)
+    private float GetYPosFromCoord(int coord, float yLength)
     {
-        float cut = zLength / (GridRows + 1);
+        // See GetXPosFromCoord for explanation.
 
-        float leftOfRow = transform.position.y + (zLength / 2);
-
-        //Debug.Log("GetZPos() ~ leftOfRow var: " + (leftOfRow - (cut * coord)) + " trans.pos.y: " + transform.position.y);
-        return leftOfRow - (cut * coord);
+        return (yLength / GridRows) * (coord - 0.5f);
     }
 
     /// <summary>

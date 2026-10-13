@@ -32,7 +32,6 @@ public abstract class EffectableBase: MonoBehaviour
     /// <summary>
     /// Dictionary holding all passive effects currently on this EffectableBase, mappes to the Relic which is powering that Effect.
     /// </summary>
-    //protected List<Effect> _passiveEffects = new List<Effect>();
     protected Dictionary<Effect, Relic> _passiveEffects = new Dictionary<Effect, Relic>();
 
 
@@ -125,6 +124,7 @@ public abstract class EffectableBase: MonoBehaviour
         _effectsDict.TryAdd(Effect.ExtraLives, ExtraLives);
         _effectsDict.TryAdd(Effect.LightningForray, LightningForray);
         _effectsDict.TryAdd(Effect.LightingRain, LightningRain);
+        _effectsDict.TryAdd(Effect.YummySpeedChange, YummySpeedChange);
 
         // Then do a check at the end to see if the size of the dictionary matches up with the number of Effects.
         int EffectCount = Enum.GetNames(typeof(Effect)).Length;
@@ -158,6 +158,12 @@ public abstract class EffectableBase: MonoBehaviour
             "Float representing the width of the lightning rain area." +
             "Float representing the height of the lightning rain area." +
             "Int representing the number of lightning strikes.");
+        _formatDict.TryAdd(Effect.YummySpeedChange,
+            "Float representing the percentage of the speed boost compared to the base being 1." +
+            "Int representing the length of time the boost plays in milliseconds" +
+            "Float representing the percentage of the speed nerf compared to the base being 1." +
+            "Int representing the length of time the nerf plays in milliseconds" +
+            ": 1.4f, 1000, 0.75f, 1400");
     }
 
     /// <summary>
@@ -179,16 +185,17 @@ public abstract class EffectableBase: MonoBehaviour
         _launchTypeFuncs.TryAdd(LaunchType.Raycasted, LaunchRaycast);
         _launchTypeFuncs.TryAdd(LaunchType.Thrown, LaunchThrow);
         _launchTypeFuncs.TryAdd(LaunchType.Immediate, LaunchImmediate);
+        _launchTypeFuncs.TryAdd(LaunchType.LaunchSelf, LaunchSelf);
 
         // Then do a check at the end to see if the size of the dictionary matches up with the number of Effects.
         int launchCount = Enum.GetNames(typeof(LaunchType)).Length;
         if (launchCount > _launchTypeFuncs.Count)
         {
-            Debug.Log("EffectableBase does not implement every Effect in the Effect enum.");
+            Debug.Log("EffectableBase does not implement every LaunchTypes in the LaunchTypes enum.");
         }
         else if (launchCount < _launchTypeFuncs.Count)
         {
-            Debug.LogError("EffectableBase somehow has more implementions for Effects than there are Effects listed in the enum.");
+            Debug.LogError("EffectableBase somehow has more implementions for LaunchTypes than there are LaunchTypes listed in the enum.");
         }
     }
 
@@ -362,6 +369,8 @@ public abstract class EffectableBase: MonoBehaviour
     protected abstract void LaunchImmediate(Effect activeEffect, string activeEffectDetails);
 
     protected abstract void LaunchNone(Effect activeEffect, string activeEffectDetails);
+
+    protected abstract void LaunchSelf(Effect activeEffect, string activeEffectDetails);
 
     /// <summary>
     /// Method which takes an Effect and runs its respective action. 
@@ -931,6 +940,31 @@ public abstract class EffectableBase: MonoBehaviour
     protected abstract void ApplyLightningRain();
 
     /// <summary>
+    /// Apply the YummySpeedChange Effect.
+    /// It is not async like others. It simply calls the ApplyYummySpeedChange and let's the child deal with it.
+    /// </summary>
+    /// <param name="delay"> The delay before the lightning strikes. </param>
+    /// <param name="currentEffect"> The DelayedLightning Effect. </param>
+    private void YummySpeedChange(string details, Effect currentEffect, Relic thisRelic, CancellationToken token)
+    {
+        try
+        {
+            string[] detailsArr = details.Split(',');
+            ApplyYummySpeedChange(float.Parse(detailsArr[0]), int.Parse(detailsArr[1]), float.Parse(detailsArr[2]), int.Parse(detailsArr[3]));
+        }
+        catch (FormatException fe)
+        {
+            LogFormatException(fe, currentEffect);
+        }
+
+        // If this is a passive Effect related to a Relic.
+        if (thisRelic != null) CancelEffectsOnRelic(thisRelic);
+        // Else if there is no relic associated with this effect, then this is an active Effect. Cancel it directly.
+        else CancelEffect(currentEffect);
+    }
+    protected abstract void ApplyYummySpeedChange(float boostPercentage, int boostLength, float nerfPercentage, int nerfLength);
+
+    /// <summary>
     /// A function which runs when the None Effect runs. It does nothing.
     /// </summary>
     /// <param name="details"> The string details for this Effect. </param>
@@ -981,6 +1015,10 @@ public abstract class EffectableBase: MonoBehaviour
             {
                 return true;
             }
+        }
+        else if (relic.UsesOtherSystem)
+        {
+            return true;
         }
 
         return false;
