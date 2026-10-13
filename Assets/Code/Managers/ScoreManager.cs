@@ -28,7 +28,7 @@ public class ScoreManager : MonoBehaviour
     /// <summary>
     /// Player 2's score.
     /// </summary>
-    public float Player2Score {get; private set; }
+    public float Player2Score { get; private set; }
     /// <summary>
     /// Amount of rounds P2 has won.
     /// </summary>
@@ -53,7 +53,12 @@ public class ScoreManager : MonoBehaviour
     /// <summary>
     /// Bool which represents whether the game is over or not.
     /// </summary>
-    private bool IsGameOver = false;
+    private bool _isGameOver = false;
+
+    /// <summary>
+    /// Int representing the winner.
+    /// </summary>
+    private int _gameWinner = 0;
 
     private void Awake()
     {
@@ -214,9 +219,9 @@ public class ScoreManager : MonoBehaviour
             UIManager.Instance.ClearWinnerUI();
             //Round restart function (probably in Arena Manager)
 
-            if (IsGameOver)
+            if (_isGameOver)
             {
-                GameOverSceneChange();
+                GameOverSceneChange(_gameWinner);
             }
         }
     }
@@ -224,22 +229,32 @@ public class ScoreManager : MonoBehaviour
     /// <summary>
     /// Method which runs on GameOver.
     /// </summary>
-    private void GameOver(int playerNum)
+    private void GameOver(int winnerNum)
     {
-        IsGameOver = true;
-        UIManager.Instance.DeclareGameWinner(playerNum);
+        // Game is over, set the bool indicating that.
+        _isGameOver = true;
+
+        // Set the winner number.
+        _gameWinner = winnerNum;
+
+        // Inform the UIManager of this.
+        UIManager.Instance.DeclareGameWinner(winnerNum);
     }
 
     /// <summary>
     /// Method which changes the scene to the End Scene when the game ends and the intermission timer runs.
     /// </summary>
-    private void GameOverSceneChange()
+    private void GameOverSceneChange(int winnerNum)
     {
         // Create the EndSceneManager gameObject.
-        ////
-        
+        GameObject endSceneManager = ArenaManager.Instance.GetEndSceneManager();
+
         // Set the Winner
-        ////
+        Winner winner;
+        if (TryGetComponent(out winner))
+        {
+            winner.SetWinner(winnerNum);
+        }
 
         // Change scene to the Ending Scene.
         SceneManager.LoadScene(2);

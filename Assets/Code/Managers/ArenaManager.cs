@@ -18,6 +18,16 @@ public class ArenaManager : MonoBehaviour
     public event Action<bool> OnGameActivation;
 
     /// <summary>
+    /// Bool indicating whether a game is active or not.
+    /// </summary>
+    [SerializeField] private bool IsGameActive = false;
+
+    /// <summary>
+    /// GameObject for the EndScene. To be instantiated before the scene is changed so that information can flow between scenes.
+    /// </summary>
+    [SerializeField] private GameObject EndSceneManager;
+
+    /// <summary>
     /// Spawn rate of Relics with effects.
     /// </summary>
     [SerializeField] private float EffectRelicSOSpawnRate = 0.01f;
@@ -62,12 +72,6 @@ public class ArenaManager : MonoBehaviour
     /// List of all of the spawn planes in the ArenaManager.
     /// </summary>
     private List<RelicSpawnPlane> _relicSpawnPlanes = new List<RelicSpawnPlane>();
-
-    /// <summary>
-    /// Bool indicating whether a game is active or not.
-    /// </summary>
-    [SerializeField] private bool IsGameActive = false;
-    
 
     /// <summary>
     /// Method called on awake.
@@ -370,5 +374,12 @@ public class ArenaManager : MonoBehaviour
         */
     }
 
-
+    /// <summary>
+    /// Method which returns the EndSceneManager gameObject.
+    /// </summary>
+    /// <returns> A GameObject representing the EndSceneManager. </returns>
+    public GameObject GetEndSceneManager()
+    {
+        return EndSceneManager;
+    }
 }

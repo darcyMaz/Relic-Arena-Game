@@ -11,14 +11,6 @@ public class Winner : MonoBehaviour
     private int _winner = 0;
 
     /// <summary>
-    /// Method which runs when the GameObject is enabled.
-    /// </summary>
-    private void OnEnable()
-    {
-        DontDestroyOnLoad(this);
-    }
-
-    /// <summary>
     /// Method which sets the winner.
     /// </summary>
     /// <param name="winner"> Winner to set as an int. </param>
