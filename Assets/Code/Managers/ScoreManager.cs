@@ -18,6 +18,13 @@ public class ScoreManager : MonoBehaviour
     public event Action<int> OnGameOver;
 
     /// <summary>
+    /// Event which declares the start or end of a round.
+    /// Returns true when round starts.
+    /// Returns false when round ends.
+    /// </summary>
+    public event Action<bool> OnRoundChange;
+
+    /// <summary>
     /// Player 1's score.
     /// </summary>
     public float Player1Score { get; private set; }
@@ -202,8 +209,9 @@ public class ScoreManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Round over");
-            UIManager.Instance.DeclareRoundWinner(playerNum);
+            // Debug.Log("Round over");
+            
+            RoundOver(playerNum);
         }
         
         //Set the bools to make sure it's in between rounds.
@@ -211,19 +219,51 @@ public class ScoreManager : MonoBehaviour
         _endOfRoundTimerActive = true;
     }
 
+    /// <summary>
+    /// Method which runs after a round ends.
+    /// </summary>
     private void Intermission()
     {
         EndOfRoundTimer -= Time.deltaTime;
         if (EndOfRoundTimer > 0)
         {
-            UIManager.Instance.ClearWinnerUI();
-            //Round restart function (probably in Arena Manager)
-
+            // If the game ended.
             if (_isGameOver)
             {
                 GameOverSceneChange(_gameWinner);
             }
+            // Otherwise, start the next round.
+            else
+            {
+                // Start the next round where the input is the current round number.
+                NextRound(Player1RoundsWon + Player2RoundsWon + 1);
+            }
         }
+    }
+
+    /// <summary>
+    /// Method called when a round ends.
+    /// </summary>
+    /// <param name="roundWinner"> The winner of the previous round. </param>
+    private void RoundOver(int roundWinner)
+    {
+        // UI declares the winner.
+        UIManager.Instance.DeclareRoundWinner(roundWinner);
+
+        // Inform others of the end of a round.
+        OnRoundChange?.Invoke(false);
+    }
+
+    /// <summary>
+    /// Method which starts the next round.
+    /// </summary>
+    private void NextRound(int roundNum)
+    {
+        // Clear the UI
+        UIManager.Instance.ClearWinnerUI();
+
+        // Inform others that the next round has begun.
+        OnRoundChange?.Invoke(true);
     }
 
     /// <summary>

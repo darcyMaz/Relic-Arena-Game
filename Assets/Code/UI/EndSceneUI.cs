@@ -1,33 +1,31 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Class which controls the UI of the End Scene
 /// </summary>
-[RequireComponent(typeof(Winner))]
 public class EndSceneUI : MonoBehaviour
 {
     /// <summary>
-    /// The Winner component.
+    /// Text on the canvas displaying a winning message.
     /// </summary>
-    private Winner _winner;
-    
+    [SerializeField] private TextMeshProUGUI _winnerText;
+
     /// <summary>
-    /// Method which runs on the gameObject's enabling.
+    /// Method called before the first call of Update on this script.
     /// </summary>
-    private void OnEnable()
+    private void Start()
     {
-        DontDestroyOnLoad(gameObject);
-        InitWinner();
+        SetWinnerText();
     }
 
     /// <summary>
-    /// Method which gets the Winner component.
+    /// Method whichs sets the text which displays the winner.
     /// </summary>
-    private void InitWinner()
+    private void SetWinnerText()
     {
-        // Get the Winner component.
-        _winner = GetComponent<Winner>();
+        _winnerText.text += " " + EndSceneManager.Instance.GetWinner().ToString();
     }
 
     /// <summary>
@@ -49,10 +47,10 @@ public class EndSceneUI : MonoBehaviour
     }
 
     /// <summary>
-    /// Method which destroys the winner GameObject.
+    /// Method which destroys the end scene manager.
     /// </summary>
-    public void DestroySelf()
+    public void DestroyESM()
     {
-        Destroy(gameObject);
+        EndSceneManager.Instance.DestroySelf();
     }
 }

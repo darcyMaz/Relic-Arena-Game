@@ -8,7 +8,7 @@ public class Winner : MonoBehaviour
     /// <summary>
     /// Int representing the winner.
     /// </summary>
-    private int _winner = 0;
+    [SerializeField] private int _winner = 0;
 
     /// <summary>
     /// Method which sets the winner.

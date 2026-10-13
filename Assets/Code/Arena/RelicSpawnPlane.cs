@@ -213,7 +213,6 @@ public class RelicSpawnPlane : MonoBehaviour
     /// <param name="coord"> The coordinate to translate. </param>
     private Vector3 CoordToPosition(Vector2 coord)
     {
-        
         // Get the size of the arena.
         Vector3 size = _renderer.bounds.size;
 

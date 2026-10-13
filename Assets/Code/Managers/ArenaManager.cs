@@ -129,6 +129,11 @@ public class ArenaManager : MonoBehaviour
         Instance = this;
     }
 
+    /// <summary>
+    /// Method which buries relics in the game scene, choosing a RelicSpawnPlane based on how full they are all.
+    /// The choice of where to spawn a relic depends on how full a plane is.
+    /// The higher the ratio between the number of relics buried in a plane and its max, the lower the odds of spawning there are.
+    /// </summary>
     private void BuryRelics()
     {
         // Count how many relics have been buried.
@@ -157,7 +162,8 @@ public class ArenaManager : MonoBehaviour
     /// </summary>
     private void GameActivationSubscription()
     {
-        // LISTEN TO SOMETHING THAT TURNS ROUNDS ON AND OFF
+        // Subscribe to round start/end event.
+        ScoreManager.Instance.OnRoundChange += GameActivationListener;
     }
 
     /// <summary>
@@ -165,7 +171,8 @@ public class ArenaManager : MonoBehaviour
     /// </summary>
     private void GameActivationUnsubscribe()
     {
-        // Unsubscribe to something that turns rtounds on and off.
+        // Unsubscribe from round start/end event.
+        ScoreManager.Instance.OnRoundChange -= GameActivationListener;
     }
 
     /// <summary>
@@ -247,7 +254,7 @@ public class ArenaManager : MonoBehaviour
             }
         }
 
-        // This part of the method ensures that the maximum number of relics allowed in the game at once by the ArenaManager does not exceed the sum of that limit set for each plane.
+        // The below part of the method ensures that the maximum number of relics allowed in the game at once by the ArenaManager does not exceed the sum of that limit set for each plane.
 
         // Get the value representing how many relics can be buried in each plane.
         int maxAllowedRelics = 0;
@@ -258,6 +265,7 @@ public class ArenaManager : MonoBehaviour
             maxAllowedRelics += plane.GetBuriedRelicMax() - plane.GetTotalRelicsBuried();
         }
 
+        //// Ok I've gotta think about the logic below to see if there's anything other than setting the MaxRelicsInGame for each option.
         // If the planes can accept more relics than the arena allows, increase the tolerance for the ArenaManager.
         if (maxAllowedRelics > MaxRelicsInGame)
         {
@@ -268,8 +276,6 @@ public class ArenaManager : MonoBehaviour
         {
             MaxRelicsInGame = maxAllowedRelics;
         }
-
-        //Debug.Log("SpawnPlane count" + _relicSpawnPlanes.Count);
     }
 
     /// <summary>
@@ -290,9 +296,6 @@ public class ArenaManager : MonoBehaviour
         // Generate the random float between 0 and 1.
         float rand = UnityEngine.Random.Range(0f, 1f);
 
-        // Debug.Log("Choosing random plane rand val: " + rand);
-
-
         // The sum of the previous odds as the list below progresses.
         float prevOdds = 0;
 
@@ -301,8 +304,6 @@ public class ArenaManager : MonoBehaviour
         {
             // The odds of this plane being chosen.
             float odds = (plane.GetBuriedRelicMax() - plane.GetTotalRelicsBuried()) / diffSum;
-
-            // Debug.Log("Choosing random plane loop ~ odds: " + odds + " prevOdds:" + prevOdds);
 
             // Is this plane within the range of the odds?
             if (rand <= prevOdds + odds)
@@ -331,6 +332,10 @@ public class ArenaManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method which returns a random delay within a certain set range.
+    /// </summary>
+    /// <returns></returns>
     private int GetRandomDelay()
     {
         return UnityEngine.Random.Range(MinRelicSpawnDelay, MinRelicSpawnDelay + UpperBoundRelicSpawnDelay);
