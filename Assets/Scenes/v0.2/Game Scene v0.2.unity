@@ -261,6 +261,7 @@ MonoBehaviour:
   GridColumns: 4
   MaxRelicsBuried: 1
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
+  VisualDebugging: 0
 --- !u!64 &13152609
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1489,6 +1490,7 @@ MonoBehaviour:
   GridColumns: 6
   MaxRelicsBuried: 3
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
+  VisualDebugging: 0
 --- !u!64 &1123177428
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2652,6 +2654,7 @@ MonoBehaviour:
   GridColumns: 3
   MaxRelicsBuried: 1
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
+  VisualDebugging: 0
 --- !u!64 &1892454080
 MeshCollider:
   m_ObjectHideFlags: 0

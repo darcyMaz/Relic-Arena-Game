@@ -267,13 +267,13 @@ public class RelicSpawnPlane : MonoBehaviour
     {
         // Make a list of all coordinates which are not already occupied by BuriedRelics.
         List<Vector2> allCoords = new List<Vector2>();
-        for (int i=1; i<GridRows+1; i++)
+        for (int x=1; x< GridColumns + 1; x++)
         {
-            for (int j=1; j<GridColumns+1; j++)
+            for (int y=1; y<GridRows+1; y++)
             {
-                if (!_buriedRelics.TryGetValue(new Vector2(i, j), out _))
+                if (!_buriedRelics.TryGetValue(new Vector2(x, y), out _))
                 {
-                    allCoords.Add(new Vector2(i, j));
+                    allCoords.Add(new Vector2(x, y));
                 }
             }
         }
