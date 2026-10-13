@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
+/// <summary>
+/// Class which manages the Arena. In partricular, it manages spawning in of relics across RelicSpawnPlanes and helps end the game.
+/// </summary>
 public class ArenaManager : MonoBehaviour
 {
     /// <summary>
@@ -13,6 +16,11 @@ public class ArenaManager : MonoBehaviour
     /// Event which informs others, plane spawners in particular, whether the game is active.
     /// </summary>
     public event Action<bool> OnGameActivation;
+
+    /// <summary>
+    /// Spawn rate of Relics with effects.
+    /// </summary>
+    [SerializeField] private float EffectRelicSOSpawnRate = 0.01f;
 
     /// <summary>
     /// Int representing the maximum number of relics allowed to be buried at a time.
@@ -30,13 +38,15 @@ public class ArenaManager : MonoBehaviour
     /// </summary>
     [SerializeField] private int UpperBoundRelicSpawnDelay = 500;
 
-    public GameObject RelicSpawnHelper; // to remove
-    public GameObject SpawnPlaneHelper;
+    /// <summary>
+    /// Prefab gameObject for visual debugging. Shows where relics spawn.
+    /// </summary>
+    public GameObject RelicSpawnHelper { get; private set; }
 
     /// <summary>
-    /// Spawn rate of Relics with effects.
+    /// Prefab gameObject for visual debugging. Shows where relics CAN spawn.
     /// </summary>
-    [SerializeField] private float EffectRelicSOSpawnRate = 0.01f;
+    public GameObject SpawnPlaneHelper { get; private set; }
 
     /// <summary>
     /// All RelicSOs with no effect.

@@ -1,10 +1,22 @@
+using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// The Score Manager is a class which keeps track of the Score of the players and may hold other stats.
 /// </summary>
 public class ScoreManager : MonoBehaviour
 {
+    /// <summary>
+    /// ScoreManager singleton instance.
+    /// </summary>
+    public static ScoreManager Instance { get; private set; }
+
+    /// <summary>
+    /// Event which declares the end of the game and which returns an int representing the player who won.
+    /// </summary>
+    public event Action<int> OnGameOver;
+
     /// <summary>
     /// Player 1's score.
     /// </summary>
@@ -28,7 +40,7 @@ public class ScoreManager : MonoBehaviour
     /// <summary>
     /// Whether the round timer is counting down or not.
     /// </summary>
-    private bool RoundTimerActive = true;
+    private bool _roundTimerActive = true;
     /// <summary>
     /// Amound of time the game stays active between rounds.
     /// </summary>
@@ -36,7 +48,50 @@ public class ScoreManager : MonoBehaviour
     /// <summary>
     /// Whether the game is in between rounds.
     /// </summary>
-    private bool EndOfRoundTimerActive = false;
+    private bool _endOfRoundTimerActive = false;
+
+    /// <summary>
+    /// Bool which represents whether the game is over or not.
+    /// </summary>
+    private bool IsGameOver = false;
+
+    private void Awake()
+    {
+        InitSingleton();
+    }
+
+    /// <summary>
+    /// Method which verifies the instantiation of the ScoreManager singleton.
+    /// </summary>
+    private void InitSingleton()
+    {
+        // If the singleton exists and it's not this gameObject, then remove this gameObject.
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        // Otherwise set it to be this.
+        Instance = this;
+    }
+
+    /// <summary>
+    /// Method which runs when the gameObject is enabled.
+    /// </summary>
+    private void OnEnable()
+    {
+        // Subscribe to OnGameOver event.
+        OnGameOver += GameOver;
+    }
+
+    /// <summary>
+    /// Methid which runs when the gameObject is disabled.
+    /// </summary>
+    private void OnDisable()
+    {
+        // Unsubscribe from OnGameOver event.
+        OnGameOver -= GameOver;
+    }
 
     /// <summary>
     /// Method which increments the score of players in the game and returns a success indicator.
@@ -88,14 +143,13 @@ public class ScoreManager : MonoBehaviour
     /// Function that launches the player win screen between rounds.
     /// </summary>
     /// <param name="PlayerNum">The number of the player that won the round.</param>
-
     private void Update()
     {
-        if (RoundTimerActive)
+        if (_roundTimerActive)
         {
             TimerCountdown();
         }
-        if (EndOfRoundTimerActive)
+        if (_endOfRoundTimerActive)
         {
             Intermission();
         }
@@ -117,40 +171,39 @@ public class ScoreManager : MonoBehaviour
     {
         RoundTimer = 0f;
         //Set the PlayerNum to who has the most points in a round, and add a round won to the winner.
-        int PlayerNum = 0;
+        int playerNum = 0;
         if (Player1Score > Player2Score)
         {
             Player1RoundsWon += 1;
-            PlayerNum = 1;
+            playerNum = 1;
         }
         else if (Player1Score < Player2Score)
         {
             Player2RoundsWon += 1;
-            PlayerNum = 2;
+            playerNum = 2;
         }
         else if (Player1Score == Player2Score)
         {
             Player1RoundsWon += 1;
             Player2RoundsWon += 1;
-            PlayerNum = 0;
+            playerNum = 0;
         }
         //check if someone won 2 rounds
         if ((Player1RoundsWon > 1 && Player1RoundsWon > Player2RoundsWon)||
             (Player2RoundsWon > 1 && Player2RoundsWon > Player1RoundsWon)||
             (Player1RoundsWon == 2 && Player2RoundsWon == 2))
         {
-            Debug.Log("Game Over");
-            UIManager.Instance.DeclareGameWinner(PlayerNum);
+            OnGameOver?.Invoke(playerNum);
         }
         else
         {
             Debug.Log("Round over");
-            UIManager.Instance.DeclareRoundWinner(PlayerNum);
+            UIManager.Instance.DeclareRoundWinner(playerNum);
         }
         
         //Set the bools to make sure it's in between rounds.
-        RoundTimerActive = false;
-        EndOfRoundTimerActive = true;
+        _roundTimerActive = false;
+        _endOfRoundTimerActive = true;
     }
 
     private void Intermission()
@@ -160,7 +213,36 @@ public class ScoreManager : MonoBehaviour
         {
             UIManager.Instance.ClearWinnerUI();
             //Round restart function (probably in Arena Manager)
+
+            if (IsGameOver)
+            {
+                GameOverSceneChange();
+            }
         }
+    }
+
+    /// <summary>
+    /// Method which runs on GameOver.
+    /// </summary>
+    private void GameOver(int playerNum)
+    {
+        IsGameOver = true;
+        UIManager.Instance.DeclareGameWinner(playerNum);
+    }
+
+    /// <summary>
+    /// Method which changes the scene to the End Scene when the game ends and the intermission timer runs.
+    /// </summary>
+    private void GameOverSceneChange()
+    {
+        // Create the EndSceneManager gameObject.
+        ////
+        
+        // Set the Winner
+        ////
+
+        // Change scene to the Ending Scene.
+        SceneManager.LoadScene(2);
     }
 }
 

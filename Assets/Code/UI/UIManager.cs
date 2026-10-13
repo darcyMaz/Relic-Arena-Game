@@ -61,6 +61,7 @@ public class UIManager : MonoBehaviour
             RoundWinner.text = "Player " + PlayerNum + " wins!";
         }   
      }
+
     public void DeclareGameWinner(int PlayerNum)
     {
         if (PlayerNum == 0)
