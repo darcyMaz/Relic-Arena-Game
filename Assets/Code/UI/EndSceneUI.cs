@@ -23,4 +23,12 @@ public class EndSceneUI : MonoBehaviour
     {
         SceneManager.LoadScene(sceneName);
     }
+
+    /// <summary>
+    /// Method which destroys the winner GameObject.
+    /// </summary>
+    public void DestroyWinner()
+    {
+        
+    }
 }
