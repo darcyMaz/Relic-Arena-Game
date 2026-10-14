@@ -17,10 +17,6 @@ using UnityEngine;
 /// </summary>
 public abstract class EffectableBase: MonoBehaviour
 {
-    /// <summary>
-    /// Event that announces the current list of Passive Effects.
-    /// </summary>
-    public event Action<List<Relic>> OnUpdateEffectRelics;
 
     /// <summary>
     /// Event that announces when a Relic has been destroyed due to an Effect.
@@ -31,7 +27,6 @@ public abstract class EffectableBase: MonoBehaviour
     /// Dictionary holding all passive effects currently on this EffectableBase, mappes to the Relic which is powering that Effect.
     /// </summary>
     protected Dictionary<Effect, Relic> _passiveEffects = new Dictionary<Effect, Relic>();
-
 
     /// <summary>
     /// The Effects Dictionary, Effect enums are mapped to class methods that take a string as input.
@@ -173,7 +168,7 @@ public abstract class EffectableBase: MonoBehaviour
     /// </summary>
     private void InitCancellationDict()
     {
-        // For each Effect, there must be a source for cancellation tokens.
+        // For each Effect, there must be a cancellation token source.
         foreach (Effect effect in Enum.GetValues(typeof(Effect))) 
         {
             _effectsCancellationTokens.Add(effect, new CancellationTokenSource());
@@ -206,7 +201,7 @@ public abstract class EffectableBase: MonoBehaviour
     /// </summary>
     private void InitOnEnable()
     {
-        OnUpdateEffectRelics += CheckPassiveEffects;
+        
     }
 
     /// <summary>
@@ -214,7 +209,6 @@ public abstract class EffectableBase: MonoBehaviour
     /// </summary>
     private void InitOnDisable()
     {
-        OnUpdateEffectRelics -= CheckPassiveEffects;
         CancelAllEffects();
     }
 
@@ -291,7 +285,6 @@ public abstract class EffectableBase: MonoBehaviour
                     // Remove this Effect from the dictionary.
                     _passiveEffects.Remove(effect);
 
-                    // Debug.Log("CancelEffectsOnRelic: effect being cancelled");
                     // Cancel the Effect.
                     CancelEffect(effect);
                 }
@@ -443,15 +436,6 @@ public abstract class EffectableBase: MonoBehaviour
     }
 
     /// <summary>
-    /// Method which invokes the OnUpdateEffectRelics.
-    /// This method invokes the event from implementing classes only.
-    /// </summary>
-    protected void InvokePassiveEffectEvent(List<Relic> effectRelics)
-    {
-        OnUpdateEffectRelics?.Invoke(effectRelics);
-    }
-
-    /// <summary>
     /// This method builds the effect relic list and then should call the function InvokePassiveEffectEvent();
     /// </summary>
     protected abstract void BuildEffectRelicList();
@@ -462,7 +446,7 @@ public abstract class EffectableBase: MonoBehaviour
     /// It runs async functions related to those passive effects if they're not applied already.
     /// </summary>
     /// <param name="effectRelics"> The updated list of EffectRelics. </param>
-    private void CheckPassiveEffects(List<Relic> effectRelics)
+    protected void CheckPassiveEffects(List<Relic> effectRelics)
     {
         
         // Go through each relic and add new effects to the _passiveEffects list.
