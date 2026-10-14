@@ -1,0 +1,41 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class Melee2 : MonoBehaviour
+{
+    //public int damage = 1;
+    public int HitPoints;
+    [SerializeField] private float range = 2f;
+    [SerializeField] private Vector3 offset = new Vector3(1.5f, 0f, 0f);
+    public bool meowHit;
+
+ void Update()
+{
+        if (Keyboard.current.numpad5Key.wasPressedThisFrame)
+    Swing();
+}
+
+    public void Swing()
+    {
+        Vector3 center = transform.position + transform.rotation * offset;
+
+        foreach (Collider hit in Physics.OverlapSphere(center, range)){
+
+            if (hit.gameObject == gameObject)
+            {
+                continue;
+            }
+
+        if (hit.TryGetComponent(out Destructibleobject target))
+        {
+        target.TakeHit();
+        }
+       /* if (hit.TryGetComponent(out MovementInput target2)){
+        target2.Pushback(transform.position);
+        }
+        
+        */
+        }
+    }
+ 
+}

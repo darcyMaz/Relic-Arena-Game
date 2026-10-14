@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class Melee : MonoBehaviour
 {
-    public int damage = 1;
+    //public int damage = 1;
     public int HitPoints;
     [SerializeField] private float range = 2f;
     [SerializeField] private Vector3 offset = new Vector3(1.5f, 0f, 0f);
@@ -28,7 +28,7 @@ public class Melee : MonoBehaviour
 
         if (hit.TryGetComponent(out Destructibleobject target))
         {
-        target.TakeHit(damage);
+        target.TakeHit();
         }
        /* if (hit.TryGetComponent(out MovementInput target2)){
         target2.Pushback(transform.position);
