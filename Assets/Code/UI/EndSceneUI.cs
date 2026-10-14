@@ -47,6 +47,14 @@ public class EndSceneUI : MonoBehaviour
     }
 
     /// <summary>
+    /// Method which quits the game.
+    /// </summary>
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    /// <summary>
     /// Method which destroys the end scene manager.
     /// </summary>
     public void DestroyESM()
