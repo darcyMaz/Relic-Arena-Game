@@ -6,6 +6,6 @@ public enum Effect
     ExtraLives,
     LightningForray,
     LightingRain,
-    YummySpeedChange
-    
+    YummySpeedChange,
+    ExcaliburSwipe
 }

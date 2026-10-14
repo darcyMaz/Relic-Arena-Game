@@ -2872,13 +2872,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b51c1887d14c69e4db38683393fbdafd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaManager
+  IsGameActive: 1
+  EndSceneManager: {fileID: 0}
+  EffectRelicSOSpawnRate: 0.5
   MaxRelicsInGame: 5
   MinRelicSpawnDelay: 2000
   UpperBoundRelicSpawnDelay: 500
-  RelicSpawnHelper: {fileID: 7343063177068665414, guid: dcd41f0672cfb3545a7dffe2373679a4, type: 3}
-  SpawnPlaneHelper: {fileID: 6614444877399756388, guid: b6e166c96a9b17a4a89d52508a8140d2, type: 3}
-  EffectRelicSOSpawnRate: 0.5
-  IsGameActive: 1
 --- !u!1 &2034676461
 GameObject:
   m_ObjectHideFlags: 0

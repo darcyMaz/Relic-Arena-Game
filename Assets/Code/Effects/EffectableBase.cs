@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 // Note on compressing this class:
 //      The formatDict could be changed to lambda funcs
@@ -125,6 +123,7 @@ public abstract class EffectableBase: MonoBehaviour
         _effectsDict.TryAdd(Effect.LightningForray, LightningForray);
         _effectsDict.TryAdd(Effect.LightingRain, LightningRain);
         _effectsDict.TryAdd(Effect.YummySpeedChange, YummySpeedChange);
+        _effectsDict.TryAdd(Effect.ExcaliburSwipe, ExcaliburSwipe);
 
         // Then do a check at the end to see if the size of the dictionary matches up with the number of Effects.
         int EffectCount = Enum.GetNames(typeof(Effect)).Length;
@@ -164,6 +163,9 @@ public abstract class EffectableBase: MonoBehaviour
             "Float representing the percentage of the speed nerf compared to the base being 1." +
             "Int representing the length of time the nerf plays in milliseconds" +
             ": 1.4f, 1000, 0.75f, 1400");
+        _formatDict.TryAdd(Effect.ExcaliburSwipe,
+            "Float representing the length of time the swipe lasts in seconds" +
+            ": 2.1");
     }
 
     /// <summary>
@@ -224,6 +226,9 @@ public abstract class EffectableBase: MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Method which helps the Update function.
+    /// </summary>
     private void UpdateHelper()
     {
 
@@ -362,14 +367,40 @@ public abstract class EffectableBase: MonoBehaviour
             Debug.LogError("There was an attempt by an EffectableBase to launch an active Effect, but the LaunchType was invalid.");
         }
     }
+
+    /// <summary>
+    /// Method to implement for the LaunchType LaunchRaycast.
+    /// </summary>
+    /// <param name="activeEffect"> The Effect being launched. </param>
+    /// <param name="activeEffectDetails"> The details of that effect as a string. </param>
     protected abstract void LaunchRaycast(Effect activeEffect, string activeEffectDetails);
 
+    /// <summary>
+    /// Method to implement for the LaunchType LaunchRaycast.
+    /// </summary>
+    /// <param name="activeEffect"> The Effect being launched. </param>
+    /// <param name="activeEffectDetails"> The details of that effect as a string. </param>
     protected abstract void LaunchThrow(Effect activeEffect, string activeEffectDetails);
 
+    /// <summary>
+    /// Method to implement for the LaunchType LaunchRaycast.
+    /// </summary>
+    /// <param name="activeEffect"> The Effect being launched. </param>
+    /// <param name="activeEffectDetails"> The details of that effect as a string. </param>
     protected abstract void LaunchImmediate(Effect activeEffect, string activeEffectDetails);
 
+    /// <summary>
+    /// Method to implement for the LaunchType LaunchRaycast.
+    /// </summary>
+    /// <param name="activeEffect"> The Effect being launched. </param>
+    /// <param name="activeEffectDetails"> The details of that effect as a string. </param>
     protected abstract void LaunchNone(Effect activeEffect, string activeEffectDetails);
 
+    /// <summary>
+    /// Method to implement for the LaunchType LaunchRaycast.
+    /// </summary>
+    /// <param name="activeEffect"> The Effect being launched. </param>
+    /// <param name="activeEffectDetails"> The details of that effect as a string. </param>
     protected abstract void LaunchSelf(Effect activeEffect, string activeEffectDetails);
 
     /// <summary>
@@ -381,7 +412,6 @@ public abstract class EffectableBase: MonoBehaviour
     /// <param name="relic"> The Relic related to the Effect. </param>
     private void RunEffectAction(Effect effect, string effectDetails, Relic relic)
     {
-
         // Try to get a cancellation token source for the effect at hand.
         CancellationTokenSource cancellationTokenSource;
         // Try to get the effect function for the effect at hand.
@@ -418,7 +448,6 @@ public abstract class EffectableBase: MonoBehaviour
     /// </summary>
     protected void InvokePassiveEffectEvent(List<Relic> effectRelics)
     {
-        // Debug.Log("Invoke passive effecrt event() start");
         OnUpdateEffectRelics?.Invoke(effectRelics);
     }
 
@@ -943,8 +972,10 @@ public abstract class EffectableBase: MonoBehaviour
     /// Apply the YummySpeedChange Effect.
     /// It is not async like others. It simply calls the ApplyYummySpeedChange and let's the child deal with it.
     /// </summary>
-    /// <param name="delay"> The delay before the lightning strikes. </param>
-    /// <param name="currentEffect"> The DelayedLightning Effect. </param>
+    /// <param name="details"> The string details for this Effect. </param>
+    /// <param name="effect"> The Effect itself. </param>
+    /// <param name="thisRelic"> The Relic this effect comes from. </param>
+    /// <param name="token"> The cancellation token for this async function. </param>
     private void YummySpeedChange(string details, Effect currentEffect, Relic thisRelic, CancellationToken token)
     {
         try
@@ -963,6 +994,57 @@ public abstract class EffectableBase: MonoBehaviour
         else CancelEffect(currentEffect);
     }
     protected abstract void ApplyYummySpeedChange(float boostPercentage, int boostLength, float nerfPercentage, int nerfLength);
+
+    /// <summary>
+    /// Apply the Excalibur Effect.
+    /// </summary>
+    /// <param name="details"> The string details for this Effect. </param>
+    /// <param name="effect"> The Effect itself. </param>
+    /// <param name="thisRelic"> The Relic this effect comes from. </param>
+    /// <param name="token"> The cancellation token for this async function. </param>
+    private async void ExcaliburSwipe(string details, Effect currentEffect, Relic thisRelic, CancellationToken token)
+    {
+        // Get from the effectsmanager the excal obj
+        GameObject excaliburGO = EffectsManager.Instance.GetExcaliburGO(transform);
+
+        try
+        {
+            try
+            {
+                // Change the format of the details from string to float. This is the animatiome time in seconds.
+                float playTime = float.Parse(details);
+                
+                // Apply the effect to the child.
+                ApplyExcaliburSwipe(playTime);
+
+                // Delay for the length of the anim time.
+                await Task.Delay((int)(playTime * 1000), token);
+            }
+            catch (TaskCanceledException)
+            {
+
+            }
+            catch (OperationCanceledException)
+            {
+
+            }
+
+            
+        }
+        catch (FormatException fe)
+        {
+            LogFormatException(fe, currentEffect);
+        }
+
+        // Destroy the excaliburGO.
+        Destroy(excaliburGO);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="animTime"></param>
+    protected abstract void ApplyExcaliburSwipe(float playTime);
 
     /// <summary>
     /// A function which runs when the None Effect runs. It does nothing.

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -1112,6 +1113,17 @@ public class Player : EffectableBase
 
         // Set the speed back to normal
         ChangeSpeed(1);
+    }
+
+    /// <summary>
+    /// Method which applies the Excalibur Swipe Effect.
+    /// It runs an animation which indicates to the player that the effect is running.
+    /// </summary>
+    /// <param name="playTime"></param>
+    protected async override void ApplyExcaliburSwipe(float playTime)
+    {
+        // Play an animation
+        ////
     }
 
     /// <summary>

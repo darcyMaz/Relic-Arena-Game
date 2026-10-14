@@ -62,8 +62,6 @@ public class EffectsManager : MonoBehaviour
     /// </summary>
     [SerializeField] private int NextLightningMarkerDelay = 1000;
 
-
-
     /// <summary>
     /// Event invoked whenever a lightning strikes the scene.
     /// </summary>
@@ -74,7 +72,10 @@ public class EffectsManager : MonoBehaviour
     /// </summary>
     public event Action<Effect, string, int, int> OnActiveEffectLaunched;
 
-
+    /// <summary>
+    /// GameObject used for the ExcaliburSlash Effect.
+    /// </summary>
+    [SerializeField] private GameObject ExcaliburGO;
 
     /// <summary>
     /// The Awake function checks if the current object is the singleton.
@@ -186,6 +187,16 @@ public class EffectsManager : MonoBehaviour
     public GameObject GetBulletPatternSpawner(Transform parent)
     {
         return Instantiate(PatternSpawnerPrefab, parent);
+    }
+
+    /// <summary>
+    /// Method which returns a clone of the ExcaliburGO and parents it to the input transform.
+    /// </summary>
+    /// <param name="parent"> Transform representing the parent. </param>
+    /// <returns> The GameObject clone. </returns>
+    public GameObject GetExcaliburGO(Transform parent)
+    {
+        return Instantiate(ExcaliburGO, parent);
     }
 
     /// <summary>
