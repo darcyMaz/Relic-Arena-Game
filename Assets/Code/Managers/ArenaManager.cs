@@ -220,7 +220,7 @@ public class ArenaManager : MonoBehaviour
     /// <returns> A RelicSO at random. </returns>
     private RelicSO GetRandomRelicSO()
     {
-        Debug.Log("_relicSOsEffect size " + _relicSOsEffect.Count);
+        // Debug.Log("_relicSOsEffect size " + _relicSOsEffect.Count);
 
         // Randomly generate a float in the range from 0 to 1.
         float rand = UnityEngine.Random.Range(0f, 1f);

@@ -312,7 +312,7 @@ public class RelicSpawnPlane : MonoBehaviour
         // For each buried relic, destroy the game object.
         foreach (Vector2 relicCoord in _buriedRelics.Keys)
         {
-            Destroy(_buriedRelics[relicCoord]);
+            Destroy(_buriedRelics[relicCoord].gameObject);
         }
         // Clear the list.
         _buriedRelics.Clear();

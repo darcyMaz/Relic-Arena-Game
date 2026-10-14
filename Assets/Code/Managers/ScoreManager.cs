@@ -43,15 +43,28 @@ public class ScoreManager : MonoBehaviour
     /// <summary>
     /// How long the round lasts.
     /// </summary>
-    public float RoundTimer = 99f;
+    public float RoundTime = 99f;
+
+    /// <summary>
+    /// The timer for the round.
+    /// </summary>
+    private float _roundTimer;
+
     /// <summary>
     /// Whether the round timer is counting down or not.
     /// </summary>
     private bool _roundTimerActive = true;
+
+    /// <summary>
+    /// Timer for each round.
+    /// </summary>
+    private float EndOfRoundTimer;
+
     /// <summary>
     /// Amound of time the game stays active between rounds.
     /// </summary>
-    public float EndOfRoundTimer = 5f;
+    public float EndOfRoundTime = 5f;
+
     /// <summary>
     /// Whether the game is in between rounds.
     /// </summary>
@@ -167,11 +180,29 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// Method which runs before the first Update frame for ScoreManager.
+    /// </summary>
+    private void Start()
+    {
+        StartHelper();
+    }
+
+    /// <summary>
+    /// Helper method for the start function.
+    /// </summary>
+    private void StartHelper()
+    {
+        _roundTimer = RoundTime;
+    }
+
     private void TimerCountdown()
     {
-        RoundTimer -= Time.deltaTime;
-        UIManager.Instance.CallTimerUpdate((int)RoundTimer);
-        if (RoundTimer <= 0f)
+        _roundTimer -= Time.deltaTime;
+        UIManager.Instance.CallTimerUpdate((int)_roundTimer);
+
+        if (_roundTimer <= 0f)
         {
             EndOfRoundSequence();
         }
@@ -181,7 +212,13 @@ public class ScoreManager : MonoBehaviour
     /// </summary>
     private void EndOfRoundSequence()
     {
-        RoundTimer = 0f;
+        //Set the bools to make sure it's in between rounds.
+        _roundTimerActive = false;
+        _endOfRoundTimerActive = true;
+
+        Debug.Log("End of round vals before check ~ Player1wins: " + Player1RoundsWon);
+
+        _roundTimer = RoundTime;
         //Set the PlayerNum to who has the most points in a round, and add a round won to the winner.
         int playerNum = 0;
         if (Player1Score > Player2Score)
@@ -200,23 +237,28 @@ public class ScoreManager : MonoBehaviour
             Player2RoundsWon += 1;
             playerNum = 0;
         }
+
+        Debug.Log("End of round vals after check ~ Player1wins: " + Player1RoundsWon);
+
+
+        // Round is over method.
+        RoundOver(playerNum);
+
         //check if someone won 2 rounds
-        if ((Player1RoundsWon > 1 && Player1RoundsWon > Player2RoundsWon)||
-            (Player2RoundsWon > 1 && Player2RoundsWon > Player1RoundsWon)||
-            (Player1RoundsWon == 2 && Player2RoundsWon == 2))
+        if (
+            (Player1RoundsWon > 1 && Player1RoundsWon > Player2RoundsWon)
+            ||
+            (Player2RoundsWon > 1 && Player2RoundsWon > Player1RoundsWon)
+            ||
+            (Player1RoundsWon == 2 && Player2RoundsWon == 2)
+            )
         {
+            Debug.Log("Someone won apparently");
+
             OnGameOver?.Invoke(playerNum);
         }
-        else
-        {
-            // Debug.Log("Round over");
-            
-            RoundOver(playerNum);
-        }
         
-        //Set the bools to make sure it's in between rounds.
-        _roundTimerActive = false;
-        _endOfRoundTimerActive = true;
+        
     }
 
     /// <summary>
@@ -225,8 +267,10 @@ public class ScoreManager : MonoBehaviour
     private void Intermission()
     {
         EndOfRoundTimer -= Time.deltaTime;
-        if (EndOfRoundTimer > 0)
+        if (EndOfRoundTimer <= 0)
         {
+            Debug.Log("Intermission ending, isgameover?: " + _isGameOver);
+
             // If the game ended.
             if (_isGameOver)
             {
@@ -261,6 +305,15 @@ public class ScoreManager : MonoBehaviour
     {
         // Clear the UI
         UIManager.Instance.ClearWinnerUI();
+
+        // Reset the timer.
+        EndOfRoundTimer = EndOfRoundTime;
+
+        // Start round timer
+        _roundTimerActive = true;
+
+        // End intermission timer
+        _endOfRoundTimerActive = false;
 
         // Inform others that the next round has begun.
         OnRoundChange?.Invoke(true);
