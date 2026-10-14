@@ -1141,6 +1141,14 @@ PrefabInstance:
       propertyPath: ITime
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6395290448133851492, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
+      propertyPath: _closeSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 53b15586e04d6784fa45e3ec3b76a12a, type: 3}
+    - target: {fileID: 6395290448133851492, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
+      propertyPath: _veryCloseSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 1e41ae435a9f6b342b05e29f6d96d8b9, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -3036,7 +3044,11 @@ PrefabInstance:
     - target: {fileID: 2953285023961512080, guid: b2389981ec2ebd740bd36b4d6defa673, type: 3}
       propertyPath: _closeSound
       value: 
-      objectReference: {fileID: 8300000, guid: 7c17dc39e29f730438eb7ebd78bf3f02, type: 3}
+      objectReference: {fileID: 8300000, guid: e0c851565c42a914fa9c530c22f256d5, type: 3}
+    - target: {fileID: 2953285023961512080, guid: b2389981ec2ebd740bd36b4d6defa673, type: 3}
+      propertyPath: _veryCloseSound
+      value: 
+      objectReference: {fileID: 8300000, guid: cff79cc3a4256064e91204682b32f237, type: 3}
     - target: {fileID: 8205348096973775290, guid: b2389981ec2ebd740bd36b4d6defa673, type: 3}
       propertyPath: m_Name
       value: Player 2
