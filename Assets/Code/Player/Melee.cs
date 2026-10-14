@@ -7,6 +7,7 @@ public class Melee : MonoBehaviour
     public int HitPoints;
     [SerializeField] private float range = 2f;
     [SerializeField] private Vector3 offset = new Vector3(1.5f, 0f, 0f);
+    public bool meowHit;
 
  void Update()
 {
@@ -18,9 +19,23 @@ public class Melee : MonoBehaviour
     {
         Vector3 center = transform.position + transform.rotation * offset;
 
-        foreach (Collider hit in Physics.OverlapSphere(center, range))
+        foreach (Collider hit in Physics.OverlapSphere(center, range)){
+
+            if (hit.gameObject == gameObject)
+            {
+                continue;
+            }
+
         if (hit.TryGetComponent(out Destructibleobject target))
+        {
         target.TakeHit(damage);
+        }
+       /* if (hit.TryGetComponent(out MovementInput target2)){
+        target2.Pushback(transform.position);
+        }
+        
+        */
+        }
     }
  
 }

@@ -32,6 +32,13 @@ public class MovementInput : MonoBehaviour
     /// </summary>
     private float _speed;
 
+///this will be called to determine the speed the player is flung back on
+private float _HitSpeed = 5f;
+//private float _stunamount = 0.2f;
+
+///this will check if the player got hit.
+public bool meowHit = false;
+
     /// <summary>
     /// Input vector for the movement.
     /// </summary>
@@ -191,5 +198,16 @@ public class MovementInput : MonoBehaviour
         _rigidbody.linearVelocity = (_gravity + _input) * Time.fixedDeltaTime;
     }
 
+//work in progress below
+/*
+//public void Pushback(Vector3 hitFrom){
+    Vector3 direction = transform.position - hitFrom;
+    direction.y = 0;
+    direction.Normalize();
+
+    _rigidbody.AddForce(direction * _HitSpeed, ForceMode.Impulse);
+
+    _stunTimer = _stunamount;
+    */
     
 }

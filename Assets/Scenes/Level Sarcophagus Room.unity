@@ -763,10 +763,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff4e7fc7cfc228d4d81c1e3a3501812c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  TestTextUI: {fileID: 0}
+  P1Rounds: {fileID: 0}
   P1Score: {fileID: 2027362786}
+  P2Rounds: {fileID: 0}
   P2Score: {fileID: 345633947}
   RoundWinner: {fileID: 0}
+  TimerDisplay: {fileID: 0}
 --- !u!1 &326050371
 GameObject:
   m_ObjectHideFlags: 0
@@ -1149,7 +1151,7 @@ Transform:
   m_GameObject: {fileID: 386097482}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.42, y: 5.42, z: -4.28}
+  m_LocalPosition: {x: -0.42, y: 4.58, z: -4.28}
   m_LocalScale: {x: 2.9357, y: 6.3736978, z: 2.9357}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1997,8 +1999,8 @@ Transform:
   m_GameObject: {fileID: 841457032}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.08739, y: 14.206989, z: -0.25999975}
-  m_LocalScale: {x: 1, y: 6.121678, z: 1}
+  m_LocalPosition: {x: 7.08739, y: 15.07, z: -0.25999975}
+  m_LocalScale: {x: 1, y: 5.4181747, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1830820589}
@@ -4756,6 +4758,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2badf17bb79cf604b91bb6b23dae601b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
+  Player1RoundsWon: 0
+  Player2RoundsWon: 0
   RoundTimer: 99
   EndOfRoundTimer: 5
 --- !u!1 &1926875179
@@ -5227,8 +5231,24 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.41, y: 1.63, z: 0.19999999}
+  m_Size: {x: 1, y: 1.43, z: 0.19999999}
   m_Center: {x: 0.000002861023, y: 0, z: 0}
+--- !u!114 &6880079636797208000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832203614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f49297375487b4d738febeda0efeb4a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Melee
+  damage: 1
+  HitPoints: 0
+  range: 2
+  offset: {x: 1.5, y: 0, z: 0}
 --- !u!1001 &7286492064766569486
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5242,12 +5262,16 @@ PrefabInstance:
       value: Destructible Wall
       objectReference: {fileID: 0}
     - target: {fileID: 7581135404775683599, guid: f1140570b58194925a386d4b87fad813, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 5.417379
+      objectReference: {fileID: 0}
+    - target: {fileID: 7581135404775683599, guid: f1140570b58194925a386d4b87fad813, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.6326098
       objectReference: {fileID: 0}
     - target: {fileID: 7581135404775683599, guid: f1140570b58194925a386d4b87fad813, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 14.206989
+      value: 14.79
       objectReference: {fileID: 0}
     - target: {fileID: 7581135404775683599, guid: f1140570b58194925a386d4b87fad813, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5426,6 +5450,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3434011169272234523, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6880079636797207999}
+    - targetCorrespondingSourceObject: {fileID: 3434011169272234523, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6880079636797208000}
   m_SourcePrefab: {fileID: 100100000, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
 --- !u!1001 &8536335913484119523
 PrefabInstance:

@@ -499,9 +499,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff4e7fc7cfc228d4d81c1e3a3501812c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  TestTextUI: {fileID: 0}
+  P1Rounds: {fileID: 0}
   P1Score: {fileID: 2027362786}
+  P2Rounds: {fileID: 0}
   P2Score: {fileID: 345633947}
+  RoundWinner: {fileID: 0}
+  TimerDisplay: {fileID: 0}
 --- !u!1 &345633945
 GameObject:
   m_ObjectHideFlags: 0
@@ -1848,6 +1851,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2badf17bb79cf604b91bb6b23dae601b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
+  Player1RoundsWon: 0
+  Player2RoundsWon: 0
+  RoundTimer: 99
+  EndOfRoundTimer: 5
 --- !u!1 &1926875179
 GameObject:
   m_ObjectHideFlags: 0
@@ -1886,7 +1893,6 @@ MonoBehaviour:
   EffectRelicSOSpawnRate: 0.8
   MaxRelicsBuried: 10
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
-  _shop: {fileID: 0}
 --- !u!64 &1926875181
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2259,6 +2265,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.41, y: 1.63, z: 0.19999999}
   m_Center: {x: 0.000002861023, y: 0, z: 0}
+--- !u!114 &6880079636797208008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832203614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f49297375487b4d738febeda0efeb4a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Melee
+  damage: 1
+  HitPoints: 0
+  range: 2
+  offset: {x: 1.5, y: 0, z: 0}
 --- !u!1001 &8095061708731486577
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2297,7 +2319,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1176490974817153580, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.22
       objectReference: {fileID: 0}
     - target: {fileID: 1176490974817153580, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2335,6 +2357,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6395290448133851492, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
+      propertyPath: _closeSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 2b36e15d9a81d44769eeb60e03f44a3c, type: 3}
+    - target: {fileID: 6395290448133851492, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
+      propertyPath: _veryCloseSound
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2342,6 +2372,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3434011169272234523, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6880079636797207999}
+    - targetCorrespondingSourceObject: {fileID: 3434011169272234523, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6880079636797208008}
   m_SourcePrefab: {fileID: 100100000, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
 --- !u!1001 &8536335913484119523
 PrefabInstance:
