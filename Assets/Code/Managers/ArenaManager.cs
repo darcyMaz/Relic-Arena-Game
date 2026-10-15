@@ -58,6 +58,7 @@ public class ArenaManager : MonoBehaviour
     /// </summary>
     public GameObject SpawnPlaneHelper;
 
+
     /// <summary>
     /// All RelicSOs with no effect.
     /// </summary>
@@ -245,6 +246,7 @@ public class ArenaManager : MonoBehaviour
     /// </summary>
     private void GetSpawnPlanes()
     {
+
         foreach (Transform child in transform)
         {
             RelicSpawnPlane spawnPlane;
