@@ -31,7 +31,7 @@ public class RelicEffectSO : ScriptableObject
     public int rotationType = 1;
     #region Rotation Type Legend
     // 0 = Set Rotation for all Bullets
-    // [NOT DONE] 1 = Rotation follow Player when aiming
+    // [NOT USED] 1 = Rotation follow Player when aiming
     // 2 = Rotation follow Player constant
     // 3 = Set Rotation per set spawnLocation
     #endregion

@@ -6,6 +6,8 @@ public class BulletWarning : MonoBehaviour
 {
     
     [SerializeField] private RelicEffectSO relicEffectSO;
+    [SerializeField] private GameObject colliderChild;
+    [SerializeField] public GameObject bSprite;
     [SerializeField] private GameObject warnArrow;
     private GameObject spawnerRef;
 
@@ -47,10 +49,14 @@ public class BulletWarning : MonoBehaviour
 
         bScaleX = relicEffectSO.bulletScaleX;
         bScaleY = relicEffectSO.bulletScaleY;
-        transform.localScale = new Vector3(bScaleX, bScaleY, 1f);
+        colliderChild.transform.localScale = new Vector3(bScaleX, bScaleY, 1f);
 
         warnPos = this.transform.position;
         WarningArrow();
+
+        //Start Animation here
+
+        //Warning is Setup
         warnSetup = true;
     }
 
@@ -63,6 +69,7 @@ public class BulletWarning : MonoBehaviour
         else
         {
             warnArrow.SetActive(true);
+            warnArrow.transform.localPosition = new Vector3((bScaleX/4f) + 0.5f, 0f, 0f);
         }
     }
     private void WarningArrowRotation()
