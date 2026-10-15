@@ -7,6 +7,9 @@ using UnityEngine.InputSystem;
 
 public class Player : EffectableBase
 {
+
+    [SerializeField] private AudioClip DigSound;
+    [SerializeField] private AudioClip HitSound;
     /// <summary>
     /// The Player's number, set in the inspector.
     /// </summary>
@@ -474,6 +477,7 @@ public class Player : EffectableBase
 
             // Play the digging animation.
             anim.SetTrigger("IsDigging");
+            SoundManager.Instance.Play(DigSound);
 
             /*
              * Note on throwing and digging being the same button:
@@ -750,12 +754,14 @@ public class Player : EffectableBase
     {
         // LOSE ALL RELICS
         ConsumeAllRelics();
+        
 
         // Set ITimer to ITime.
         ITimer = ITime;
 
         // Hit animation trigger.
         anim.SetTrigger("GetHit");
+        SoundManager.Instance.Play(HitSound);
     }
 
     /// <summary>
