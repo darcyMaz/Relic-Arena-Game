@@ -1459,7 +1459,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
   WallRumble: {fileID: 8300000, guid: a5b914cd9442c4e4ba33bd09aa788274, type: 3}
   _miscAudioSource: {fileID: 1812186628}
-  PlayerAudioSources: []
+  _playerAudioSources:
+  - {fileID: 1699100637}
+  - {fileID: 425390977}
 --- !u!4 &561663931
 Transform:
   m_ObjectHideFlags: 0
