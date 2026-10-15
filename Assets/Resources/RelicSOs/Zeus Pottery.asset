@@ -18,6 +18,6 @@ MonoBehaviour:
   BulletSystemSO: {fileID: 11400000, guid: 8d8988109161f734482f527df8c55ad3, type: 2}
   ActiveEffect: 5
   ActiveEffectDetails: 2000,1,1,10,10,6
-  LaunchType: 0
+  LaunchType: 3
   PassiveEffects: 
   PassiveEffectsDetails: []

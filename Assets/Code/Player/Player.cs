@@ -329,6 +329,8 @@ public class Player : EffectableBase
             _wasEffectsManagerFound = true;
         }
         
+        //// IF ARENA MANAGER EXISTS, SUBSCRIBE CONSUMEALLRELICS TO ITS ONROUNDEND WHATEVER
+
         // For testing purposes.
         _getHitTest = _actions.Player.Crouch;
         _getHitTest.Enable();
@@ -1149,6 +1151,7 @@ public class Player : EffectableBase
         // Cancel all effects.
         CancelAllEffects();
 
+        // Destroys all GameObjects related to the new passive effect system.
         DestroyAllPassiveGOs();
 
         // Rebuild the effect relic list.
