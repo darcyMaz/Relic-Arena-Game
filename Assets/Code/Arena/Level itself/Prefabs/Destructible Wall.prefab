@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 5597734779319478552}
   - component: {fileID: 452500240404242046}
   - component: {fileID: 1061047403325282075}
-  - component: {fileID: 7468187687877969542}
   m_Layer: 0
   m_Name: Destructible Wall
   m_TagString: Untagged
@@ -154,7 +153,7 @@ MonoBehaviour:
   _DestructionAnimation: 
   strength: 0.3
   duration: 0.5
-  HitPoints: 3
+  HitPoints: 10
 --- !u!114 &1061047403325282075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,21 +167,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightningTester
   target: {fileID: 7581135404775683599}
---- !u!114 &7468187687877969542
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4802964592331832697}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 055ce393779c54bbb929c9df7541a390, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Destructibleobject
-  _DestructionSound1: {fileID: 0}
-  _DestructionSound2: {fileID: 0}
-  _DestructionAnimation: 
-  strength: 0.3
-  duration: 0.5
-  HitPoints: 3

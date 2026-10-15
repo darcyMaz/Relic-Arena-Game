@@ -263,6 +263,7 @@ MonoBehaviour:
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
   VisualDebuggingCoordinates: 0
   VisualDebuggingRelic: 1
+  _visualDebugList: []
 --- !u!64 &13152609
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -280,7 +281,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -1171,7 +1172,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1176490974817153580, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1699100638}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3434011169272234523, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1627313273}
   m_SourcePrefab: {fileID: 100100000, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
 --- !u!1 &425390976
 GameObject:
@@ -1328,6 +1332,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5, y: 0.5, z: 0.2}
   m_Center: {x: 0, y: -0.5, z: 0}
+--- !u!114 &443844096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443844085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86f40cd5dee4440d3bab15a74deff3a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Melee2
+  HitPoints: 0
+  range: 2
+  offset: {x: 1.5, y: 0, z: 0}
+  meowHit: 0
 --- !u!4 &445515295 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1176490974817153580, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
@@ -1674,6 +1694,7 @@ MonoBehaviour:
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
   VisualDebuggingCoordinates: 0
   VisualDebuggingRelic: 1
+  _visualDebugList: []
 --- !u!64 &1123177428
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1691,7 +1712,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -2538,6 +2559,27 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &1627313272 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3434011169272234523, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
+  m_PrefabInstance: {fileID: 405434628}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1627313273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627313272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f49297375487b4d738febeda0efeb4a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Melee
+  HitPoints: 0
+  range: 2
+  offset: {x: 1.5, y: 0, z: 0}
+  meowHit: 0
 --- !u!1 &1676825687
 GameObject:
   m_ObjectHideFlags: 0
@@ -3049,6 +3091,7 @@ MonoBehaviour:
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
   VisualDebuggingCoordinates: 0
   VisualDebuggingRelic: 1
+  _visualDebugList: []
 --- !u!64 &1892454080
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3066,7 +3109,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -3466,6 +3509,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8205348096973775290, guid: b2389981ec2ebd740bd36b4d6defa673, type: 3}
       insertIndex: -1
       addedObject: {fileID: 443844095}
+    - targetCorrespondingSourceObject: {fileID: 8205348096973775290, guid: b2389981ec2ebd740bd36b4d6defa673, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 443844096}
   m_SourcePrefab: {fileID: 100100000, guid: b2389981ec2ebd740bd36b4d6defa673, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

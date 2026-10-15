@@ -130,4 +130,4 @@ MonoBehaviour:
   _DestructionAnimation: 
   strength: 0.3
   duration: 0.5
-  HitPoints: 3
+  HitPoints: 10
