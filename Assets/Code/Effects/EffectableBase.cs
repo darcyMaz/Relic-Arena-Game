@@ -1001,7 +1001,7 @@ public abstract class EffectableBase: MonoBehaviour
                 // Apply the effect to the child.
                 ApplyExcaliburSwipe(playTime);
 
-                // Delay for the length of the anim time.
+                // Delay for the length of the swipe time.
                 await Task.Delay((int)(playTime * 1000), token);
             }
             catch (TaskCanceledException)
@@ -1025,10 +1025,10 @@ public abstract class EffectableBase: MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Abstract method which allows for implementation specific applications of the ExcaliburSwipe.
     /// </summary>
-    /// <param name="animTime"></param>
-    protected abstract void ApplyExcaliburSwipe(float playTime);
+    /// <param name="swipeTime"> The amount of time in seconds it swipes as a float. </param>
+    protected abstract void ApplyExcaliburSwipe(float swipeTime);
 
     /// <summary>
     /// A function which runs when the None Effect runs. It does nothing.
@@ -1058,9 +1058,14 @@ public abstract class EffectableBase: MonoBehaviour
 
     /// <summary>
     /// This method determines whether a Relic is an Effect relic.
+    /// It checks either:
+    /// (1) There are any passive effects on the passive effect list or
+    /// (2) It has an EffectRelicSO attached to it.
+    /// 
+    /// This should be put into Relic as a static function.
     /// </summary>
     /// <param name="relic"></param>
-    /// <returns></returns>
+    /// <returns> A boolean representing whether the given Relic is an Effect Relic or not.</returns>
     protected bool IsEffectRelic(Relic relic)
     {
         // Get the passive effects.

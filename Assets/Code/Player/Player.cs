@@ -602,17 +602,17 @@ public class Player : EffectableBase
             }
         }
         
+        // Send the build list of relics to the EffectableBase.
         CheckPassiveEffects(effectRelics);
     }
 
     /// <summary>
-    /// This method updates which Relic is currently in the player's hand and invokes an event showing the list of relics in the right order.
+    /// This method creates a list in the same order as the Inventory, but where the first element is the item currently in the Player's hand.
+    /// The event UpdateRelicInHand is called at the end of the method with that list.
     /// </summary>
-    /// <param name="isCycleCalled"></param>
+    /// <param name="isCycleCalled"> Boolean which indicates whether there was a call to cycle the list to the next relic. </param>
     private void UpdateRelicInHand(bool isCycleCalled)
     {
-        // Debug.Log("UpdateRelicInHand called");
-
         // If the inventory is empty, set the index to -1 and return an empty list.
         if (_inventory.Count() <= 0)
         {
@@ -627,8 +627,6 @@ public class Player : EffectableBase
         // If it is not, cycle until a new Effect relic is found. If none are found then set _relicInHandIndex to -1 and break.
         else
         {
-            // Debug.Log("- Inventory has more than one relic");
-
             // Ensure the relicInHandIndex is not out of bounds.
             _relicInHandIndex = 
                 // If the relicInHandIndex > the size of the inventory. set it to be the last index.
@@ -671,8 +669,6 @@ public class Player : EffectableBase
             // If there were indeed no Effect relics, then note that and return.
             if (nearestEffectRelic == -1)
             {
-                //Debug.Log("-- nearest effect relic is -1");
-
                 _relicInHandIndex = -1;
                 OnRelicInHandChanged?.Invoke( BuildDisplayList(0) );
                 return;
@@ -681,8 +677,6 @@ public class Player : EffectableBase
             // Then there will be no cycling.
             else if (nextEffectRelic == -1)
             {
-                //Debug.Log("-- next effect relic is -1");
-
                 _relicInHandIndex = nearestEffectRelic;
                 OnRelicInHandChanged?.Invoke(BuildDisplayList( _relicInHandIndex ));
                 return;
@@ -692,14 +686,12 @@ public class Player : EffectableBase
             // If the index is on an Effect Relic AND the isCycleCalled is true, then cycle to that Effect relic.
             // This function may be called without a call to cycle to the next relic because there may simply be a reordering of the inventory.
             if (isCycleCalled)
-            {
-                // Debug.Log("-- cycle was called, and thus there was more than one effect relic and Q was pressed");
+            {   
                 _relicInHandIndex = nextEffectRelic;
-                OnRelicInHandChanged?.Invoke( BuildDisplayList( _relicInHandIndex ) );
+                OnRelicInHandChanged?.Invoke(BuildDisplayList( _relicInHandIndex ) );
             }
             else
             {
-                // Debug.Log("-- cycle was not called, two effect relics and q was nor pressed");
                 _relicInHandIndex = nearestEffectRelic;
                 OnRelicInHandChanged?.Invoke(BuildDisplayList(_relicInHandIndex));
             }
@@ -716,11 +708,13 @@ public class Player : EffectableBase
         // Initialize the displayList
         List<Relic> displayList = new List<Relic>();
 
+        // Checl the validity of the firstIndex
         if (firstIndex < 0 || firstIndex >= _inventory.Count())
         {
             return displayList;
         }
 
+        // Build the display list. I.e. build a list of relics in the same order as the inventory but the first element is the given firstIndex.
         for (int buildIndex = 0; buildIndex < _inventory.Count(); buildIndex++)
         {
             int adjustedIndex = (firstIndex + buildIndex) % _inventory.Count();
@@ -883,13 +877,13 @@ public class Player : EffectableBase
     /// <exception cref="NotImplementedException"></exception>
     protected override void LaunchSelf(Effect activeEffect, string activeEffectDetails)
     {
-        Debug.Log("Launch Self activated");
+        // Debug.Log("Launch Self activated");
         ApplyActiveEffect(activeEffect, activeEffectDetails);
     }
 
     protected override void LaunchNone(Effect activeEffect, string activeEffectDetails)
     {
-        Debug.Log("This Relic does not get thrown.");
+        // Debug.Log("This Relic does not get thrown.");
     }
 
     /// <summary>
@@ -1118,10 +1112,12 @@ public class Player : EffectableBase
     /// It runs an animation which indicates to the player that the effect is running.
     /// </summary>
     /// <param name="playTime"></param>
-    protected async override void ApplyExcaliburSwipe(float playTime)
+    protected override void ApplyExcaliburSwipe(float playTime)
     {
         // Play an animation
         ////
+
+        Debug.Log("Excalibur swipe applied");
     }
 
     /// <summary>
