@@ -43,6 +43,8 @@ public class SoundManager : MonoBehaviour
     /// <param name="audioClip"> The audio clip to play. </param>
     public async void PlayMetalDetector(AudioClip audioClip, float volume)
     {
+        // Debug.Log("Play metal detector: " + audioClip);
+
         // If this audio clip is not in the ongoingMetalDetector list, then it is not already playing.
         if (!_ongoingMetalDetectors.Contains(audioClip))
         {
@@ -50,13 +52,21 @@ public class SoundManager : MonoBehaviour
             _ongoingMetalDetectors.Add(audioClip);
 
             // Get the duration of the audio clip.
-            int audioClipDuration = (int) audioClip.length * 1000;
+            int audioClipDuration = (int) (audioClip.length * 1000);
+
+            // AudioClip class has floats in seconds for the duration: ex. 0.945
+            // Async stuff (see line 63) uses int for durations in milliseconds: ex. 945
+            // Not a problem if you convert properly.
+            // 0.945 * 1000 = 945 -> float to int
+            // .945 float to int -> 0 *1000 = 0 PROBLEM
 
             // PLAY the audio clip.
             _audioSource.PlayOneShot(audioClip, volume);
 
+            // Await in milliseconds
             await Task.Delay(audioClipDuration);
 
+            // Remove from list once it's done
             _ongoingMetalDetectors.Remove(audioClip);
         }
     }

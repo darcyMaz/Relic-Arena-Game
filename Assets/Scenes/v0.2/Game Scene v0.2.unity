@@ -1157,11 +1157,11 @@ PrefabInstance:
     - target: {fileID: 6395290448133851492, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
       propertyPath: _closeSound
       value: 
-      objectReference: {fileID: 8300000, guid: 53b15586e04d6784fa45e3ec3b76a12a, type: 3}
+      objectReference: {fileID: 8300000, guid: 1e41ae435a9f6b342b05e29f6d96d8b9, type: 3}
     - target: {fileID: 6395290448133851492, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
       propertyPath: _veryCloseSound
       value: 
-      objectReference: {fileID: 8300000, guid: 1e41ae435a9f6b342b05e29f6d96d8b9, type: 3}
+      objectReference: {fileID: 8300000, guid: 53b15586e04d6784fa45e3ec3b76a12a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
