@@ -2,13 +2,16 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
+/// <summary>
+/// Class which manages the sound.
+/// </summary>
 public class SoundManager : MonoBehaviour
 {
     /// <summary>
     /// Wall rumble
     /// </summary>
     [SerializeField] public AudioClip WallRumble;
-    
+
     /// <summary>
     /// AudioSource to play audio.
     /// </summary>
@@ -38,14 +41,6 @@ public class SoundManager : MonoBehaviour
         InitSingleton();
     }
 
-    private void Update()
-    {
-        //foreach (AudioClip clip in _ongoingMetalDetectors)
-        //{
-        //    DecrementAudioClipVolume(clip);
-        //}
-    }
-
     private void InitSingleton()
     {
         if (Instance != null && Instance != this)
@@ -56,7 +51,7 @@ public class SoundManager : MonoBehaviour
         Instance = this;
     }
 
-    
+
     /// <summary>
     /// Plays metal detector noises.
     /// If they come from a player it uses the audio sources for those players, otherwise uses the misc source.
@@ -70,9 +65,9 @@ public class SoundManager : MonoBehaviour
         AudioSource currentAudioSource;
         bool usesPlayerAS = false;
         // If the player number is a real player number and the list has an audio source.
-        if (playerNumber > 0 && ( (playerNumber-1) < _playerAudioSources.Count))
+        if (playerNumber > 0 && ((playerNumber - 1) < _playerAudioSources.Count))
         {
-            currentAudioSource = _playerAudioSources[playerNumber-1];
+            currentAudioSource = _playerAudioSources[playerNumber - 1];
             usesPlayerAS = true;
         }
         // Otherwise, use the misc audio source.
@@ -92,7 +87,7 @@ public class SoundManager : MonoBehaviour
             _ongoingMetalDetectors.Add(audioClip);
 
             // Get the duration of the audio clip.
-            int audioClipDuration = (int) (audioClip.length * 1000);
+            int audioClipDuration = (int)(audioClip.length * 1000);
 
             // AudioClip class has floats in seconds for the duration: ex. 0.945
             // Async stuff (see line 63) uses int for durations in milliseconds: ex. 945
@@ -117,17 +112,11 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void Play (AudioClip clip, float volume = 1f)
+    public void Play(AudioClip clip, float volume = 1f)
     {
-        Debug.Log("Play called with: " + (clip != null ? clip.name : "NULL"), this);
+        //Debug.Log("Play called with: " + (clip != null ? clip.name : "NULL"), this);
 
         if (clip != null)
-            _miscAudioSource.PlayOneShot(clip,volume);
+            _miscAudioSource.PlayOneShot(clip, volume);
     }
-
-    private void DecrementAudioClipVolume(AudioClip clip)
-    {
-        _miscAudioSource.volume -= 0.01f;
-    }
-
 }

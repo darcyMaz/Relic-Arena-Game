@@ -127,7 +127,6 @@ public class RelicSpawnPlane : MonoBehaviour
         // Helps visualize where the spawn points are.
         if (VisualDebuggingCoordinates)
         {
-
             // For each possible coordinate, spawn a little helper to visualize its placement.
             for (int x = 1; x < GridColumns + 1; x++)
             {
@@ -365,7 +364,14 @@ public class RelicSpawnPlane : MonoBehaviour
     /// <param name="relicPosition"> The position of the relic as a Vector3 </param>
     private void AddVisualDebugRelic(Vector3 relicPosition)
     {
-        if (VisualDebuggingRelic) Instantiate(ArenaManager.Instance.RelicSpawnHelper, relicPosition, Quaternion.identity);
+        if (VisualDebuggingRelic)
+        {
+            _visualDebugList.Add
+            (
+                Instantiate(ArenaManager.Instance.RelicSpawnHelper, relicPosition, Quaternion.identity)
+            );
+        }
+
     }
 
     /// <summary>
