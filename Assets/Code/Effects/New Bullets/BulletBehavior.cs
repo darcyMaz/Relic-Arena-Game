@@ -7,7 +7,8 @@ public class BulletBehavior : MonoBehaviour
     //References
     [SerializeField] Rigidbody rb;
     [SerializeField] public RelicEffectSO relicEffectSO;
-    [SerializeField] public GameObject spriteChild;
+    [SerializeField] public GameObject colliderChild;
+    [SerializeField] public GameObject bSprite;
     public GameObject spawnerRef;
 
     private bool bSetup = false;
@@ -59,7 +60,9 @@ public class BulletBehavior : MonoBehaviour
 
         bScaleX = relicEffectSO.bulletScaleX;
         bScaleY = relicEffectSO.bulletScaleY;
-        transform.localScale = new Vector3(bScaleX, bScaleY, 1f);
+        colliderChild.transform.localScale = new Vector3(bScaleX, bScaleY, 1f);
+
+        //Start Animation here
 
         //Bullet is setup
         bSetup = true;
@@ -110,7 +113,7 @@ public class BulletBehavior : MonoBehaviour
         //Rotate Sprite of Bullet
         if (rotateSprite)
         {
-            //This is where id rotate the sprite, if i could...
+            bSprite.transform.rotation = Quaternion.Euler(0f, 0f, bRotateZ);
         }
     }
 
