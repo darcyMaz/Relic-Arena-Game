@@ -91,7 +91,7 @@ public class Destructibleobject : MonoBehaviour
     }
 // when this function is called reduce 1 hp and destroy self if 0, or start coroutine of the shake. Play sound from sound manager
     public void TakeHit(){
-                SoundManager.Instance.Play(SoundManager.Instance.WallRumble);
+                SoundManager.Instance.Play(SoundManager.Instance.WallRumble, 0.1f);
 
          HitPoints -= 1;
          Debug.Log(HitPoints);
