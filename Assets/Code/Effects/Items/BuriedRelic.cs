@@ -76,6 +76,14 @@ public class BuriedRelic : MonoBehaviour
     /// <param name="other"> Collider which is in this trigger. </param>
     private void OnTriggerStay(Collider other)
     {
+        // If this is a Player, then get the player number.
+        int playerNumber = 0;
+        Player player;
+        if (other.gameObject.TryGetComponent(out player))
+        {
+            playerNumber = player.GetPlayerNumber();
+        }
+
         // If this component has a Metal Detector.
         MetalDetector metalDetector;
         if (other.TryGetComponent(out metalDetector))
@@ -89,7 +97,7 @@ public class BuriedRelic : MonoBehaviour
             if (Vector3.Distance(metalDetector.GetDigSpot(), transform.position) <= _actualCloseDistance)
             {
                 // Tell the SoundManager to play the Very Close Sound.
-                SoundManager.Instance.PlayMetalDetector(metalDetector.GetVeryCloseSound(), volumeFraction);
+                SoundManager.Instance.PlayMetalDetector(metalDetector.GetVeryCloseSound(), volumeFraction, playerNumber);
 
                 // Instantiate the relic object.
                 Relic relic = new Relic(_relicSO);
@@ -105,7 +113,7 @@ public class BuriedRelic : MonoBehaviour
             else
             {
                 // Tell the SoundManager to play the Near Sound.
-                SoundManager.Instance.PlayMetalDetector(metalDetector.GetCloseSound(), volumeFraction);
+                SoundManager.Instance.PlayMetalDetector(metalDetector.GetCloseSound(), volumeFraction, playerNumber);
             }
         }
     }
