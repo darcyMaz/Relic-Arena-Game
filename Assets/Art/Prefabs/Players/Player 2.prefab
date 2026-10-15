@@ -191,6 +191,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 896009ddb092c404b8ca767b9b07d0fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
+  DigSound: {fileID: 8300000, guid: 045f6e5dfc5d16547b4b66b78c66ead7, type: 3}
+  HitSound: {fileID: 8300000, guid: 3ea40088c26dc604e953929732c40200, type: 3}
   PlayerNumber: 2
   anim: {fileID: 4004506865810588637}
   ITime: 0.5
@@ -207,6 +209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovementInput
   BaseSpeed: 200
+  meowHit: 0
   GravityFloat: 0
   PlayerNumber: 2
 --- !u!114 &2953285023961512080
