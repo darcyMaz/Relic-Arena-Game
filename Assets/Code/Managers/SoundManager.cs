@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
+/// <summary>
+/// Class which manages the sound.
+/// </summary>
 public class SoundManager : MonoBehaviour
 {
     /// <summary>
@@ -17,7 +20,12 @@ public class SoundManager : MonoBehaviour
     /// <summary>
     /// List of all of the audio sources attached to players.
     /// </summary>
-    [SerializeField] private List<AudioSource> _playerAudioSources = new List<AudioSource>();
+    [SerializeField] private List<AudioSource> PlayerAudioSources = new List<AudioSource>();
+
+    /// <summary>
+    /// List of queues. One queue for each player. Has the potential audio clips to play. The closest is played on late update.
+    /// </summary>
+    private List<Queue<AudioClip>> _playerQueueList = new List<Queue<AudioClip>>();
 
     /// <summary>
     /// Singleton instance of Sound Manager.
@@ -38,14 +46,9 @@ public class SoundManager : MonoBehaviour
         InitSingleton();
     }
 
-    private void Update()
-    {
-        //foreach (AudioClip clip in _ongoingMetalDetectors)
-        //{
-        //    DecrementAudioClipVolume(clip);
-        //}
-    }
-
+    /// <summary>
+    /// Initializes the singleton for the SoundManager.
+    /// </summary>
     private void InitSingleton()
     {
         if (Instance != null && Instance != this)
@@ -70,15 +73,28 @@ public class SoundManager : MonoBehaviour
         AudioSource currentAudioSource;
         bool usesPlayerAS = false;
         // If the player number is a real player number and the list has an audio source.
-        if (playerNumber > 0 && ( (playerNumber-1) < _playerAudioSources.Count))
+        if (playerNumber > 0 && ( (playerNumber-1) < PlayerAudioSources.Count))
         {
-            currentAudioSource = _playerAudioSources[playerNumber-1];
+            currentAudioSource = PlayerAudioSources[playerNumber-1];
             usesPlayerAS = true;
         }
         // Otherwise, use the misc audio source.
         else
         {
             currentAudioSource = _miscAudioSource;
+        }
+
+        if (playerNumber == 0)
+        {
+
+        }
+        else
+        {
+            // If the current player's priority queue does not contain this audio clip.
+            if (!_playerQueueList[playerNumber - 1].Contains(audioClip))
+            {
+
+            }
         }
 
 
@@ -117,17 +133,67 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void Play (AudioClip clip, float volume = 1f)
+    /// <summary>
+    /// Plays a sound in the misc audio source.
+    /// </summary>
+    /// <param name="clip"> The audio clip to play </param>
+    /// <param name="volume"> The volume of the audio clip as a float from 0 to 1 </param>
+    public void Play(AudioClip clip, float volume = 1f)
     {
-        Debug.Log("Play called with: " + (clip != null ? clip.name : "NULL"), this);
+        // Debug.Log("Play called with: " + (clip != null ? clip.name : "NULL"), this);
 
         if (clip != null)
-            _miscAudioSource.PlayOneShot(clip,volume);
+        {
+            _miscAudioSource.PlayOneShot(clip, volume);
+        }
     }
 
-    private void DecrementAudioClipVolume(AudioClip clip)
+    /// <summary>
+    /// A priority queue for the audio clips based on volume.
+    /// </summary>
+    protected class PriorityQueue
     {
-        _miscAudioSource.volume -= 0.01f;
-    }
+        // List of audio clips.
+        private List<ClipVolPair> _audioClips;
 
+        // Constructor initializes the queue.
+        public PriorityQueue()
+        {
+            _audioClips = new List<ClipVolPair>();
+        }
+
+        // Adds the clip to the list based on the volume, prioritizing higher volumes.
+        public void Add(AudioClip clip, float volume)
+        {
+            int index = 0;
+            ClipVolPair pair = new ClipVolPair();
+
+            for (; index<_audioClips.Count; index++)
+            {
+
+            }
+        }
+
+        // Clear the queue.
+        public void Clear() 
+        {
+            _audioClips.Clear();
+        }
+
+        // Helper struct to track clip and volume at the same time.
+        public struct ClipVolPair
+        {
+            // Constructor for the struct.
+            public ClipVolPair(AudioClip clip, float volume)
+            {
+                Clip = clip;
+                Volume = volume;
+            }
+
+            // Audio clip.
+            public AudioClip Clip;
+            // Volume as float from 0 to 1.
+            public float Volume;
+        }
+    }
 }

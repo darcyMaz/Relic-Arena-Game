@@ -1749,6 +1749,10 @@ PrefabInstance:
       propertyPath: EndOfRoundTimer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 3247691009835619940, guid: 06aa60c4c288c654f92919c332cda96f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 221.7
+      objectReference: {fileID: 0}
     - target: {fileID: 5066945303051790585, guid: 06aa60c4c288c654f92919c332cda96f, type: 3}
       propertyPath: m_Name
       value: Arena UI
