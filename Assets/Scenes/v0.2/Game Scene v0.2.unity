@@ -3135,7 +3135,7 @@ GameObject:
   - component: {fileID: 1977921948}
   - component: {fileID: 1977921949}
   m_Layer: 0
-  m_Name: Spawn Planes
+  m_Name: Spawn Planes (ArenaManager)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
