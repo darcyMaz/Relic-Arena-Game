@@ -16,8 +16,8 @@ MonoBehaviour:
   Sprite: {fileID: 1675566126630113127, guid: 087fa48f1608a7a4fa92125a2aca8b90, type: 3}
   Price: 100
   BulletSystemSO: {fileID: 11400000, guid: 91d2b9e7243f278489ee078954221a4d, type: 2}
-  ActiveEffect: 0
-  ActiveEffectDetails: 
-  LaunchType: 0
+  ActiveEffect: 7
+  ActiveEffectDetails: 3
+  LaunchType: 4
   PassiveEffects: 
   PassiveEffectsDetails: []

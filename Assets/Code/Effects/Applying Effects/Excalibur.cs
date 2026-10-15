@@ -1,5 +1,5 @@
 using UnityEngine;
-// using System.Collections.Generic;
+using System.Collections.Generic;
 
 /// <summary>
 /// Class made for the Excalibur Effect.
@@ -10,7 +10,12 @@ public class Excalibur : MonoBehaviour
     /// <summary>
     /// A list holding which Player's have been hit by this excalibur.
     /// </summary>
-    // private List<int> playersHit = new List<int>();
+    private List<int> playersHit = new List<int>();
+
+    /// <summary>
+    /// A list holding Destructibleobjects that have been hit so they won't get hit twice.
+    /// </summary>
+    private List<Destructibleobject> destructibleObjects = new List<Destructibleobject>();
 
     /// <summary>
     /// Method which runs when a Collider enters the trigger.
@@ -23,29 +28,32 @@ public class Excalibur : MonoBehaviour
         Player otherPlayer;
         if (other.gameObject.TryGetComponent(out otherPlayer))
         {
-            /* If OnTriggerEnter is flawed for this, then change it to OnTriggerStay and use this code.
-             * It keeps track of who has been hit during the lifetime of the excalibur.
-             * Is not a great system for destructable objects.
-             * 
+            // This ensures that the Player does not get hit twice.
             if (!playersHit.Contains(otherPlayer.GetPlayerNumber()))
             {
-                // hit player
-                // add this player number to list
-            }
-            */
+                // Hit the player!
+                otherPlayer.PlayerHit();
 
-            // Hit the player!
-            otherPlayer.PlayerHit();
+                // Add this player's number to the list so it won't get hit again.
+                playersHit.Add(otherPlayer.GetPlayerNumber());
+            }
         }
 
         // If Excalibur hit a destructible object.
         Destructibleobject destructibleObject;
         if (other.gameObject.TryGetComponent(out destructibleObject))
         {
-            // The destructibleObject is hit!
-            destructibleObject.TakeHit();
+            // This ensures that the destructibleobject does not get hit twice.
+            if (!destructibleObjects.Contains(destructibleObject))
+            {
+                // The destructibleObject is hit!
+                destructibleObject.TakeHit();
+
+                // Add it to the list so it won't get hit again.
+                destructibleObjects.Add(destructibleObject);
+            }
+
+            
         }
-
-
     }
 }
