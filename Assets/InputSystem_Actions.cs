@@ -634,6 +634,16 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""Melee"",
+                    ""type"": ""Button"",
+                    ""id"": ""4b6687a9-2d04-4a5c-b516-419ee4182f40"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -746,6 +756,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Use"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9a383985-67aa-42ee-a13f-eea1ec1e3e82"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Melee"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -807,6 +828,16 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": ""HitTest"",
                     ""type"": ""Button"",
                     ""id"": ""7d501c98-72b9-4504-9c68-63a98bda91b6"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""Melee"",
+                    ""type"": ""Button"",
+                    ""id"": ""c083b6ec-8d1a-45f0-a90b-44a9e61f610c"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -922,6 +953,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Use"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b2588adf-dd0e-4437-9923-fef0b80f404d"",
+                    ""path"": ""<Keyboard>/numpad5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Melee"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1536,6 +1578,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player1_Use = m_Player1.FindAction("Use", throwIfNotFound: true);
         m_Player1_Look = m_Player1.FindAction("Look", throwIfNotFound: true);
         m_Player1_HitTest = m_Player1.FindAction("HitTest", throwIfNotFound: true);
+        m_Player1_Melee = m_Player1.FindAction("Melee", throwIfNotFound: true);
         // Player2
         m_Player2 = asset.FindActionMap("Player2", throwIfNotFound: true);
         m_Player2_Move = m_Player2.FindAction("Move", throwIfNotFound: true);
@@ -1544,6 +1587,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player2_Cycle = m_Player2.FindAction("Cycle", throwIfNotFound: true);
         m_Player2_Look = m_Player2.FindAction("Look", throwIfNotFound: true);
         m_Player2_HitTest = m_Player2.FindAction("HitTest", throwIfNotFound: true);
+        m_Player2_Melee = m_Player2.FindAction("Melee", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1829,6 +1873,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player1_Use;
     private readonly InputAction m_Player1_Look;
     private readonly InputAction m_Player1_HitTest;
+    private readonly InputAction m_Player1_Melee;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player1".
     /// </summary>
@@ -1864,6 +1909,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player1/HitTest".
         /// </summary>
         public InputAction @HitTest => m_Wrapper.m_Player1_HitTest;
+        /// <summary>
+        /// Provides access to the underlying input action "Player1/Melee".
+        /// </summary>
+        public InputAction @Melee => m_Wrapper.m_Player1_Melee;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1908,6 +1957,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @HitTest.started += instance.OnHitTest;
             @HitTest.performed += instance.OnHitTest;
             @HitTest.canceled += instance.OnHitTest;
+            @Melee.started += instance.OnMelee;
+            @Melee.performed += instance.OnMelee;
+            @Melee.canceled += instance.OnMelee;
         }
 
         /// <summary>
@@ -1937,6 +1989,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @HitTest.started -= instance.OnHitTest;
             @HitTest.performed -= instance.OnHitTest;
             @HitTest.canceled -= instance.OnHitTest;
+            @Melee.started -= instance.OnMelee;
+            @Melee.performed -= instance.OnMelee;
+            @Melee.canceled -= instance.OnMelee;
         }
 
         /// <summary>
@@ -1980,6 +2035,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player2_Cycle;
     private readonly InputAction m_Player2_Look;
     private readonly InputAction m_Player2_HitTest;
+    private readonly InputAction m_Player2_Melee;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player2".
     /// </summary>
@@ -2015,6 +2071,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player2/HitTest".
         /// </summary>
         public InputAction @HitTest => m_Wrapper.m_Player2_HitTest;
+        /// <summary>
+        /// Provides access to the underlying input action "Player2/Melee".
+        /// </summary>
+        public InputAction @Melee => m_Wrapper.m_Player2_Melee;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -2059,6 +2119,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @HitTest.started += instance.OnHitTest;
             @HitTest.performed += instance.OnHitTest;
             @HitTest.canceled += instance.OnHitTest;
+            @Melee.started += instance.OnMelee;
+            @Melee.performed += instance.OnMelee;
+            @Melee.canceled += instance.OnMelee;
         }
 
         /// <summary>
@@ -2088,6 +2151,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @HitTest.started -= instance.OnHitTest;
             @HitTest.performed -= instance.OnHitTest;
             @HitTest.canceled -= instance.OnHitTest;
+            @Melee.started -= instance.OnMelee;
+            @Melee.performed -= instance.OnMelee;
+            @Melee.canceled -= instance.OnMelee;
         }
 
         /// <summary>
@@ -2501,6 +2567,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnHitTest(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Melee" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMelee(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Player2" which allows adding and removing callbacks.
@@ -2551,6 +2624,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnHitTest(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Melee" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMelee(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
