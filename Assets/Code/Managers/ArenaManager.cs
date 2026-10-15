@@ -51,12 +51,12 @@ public class ArenaManager : MonoBehaviour
     /// <summary>
     /// Prefab gameObject for visual debugging. Shows where relics spawn.
     /// </summary>
-    public GameObject RelicSpawnHelper { get; private set; }
+    public GameObject RelicSpawnHelper;
 
     /// <summary>
     /// Prefab gameObject for visual debugging. Shows where relics CAN spawn.
     /// </summary>
-    public GameObject SpawnPlaneHelper { get; private set; }
+    public GameObject SpawnPlaneHelper;
 
     /// <summary>
     /// All RelicSOs with no effect.

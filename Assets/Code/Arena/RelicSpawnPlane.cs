@@ -47,9 +47,14 @@ public class RelicSpawnPlane : MonoBehaviour
     private bool _arenaInstanceNotFound = false;
 
     /// <summary>
-    /// Turns on visual debugging for the relic spawn plane.
+    /// Turns on visual debugging for the coordinates relic spawn plane.
     /// </summary>
-    [SerializeField] private bool VisualDebugging = true;
+    [SerializeField] private bool VisualDebuggingCoordinates = true;
+
+    /// <summary>
+    /// Turns on visual debugging for relics in the spawn plane.
+    /// </summary>
+    [SerializeField] private bool VisualDebuggingRelic = true;
 
     /// <summary>
     /// Function called before the game starts.
@@ -106,7 +111,7 @@ public class RelicSpawnPlane : MonoBehaviour
         }
 
         // Helps visualize where the spawn points are.
-        if (VisualDebugging)
+        if (VisualDebuggingCoordinates)
         {
             // For each possible coordinate, spawn a little helper to visualize its placement.
             for (int x = 1; x < GridColumns + 1; x++)
@@ -156,7 +161,7 @@ public class RelicSpawnPlane : MonoBehaviour
         await Task.Delay(delay);
 
         // Uncomment this to spawn a 3D object to visually see where the relic is.
-        if (VisualDebugging) Instantiate(ArenaManager.Instance.RelicSpawnHelper, relicPosition, Quaternion.identity);
+        if (VisualDebuggingRelic) Instantiate(ArenaManager.Instance.RelicSpawnHelper, relicPosition, Quaternion.identity);
 
         // Activate the BuriedRelic after a delay.
         buriedRelicClone.SetActive(true);
