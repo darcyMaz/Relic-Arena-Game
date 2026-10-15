@@ -1192,6 +1192,10 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 241768571983204239, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
+      propertyPath: meowHit
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 241768571983204239, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
       propertyPath: BaseSpeed
       value: 300
       objectReference: {fileID: 0}
@@ -1267,6 +1271,14 @@ PrefabInstance:
       propertyPath: ITime
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4666927630188493696, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
+      propertyPath: DigSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 045f6e5dfc5d16547b4b66b78c66ead7, type: 3}
+    - target: {fileID: 4666927630188493696, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
+      propertyPath: HitSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 3ea40088c26dc604e953929732c40200, type: 3}
     - target: {fileID: 6001148587609748344, guid: 6a6d347139d7b8548b060c3d7d5a7153, type: 3}
       propertyPath: m_Size.y
       value: 1.2
