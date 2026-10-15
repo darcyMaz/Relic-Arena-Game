@@ -1745,10 +1745,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49297375487b4d738febeda0efeb4a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Melee
-  HitPoints: 0
+  PlayerNumber: 0
   range: 2
   offset: {x: 1.5, y: 0, z: 0}
-  meowHit: 0
 --- !u!1 &561663929
 GameObject:
   m_ObjectHideFlags: 0
@@ -1778,7 +1777,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 783ac1470fab1df4c987e78bfe14d9dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
-  WallRumble: {fileID: 0}
+  WallRumble: {fileID: 8300000, guid: a5b914cd9442c4e4ba33bd09aa788274, type: 3}
   _miscAudioSource: {fileID: 0}
   _playerAudioSources: []
 --- !u!4 &561663931
@@ -2109,11 +2108,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7581135404775683599, guid: f1140570b58194925a386d4b87fad813, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.76
+      value: -3.64
       objectReference: {fileID: 0}
     - target: {fileID: 7581135404775683599, guid: f1140570b58194925a386d4b87fad813, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.05
+      value: -4.6
       objectReference: {fileID: 0}
     - target: {fileID: 7581135404775683599, guid: f1140570b58194925a386d4b87fad813, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2397,6 +2396,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 452500240404242046, guid: f1140570b58194925a386d4b87fad813, type: 3}
+      propertyPath: HitPoints
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 4802964592331832697, guid: f1140570b58194925a386d4b87fad813, type: 3}
       propertyPath: m_Name
       value: Destructible Wall (1)
@@ -3727,11 +3730,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7581135404775683599, guid: f1140570b58194925a386d4b87fad813, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.17
+      value: 3.6399999
       objectReference: {fileID: 0}
     - target: {fileID: 7581135404775683599, guid: f1140570b58194925a386d4b87fad813, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.09
+      value: -4.64
       objectReference: {fileID: 0}
     - target: {fileID: 7581135404775683599, guid: f1140570b58194925a386d4b87fad813, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4150,6 +4153,79 @@ Transform:
   m_Children: []
   m_Father: {fileID: 561663931}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1834352411
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 296626892826174580, guid: e0e3b568482884e63bff1a0adf130256, type: 3}
+      propertyPath: m_Name
+      value: Sarcophagus
+      objectReference: {fileID: 0}
+    - target: {fileID: 3070212452383933561, guid: e0e3b568482884e63bff1a0adf130256, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.659065
+      objectReference: {fileID: 0}
+    - target: {fileID: 3070212452383933561, guid: e0e3b568482884e63bff1a0adf130256, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 4.293579
+      objectReference: {fileID: 0}
+    - target: {fileID: 3070212452383933561, guid: e0e3b568482884e63bff1a0adf130256, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.659065
+      objectReference: {fileID: 0}
+    - target: {fileID: 3070212452383933561, guid: e0e3b568482884e63bff1a0adf130256, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 3070212452383933561, guid: e0e3b568482884e63bff1a0adf130256, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 3070212452383933561, guid: e0e3b568482884e63bff1a0adf130256, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 3070212452383933561, guid: e0e3b568482884e63bff1a0adf130256, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3070212452383933561, guid: e0e3b568482884e63bff1a0adf130256, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3070212452383933561, guid: e0e3b568482884e63bff1a0adf130256, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3070212452383933561, guid: e0e3b568482884e63bff1a0adf130256, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3070212452383933561, guid: e0e3b568482884e63bff1a0adf130256, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3070212452383933561, guid: e0e3b568482884e63bff1a0adf130256, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3070212452383933561, guid: e0e3b568482884e63bff1a0adf130256, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977269643028770043, guid: e0e3b568482884e63bff1a0adf130256, type: 3}
+      propertyPath: HitPoints
+      value: 30
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e0e3b568482884e63bff1a0adf130256, type: 3}
 --- !u!1 &1892454077
 GameObject:
   m_ObjectHideFlags: 0
@@ -4437,6 +4513,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 452500240404242046, guid: f1140570b58194925a386d4b87fad813, type: 3}
+      propertyPath: HitPoints
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 4802964592331832697, guid: f1140570b58194925a386d4b87fad813, type: 3}
       propertyPath: m_Name
       value: Destructible Wall
@@ -4863,3 +4943,4 @@ SceneRoots:
   - {fileID: 6681743}
   - {fileID: 404676696}
   - {fileID: 988455292}
+  - {fileID: 1834352411}
