@@ -57,6 +57,11 @@ public class RelicSpawnPlane : MonoBehaviour
     [SerializeField] private bool VisualDebuggingRelic = true;
 
     /// <summary>
+    /// Holds GameObjects related to visual debugging.
+    /// </summary>
+    [SerializeField] private List<GameObject> _visualDebugList = new List<GameObject>();
+
+    /// <summary>
     /// Function called before the game starts.
     /// </summary>
     private void Awake()
@@ -110,9 +115,19 @@ public class RelicSpawnPlane : MonoBehaviour
             ArenaManager.Instance.OnGameActivation += GameActivation;
         }
 
+        VisualDebugInit();
+    }
+
+    /// <summary>
+    /// Method which instantiates visual debugging.
+    /// </summary>
+    private void VisualDebugInit()
+    {
+
         // Helps visualize where the spawn points are.
         if (VisualDebuggingCoordinates)
         {
+
             // For each possible coordinate, spawn a little helper to visualize its placement.
             for (int x = 1; x < GridColumns + 1; x++)
             {
@@ -160,8 +175,8 @@ public class RelicSpawnPlane : MonoBehaviour
         // Wait before activating the buried relic.
         await Task.Delay(delay);
 
-        // Uncomment this to spawn a 3D object to visually see where the relic is.
-        if (VisualDebuggingRelic) Instantiate(ArenaManager.Instance.RelicSpawnHelper, relicPosition, Quaternion.identity);
+        // If visual debug is on for relics, it will show in the scene where it is.
+        AddVisualDebugRelic(relicPosition);
 
         // Activate the BuriedRelic after a delay.
         buriedRelicClone.SetActive(true);
@@ -300,12 +315,19 @@ public class RelicSpawnPlane : MonoBehaviour
         _buriedRelics.Remove(coords);
     }
 
+    /// <summary>
+    /// Runs on game's activation.
+    /// </summary>
+    /// <param name="onOrOff"> Bool which indicates whether the game has been turned on or off. </param>
     private void GameActivation(bool onOrOff)
     {
         if (!onOrOff)
         {
             // Delete all relics.
             DeleteRelics();
+
+            // Delete debug GameObjects
+            DeleteVisualRelics();
         }
     }
 
@@ -321,6 +343,29 @@ public class RelicSpawnPlane : MonoBehaviour
         }
         // Clear the list.
         _buriedRelics.Clear();
+    }
+
+    /// <summary>
+    /// Delete all visual relics.
+    /// </summary>
+    private void DeleteVisualRelics()
+    {
+        // Destroy the gameobjects.
+        foreach (GameObject relicVisual in _visualDebugList)
+        {
+            Destroy(relicVisual);
+        }
+        // Clear the list.
+        _visualDebugList.Clear();
+    }
+
+    /// <summary>
+    /// Method which spawns in a GameObject at the location of a spawned relic.
+    /// </summary>
+    /// <param name="relicPosition"> The position of the relic as a Vector3 </param>
+    private void AddVisualDebugRelic(Vector3 relicPosition)
+    {
+        if (VisualDebuggingRelic) Instantiate(ArenaManager.Instance.RelicSpawnHelper, relicPosition, Quaternion.identity);
     }
 
     /// <summary>
