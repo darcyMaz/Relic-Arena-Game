@@ -261,7 +261,9 @@ MonoBehaviour:
   GridColumns: 4
   MaxRelicsBuried: 1
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
-  VisualDebugging: 0
+  VisualDebuggingCoordinates: 1
+  VisualDebuggingRelic: 1
+  _visualDebugList: []
 --- !u!64 &13152609
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -279,7 +281,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -1192,7 +1194,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
   WallRumble: {fileID: 0}
-  _audioSource: {fileID: 1812186628}
+  _miscAudioSource: {fileID: 0}
+  _playerAudioSources: []
 --- !u!4 &561663931
 Transform:
   m_ObjectHideFlags: 0
@@ -1498,7 +1501,9 @@ MonoBehaviour:
   GridColumns: 6
   MaxRelicsBuried: 3
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
-  VisualDebugging: 0
+  VisualDebuggingCoordinates: 1
+  VisualDebuggingRelic: 1
+  _visualDebugList: []
 --- !u!64 &1123177428
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1516,7 +1521,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -2666,7 +2671,9 @@ MonoBehaviour:
   GridColumns: 3
   MaxRelicsBuried: 1
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
-  VisualDebugging: 0
+  VisualDebuggingCoordinates: 1
+  VisualDebuggingRelic: 1
+  _visualDebugList: []
 --- !u!64 &1892454080
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2684,7 +2691,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -2890,6 +2897,8 @@ MonoBehaviour:
   MaxRelicsInGame: 5
   MinRelicSpawnDelay: 2000
   UpperBoundRelicSpawnDelay: 500
+  RelicSpawnHelper: {fileID: 0}
+  SpawnPlaneHelper: {fileID: 0}
 --- !u!1 &2034676461
 GameObject:
   m_ObjectHideFlags: 0

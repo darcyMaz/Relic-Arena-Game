@@ -263,6 +263,7 @@ MonoBehaviour:
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
   VisualDebuggingCoordinates: 0
   VisualDebuggingRelic: 1
+  _visualDebugList: []
 --- !u!64 &13152609
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -280,7 +281,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -1648,6 +1649,7 @@ MonoBehaviour:
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
   VisualDebuggingCoordinates: 0
   VisualDebuggingRelic: 1
+  _visualDebugList: []
 --- !u!64 &1123177428
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1665,7 +1667,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -2954,6 +2956,7 @@ MonoBehaviour:
   BuriedRelicPrefab: {fileID: 5501167012066976984, guid: 8ae1c80e1981ab5428f4c686065d5941, type: 3}
   VisualDebuggingCoordinates: 0
   VisualDebuggingRelic: 1
+  _visualDebugList: []
 --- !u!64 &1892454080
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2971,7 +2974,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -3172,7 +3175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaManager
   IsGameActive: 1
-  EndSceneManager: {fileID: 0}
+  EndSceneManager: {fileID: 4441738801541117591, guid: dc678f4b790e4ba43b7d8e6e25ccd8c9, type: 3}
   EffectRelicSOSpawnRate: 0.5
   MaxRelicsInGame: 5
   MinRelicSpawnDelay: 2000
