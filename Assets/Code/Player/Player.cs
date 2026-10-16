@@ -811,6 +811,8 @@ public class Player : EffectableBase
 
         // Call LaunchActiveEffect()
         LaunchActiveEffect(relicInHand.GetActiveEffect(), relicInHand.GetActiveEffectDetails(), relicInHand.GetLaunchType(), relicInHand);
+        // Play Use Active Effect Use Animation
+        anim.SetTrigger("UsingRelic");
     }
 
     /// <summary>
